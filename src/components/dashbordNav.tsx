@@ -41,6 +41,8 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           <button
             onClick={() => {
               setIsNotificationOpen((prev) => !prev);
+              setIsDisconnectOpen(false);
+              setSubMenu(false);
             }}
             className="bg-dark-gray px-6 py-3 rounded-full md:block hidden"
           >
@@ -49,6 +51,8 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           <button
             onClick={() => {
               setIsNotificationOpen((prev) => !prev);
+              setIsDisconnectOpen(false)
+              setSubMenu(false);
             }}
             className="bg-dark-gray text-2xl px-3 py-3 rounded-full text-white-text md:hidden"
           >
@@ -64,6 +68,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                 onClick={() => {
                   setIsDisconnectOpen((prev) => !prev);
                   setSubMenu(false);
+                  setIsNotificationOpen(false)
                 }}
               >
                 <span
@@ -84,7 +89,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
               </button>
 
               {isDisconnectOpen && (
-                <div className="bg-dark-gray fixed top-14 left-5 translate-x-1/12 translate-y-1/12 w-4/5 md:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
+                <div className="bg-dark-gray fixed top-16 right-3 translate-y-1/12 max-w-xl p-6 border border-dark-border-gray rounded-[8px] mt-7 w-4/5">
                   <ul className="flex gap-2 justify-between items-center flex-col">
                     <button
                       className="w-full  min-h-16 p-1 sm:p-0.5 group             
