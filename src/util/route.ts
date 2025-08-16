@@ -25,7 +25,6 @@ export const researcherRoute = [
   },
 ];
 
-
 export const validatorRoute = [
   {
     label: "Overview",
@@ -82,23 +81,19 @@ export const ownerRoute = [
     url: "overview",
   },
   {
-    label: "Projects",
-    url: "projects",
+    label: "Upload Project",
+    url: "upload-project",
   },
   {
-    label: "Bounties",
-    url: "bounties",
+    label: "View Projects",
+    url: "/projects",
   },
   {
-    label: "Submissions",
-    url: "submissions",
+    label: "Ranking",
+    url: "/ranking",
   },
   {
-    label: "Analytics",
-    url: "analytics",
-  },
-  {
-    label: "Security",
-    url: "security",
+    label: "Profile",
+    url: "/profile",
   },
 ];

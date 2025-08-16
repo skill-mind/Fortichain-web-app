@@ -1,5 +1,3 @@
-import { ArrowUpRight } from "lucide-react";
-import { myCustomFont } from "./layout";
 import { ArrowUp } from "@/icons/arrowUp";
 
 export default function Page() {

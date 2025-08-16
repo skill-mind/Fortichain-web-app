@@ -1,16 +1,15 @@
 "use client";
 import Image from "next/image";
-import wallet from "../../../public/Ellipse 1.svg";
 import ready from "../../../public/Argent.svg";
 import bravoos from "../../../public/braavos_icon.jpeg.svg";
 import metamask from "../../../public/metamask_icon.jpeg.svg";
 import okxwallet from "../../../public/okx-logo.svg"
 import keplr from "../../../public/66a8b2095086e8b326351bd3_logo-icon.svg";
 
-import { useConnect,Connector } from "@starknet-react/core";
+import { useConnect } from "@starknet-react/core";
 
 export default function WalletModal({close}:{close:()=>void}) {
-  const { connect, error, connectors } = useConnect({});
+  const { connect, connectors } = useConnect({});
 
 //   console.log(connectors);
 //   console.log(error);

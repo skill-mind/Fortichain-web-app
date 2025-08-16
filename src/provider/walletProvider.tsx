@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 
-import { sepolia, mainnet } from "@starknet-react/chains";
-import { StarknetConfig, publicProvider, voyager,braavos,argent,InjectedConnector } from "@starknet-react/core";
+import { sepolia } from "@starknet-react/chains";
+import { StarknetConfig, publicProvider, voyager,InjectedConnector } from "@starknet-react/core";
 // import { WebWalletConnector } from "starknetkit/webwallet";
 // import { ArgentMobileConnector } from "starknetkit/argentMobile";
 

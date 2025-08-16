@@ -1,51 +1,75 @@
 "use client";
 import { route } from "@/types/types";
-// import avatar from "../../public/Ellipse 1.svg";
-// import Image from "next/image";
+import Logo from "../../public/Logo.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
 import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
+import { Bell, EllipsisVertical, MenuIcon } from "lucide-react";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import { formatAddress } from "@/util/helper";
 import Image from "next/image";
 import ready from "../../public/Argent.svg";
 import bravoos from "../../public/braavos_icon.jpeg.svg";
-
+import { BellIcon } from "@/icons/bellIcon";
+import Notification from "./notification";
 
 export default function DashboardNavBar({ routeType, routes }: route) {
   const path = usePathname();
   const [isConnectorOpen, setIsConnectorOpen] = useState<boolean>(false);
   const [isDisconnectOpen, setIsDisconnectOpen] = useState<boolean>(false);
-  const { address, isConnected,connector} = useAccount()
-  const {disconnect} = useDisconnect()
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [subMenu, setSubMenu] = useState(false);
+  const { address, isConnected, connector } = useAccount();
+  const { disconnect } = useDisconnect();
 
-  console.log(connector?.id)
+  console.log(connector?.id);
   function connectorHandler() {
     setIsConnectorOpen((isConnect) => !isConnect);
+    setSubMenu(false);
   }
   return (
     <>
-      <nav className="capitalize font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center">
+      <nav className="capitalize font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center px-3 sm:px-3">
         <ul className="flex justify-between items-center gap-4">
-          <li className="bg-dark-gray px-6 py-3 rounded-full">FortiChain</li>
-          <li className="bg-dark-gray px-6 py-3 rounded-full">{routeType}</li>
+          <Image src={Logo} alt="Forticahin Logo" />
+          <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
+            {routeType}
+          </li>
         </ul>
         <ul className="flex justify-between items-center gap-4">
-          <li className="bg-dark-gray px-6 py-3 rounded-full">Notification</li>
+          <button
+            onClick={() => {
+              setIsNotificationOpen((prev) => !prev);
+            }}
+            className="bg-dark-gray px-6 py-3 rounded-full md:block hidden"
+          >
+            Notification
+          </button>
+          <button
+            onClick={() => {
+              setIsNotificationOpen((prev) => !prev);
+            }}
+            className="bg-dark-gray text-2xl px-3 py-3 rounded-full text-white-text md:hidden"
+          >
+            <BellIcon />
+          </button>
           {isConnected && address && (
-            <div className="relative flex ">
+            <div className="relative flex">
               <button
-                className="min-w-157 min-h-50 p-0.5 group             
+                className="w-fit sm:min-w-157 sm:min-h-50 p-1 sm:p-0.5 group             
                  from-[#10273E] to-sky-blue-border
                  bg-gradient-to-r group 
-             rounded-full group"
+             rounded-full group "
+                onClick={() => {
+                  setIsDisconnectOpen((prev) => !prev);
+                  setSubMenu(false);
+                }}
               >
                 <span
-                  className="px-6 py-3
+                  className="sm:px-6 sm:py-3
                        bg-main-bg
-                 flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+                 flex items-center sm:gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
                 >
                   {connector?.id == "argentX" && (
                     <Image className="w-5" src={ready} alt="ready wallet" />
@@ -53,25 +77,65 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   {connector?.id == "braavos" && (
                     <Image className="w-5" src={bravoos} alt="Braavos wallet" />
                   )}
-                  {formatAddress(address)}
+                  <span className="sm:block hidden">
+                    {formatAddress(address)}
+                  </span>
                 </span>
               </button>
-              <button
-                onClick={() => setIsDisconnectOpen((prev) => !prev)}
-                className="bg-dark-gray  p-2.5 rounded-full grid place-content-center"
-              >
-                <EllipsisVertical />
-              </button>
+
               {isDisconnectOpen && (
-                <button
-                  onClick={() => {
-                    disconnect();
-                    setIsDisconnectOpen(false);
-                  }}
-                  className="bg-dark-gray px-6 py-3 rounded-sm absolute right-0 -bottom-14"
-                >
-                  Disconnect
-                </button>
+                <div className="bg-dark-gray fixed top-14 left-5 translate-x-1/12 translate-y-1/12 w-4/5 md:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
+                  <ul className="flex gap-2 justify-between items-center flex-col">
+                    <button
+                      className="w-full  min-h-16 p-1 sm:p-0.5 group             
+                 from-[#10273E] to-sky-blue-border
+                 bg-gradient-to-r group 
+             rounded-full group"
+                    >
+                      <span
+                        className="sm:px-6 sm:py-3
+                       bg-dark-gray
+                 flex items-center gap-2.5 p-1 justify-center cursor-pointer  rounded-full h-[60px] w-full"
+                      >
+                        {connector?.id == "argentX" && (
+                          <Image
+                            className="w-5"
+                            src={ready}
+                            alt="ready wallet"
+                          />
+                        )}
+                        {connector?.id == "braavos" && (
+                          <Image
+                            className="w-5"
+                            src={bravoos}
+                            alt="Braavos wallet"
+                          />
+                        )}
+                        <span className="">{formatAddress(address)}</span>
+                      </span>
+                    </button>
+                    <button
+                      className="w-full min-h-16 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                      onClick={() => {
+                        disconnect();
+                        setIsDisconnectOpen(false);
+                      }}
+                      type="button"
+                    >
+                      <span
+                        className="px-6 py-3
+                      group-hover:from-sky-from group-hover:to-sky-to
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-[60px] w-full"
+                      >
+                        Disconnect Wallet
+                      </span>
+                    </button>
+                  </ul>
+                </div>
               )}
             </div>
           )}
@@ -93,10 +157,21 @@ export default function DashboardNavBar({ routeType, routes }: route) {
               </span>
             </button>
           )}
+          <button
+            onClick={() => {
+              setSubMenu((prev) => !prev);
+              setIsConnectorOpen(false);
+              setIsDisconnectOpen(false);
+            }}
+            className="bg-dark-gray px-3 py-3 rounded-full block md:hidden"
+          >
+            <MenuIcon />
+          </button>
         </ul>
       </nav>
       <span className="border-b border-dark-border-gray h-1px w-full block" />
-      <nav className="bg-dark-gray mx-auto max-w-fit  p-1 rounded-full mt-7">
+      {/* sub nav Desktop */}
+      <nav className="bg-dark-gray mx-auto max-w-fit  p-1 rounded-full mt-7 hidden md:block">
         <ul className="flex justify-between items-center">
           {routes.map((route, i) => {
             return (
@@ -123,6 +198,42 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           })}
         </ul>
       </nav>
+      {/*sub nav mobile */}
+      {subMenu && (
+        <nav className="bg-dark-gray fixed top-10 left-5 translate-x-1/12 translate-y-1/12 w-4/5 md:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
+          <ul className="flex gap-2 justify-between items-center flex-col">
+            {routes.map((route, i) => {
+              return (
+                <li
+                  key={i}
+                  className={`min-w-full min-h-16 p-0.5 group ${
+                    path.includes(route.url)
+                      ? "bg-sky-blue-border"
+                      : "hover:bg-sky-blue-border bg-dark-gray-bt border border-dark-border-gray"
+                  } rounded-full group`}
+                  onClick={() => {
+                    setSubMenu(false);
+                  }}
+                >
+                  <Link
+                    href={route.url}
+                    className={`px-6 py-3 h-[60px] ${
+                      path.includes(route.url)
+                        ? " bg-gradient-to-r from-sky-from to-sky-to"
+                        : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
+                    }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full  w-full`}
+                  >
+                    {route.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      )}
+
+      {/* notification */}
+      {isNotificationOpen && <Notification />}
       {isConnectorOpen && <WalletModal close={connectorHandler} />}
     </>
   );

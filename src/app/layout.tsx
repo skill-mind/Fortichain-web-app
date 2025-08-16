@@ -5,7 +5,7 @@ import "./globals.css"
     import localFont from 'next/font/local';
 import WalletProvider from "@/provider/walletProvider";
 
-    export const myCustomFont = localFont({
+    const myCustomFont = localFont({
       src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
       display: "swap", // Recommended for better performance
       weight: "500",
