@@ -25,9 +25,10 @@
   --color-sky-from:#1D74F9;
   --color-sky-to:#092650;
   --color-dark-gray-bt:#141414;
-
-/* 
-  --color-warning:#C1B700; */
+  --color-pririty-low-bg:#10273E;
+  --color-pririty-high-text:#EF4343;
+  --color-pririty-high-bg:#401D1D;
+  --color-warning-text:#C1B700; 
 
   /* margin */
   --spacing-sit-screen:1440px;
