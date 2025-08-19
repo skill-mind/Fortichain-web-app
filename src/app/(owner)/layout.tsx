@@ -12,7 +12,7 @@ export default function Layou({
           routeType="Project Owner Dashboard"
           routes={ownerRoute}
         />
-        <main className="max-w-sit-screen mx-auto py-7 sm:px-0 px-3">{children}</main>
+        <main className="max-w-sit-screen mx-auto py-7 px-3">{children}</main>
       </>
     );
 }
