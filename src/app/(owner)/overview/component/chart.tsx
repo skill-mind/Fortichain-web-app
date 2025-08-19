@@ -1,7 +1,6 @@
 "use client";
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 // Mock data matching the chart in the image
@@ -21,7 +20,9 @@ const chartConfig = {
   },
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+import type { TooltipProps } from "recharts";
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-dark-border-gray border-dark-gray-border p-2 shadow-sm">

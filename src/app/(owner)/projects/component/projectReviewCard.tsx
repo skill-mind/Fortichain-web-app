@@ -1,7 +1,6 @@
 import { Project } from "@/util/types";
 import Image from "next/image";
 import avatar from "../../../../../public/Ellipse 1.svg";
-import { Textarea } from "@/components/ui/textarea";
 import AuditRating from "./rating";
 
 export default function ProjectReviewCard({
@@ -306,7 +305,7 @@ export default function ProjectReviewCard({
             <li className="flex items-center gap-3">
               <span className="text-good text-lg">✓</span>
               <span>
-                Bug Bounty Program: Ironically, leverage Fortichain's own
+                Bug Bounty Program: Ironically, leverage Fortichain&apos;s own
                 platform for ongoing security incentives.
               </span>
             </li>
@@ -330,7 +329,7 @@ export default function ProjectReviewCard({
           <h3>Conclusion</h3>
           <p>
             The Fortichain smart contracts are well-designed with a focus on
-            decentralization and automation, aligning with the platform's
+            decentralization and automation, aligning with the platform&apos;s
             mission to improve Web3 security. While no critical issues were
             found, addressing the medium and low-severity findings will further
             strengthen the system. The team demonstrated responsiveness during
@@ -368,7 +367,7 @@ export default function ProjectReviewCard({
             </span>
           </div>
         </div>
-        <AuditRating/>
+        <AuditRating />
       </section>
     </div>
   );

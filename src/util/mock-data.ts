@@ -1,5 +1,4 @@
 import type { Project, User, Report, Finding } from "./types";
-import log from "../../public/Ellipse 1.svg"
 
 export const mockUsers: User[] = [
   {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
 import { useState } from "react";
-import { Bell, EllipsisVertical, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import { formatAddress } from "@/util/helper";
 import Image from "next/image";

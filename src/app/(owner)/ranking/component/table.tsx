@@ -1,9 +1,3 @@
-"use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Search, Bell, Settings, ChevronDown } from "lucide-react";
-
 // Mock data for the researchers ranking
 const researchersData = [
   {
@@ -137,7 +131,7 @@ export default function Table({type}:{type:string}) {
             </tr>
           </thead>
           <tbody>
-            {researchersData.map((researcher, index) => (
+            {researchersData.map(researcher => (
               <tr
                 key={researcher.rank}
                 className={`border-b border-dark-border-gray last:border-b-0 transition-colors `}
