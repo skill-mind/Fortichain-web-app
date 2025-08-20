@@ -28,7 +28,7 @@ export default function Page() {
         : "Summary";
   return (
     <div>
-      <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center">
+      <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center text-base">
         <li className="grid gap-4">
           <span>Submit New Project</span>
           <span className={`bg-blue-ball h-1.5 w-full block rounded-full`} />
@@ -44,10 +44,10 @@ export default function Page() {
       </nav>
 
       <form className="max-w-[750px] mx-auto mt-7 p-6 rounded-[8px] border border-dark-border-gray grid gap-5">
-        <div className="mb-3 grid gap-3">
+        <div className="mb-3 text-18 grid gap-3">
           <h2>{header}</h2>
           {formsection == 2 && (
-            <p className="text-gray-text">
+            <p className="text-gray-text text-base">
               Add funds to your bounty escrow account to pay for audit.
             </p>
           )}

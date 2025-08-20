@@ -32,12 +32,12 @@ export default function Card({ type }: { type: string }) {
                                       );
     return (
       <div className="bg-dark-gray p-6 rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-18">
           <h3>{text}</h3>
 {icon}
         </div>
         <h2 className="text-2xl">{value}</h2>
-        <span className={`${bg} bg-good-bg rounded-full px-3 py-1 w-fit`}>
+        <span className={`${bg} bg-good-bg rounded-full px-3 py-1 w-fit text-12`}>
           {btText}
         </span>
       </div>

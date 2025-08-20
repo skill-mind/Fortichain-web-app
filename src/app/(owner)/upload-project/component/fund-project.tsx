@@ -14,10 +14,10 @@ import { useAccount } from "@starknet-react/core";
 export default function FundProject({ setFormData,data }: { setFormData: React.Dispatch<React.SetStateAction<UploadProjectProps>>,data:UploadProjectProps }) {
     const { address } = useAccount();
     return (
-      <section className="grid gap-5">
+      <section className="grid gap-5 text-base">
         <div className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-2.5">
           <h3>Connected Wallet</h3>
-          <h5 className="text-gray-text">{address}</h5>
+          <h5 className="text-gray-text text-sm">{address}</h5>
         </div>
         <div className="grid gap-2">
           <label htmlFor="">Amount (USD)</label>
@@ -66,7 +66,7 @@ export default function FundProject({ setFormData,data }: { setFormData: React.D
         </div>
         <div className="rounded-[8px] p-6 grid gap-2.5 bg-dark-gray ">
           <h3>Escrow Protection</h3>
-          <h5 className="text-gray-text">
+          <h5 className="text-gray-text text-base">
             Funds are held securely in escrow and only released when valid
             vulnerabilities are confirmed and bounties are awarded.
           </h5>

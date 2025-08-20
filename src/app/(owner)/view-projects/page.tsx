@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockProjects } from "@/util/mock-data";
-import ProjectCard from "./component/project-card";
+import ProjectCard from "../../../components/project-card";
 import { useState } from "react";
 import { Project } from "@/util/types";
 import { FileCode, FileMinus, X } from "lucide-react";
@@ -61,60 +61,60 @@ export default function Page() {
           <>
             <div className="md:grid flex flex-col gap-y-3 bg-dark-gray border border-dark-border-gray rounded-[8px] h-fit px-6 py-3 w-full">
               <div className="flex justify-between items-center capitalize">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 text-base">
                   <span className="rounded-full bg-blue-ball w-1 h-1" />
                   <h5>{selectedProject.status}</h5>
                 </div>
 
-                <div className="rounded-full bg-dark-gray-pop w-fit p-1">
+                {/* <div className="rounded-full bg-dark-gray-pop w-fit p-1">
                   <X />
-                </div>
+                </div> */}
               </div>
               <div className="pb-6 flex flex-wrap gap-y-3 md:gap-y-0 items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Image src={avatar} alt="pririty type" />
-                  <h3>{selectedProject.name}</h3>
+                  <h3 className="text-18">{selectedProject.title}</h3>
                 </div>
-                <div className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1">
-                  <span className="text-gray-text border-r border-gray-text pr-2">
+                <div className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1 items-center">
+                  <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
                     Bounty amount
                   </span>
-                  <span className="">${selectedProject.bountyAmount}</span>
+                  <span className="text-18">${selectedProject.bountyAmount}</span>
                 </div>
               </div>
-              <div className=" border-b border-dark-border-gray flex items-center gap-1 pb-8">
+              <div className=" border-b text-sm border-dark-border-gray flex items-center gap-1 pb-8">
                 <span className="text-gray-text">Deadline:</span>
                 <span className="bg-dark-gray-pop rounded-full px-3 py-1">
                   {selectedProject.deadline}
                 </span>
               </div>
               <div className="grid gap-3">
-                <h3 className="text-gray-text">Details</h3>
-                <p>{selectedProject.description}</p>
+                <h3 className="text-gray-text text-base">Details</h3>
+                <p className="text-sm">{selectedProject.description}</p>
               </div>
               <div className="grid gap-3">
                 <h3 className="text-gray-text">Links</h3>
                 <div className="flex flex-wrap gap-3 items-center">
-                  <button className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
+                  <button className="text-sm w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
                     <GithubIcon />
-                    <span className="text-base">GitHub Repo</span>
+                    <span >GitHub Repo</span>
                     <ArrowGray />
                   </button>
                   <button className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
                     <FileCode className="text-gray-text w-5" />
-                    <span className="text-base">Contract Address</span>
+                    <span>Contract Address</span>
                     <ArrowGray />
                   </button>
                   <button className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
                     <FileMinus className="text-gray-text w-5" />
-                    <span className="text-base">View Certificate</span>
+                    <span>View Certificate</span>
                   </button>
                 </div>
               </div>
 
               <div className="grid gap-3">
-                <h3 className="text-gray-text">Rewards</h3>
-                <p>
+                <h3 className="text-gray-text text-base">Rewards</h3>
+                <p className="text-sm">
                   Rewards would be paid on successful completion by validator
                 </p>
               </div>

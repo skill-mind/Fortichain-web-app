@@ -53,7 +53,7 @@ export interface Report {
 
 export interface Project {
   id: string;
-  name: string;
+  title: string;
   description: string;
   status: ProjectStatus;
   priority: Priority;

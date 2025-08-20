@@ -12,13 +12,13 @@ export default function Page() {
       </div>
       <div className="w-fit gap-3 mt-3 grid-cols-1 grid md:grid-cols-2">
         <div className="bg-dark-gray rounded-[8px] order-1">
-          <h3 className="p-3"> Report History</h3>
+          <h3 className="text-18 p-6"> Report History</h3>
           <ReportHistoryChart />
         </div>
         <div className="bg-dark-gray h-full rounded-[8px] md:order-1 p-6 self-end">
-          <h3>Note:</h3>
+          <h3 className="text-18">Note:</h3>
           <span className="text-gray-text">Quick tips to get you started.</span>
-          <ul className="list-disc grid gap-3 pl-3">
+          <ul className="list-disc grid gap-3 mt-3 pl-3 text-base">
             <li>Please fund the audit with USDT or USDC on Starknet chain.</li>
             <li>
               Security researchers and validators can proceed with the audit

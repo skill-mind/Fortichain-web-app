@@ -20,8 +20,8 @@ export const researcherRoute = [
     url: "/reputation",
   },
   {
-    label: "Messages",
-    url: "/messages",
+    label: "projects",
+    url: "/projects",
   },
 ];
 
@@ -86,7 +86,7 @@ export const ownerRoute = [
   },
   {
     label: "View Projects",
-    url: "/projects",
+    url: "/view-projects",
   },
   {
     label: "Ranking",

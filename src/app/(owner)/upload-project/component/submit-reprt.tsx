@@ -27,7 +27,7 @@ export default function SubmitReport({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="grid gap-4">
+    <div className="grid text-base gap-4">
       <div className="grid gap-2">
         <label htmlFor="">Project Name</label>
         <Input

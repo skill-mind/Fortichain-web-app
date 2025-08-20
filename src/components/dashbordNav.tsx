@@ -13,6 +13,7 @@ import ready from "../../public/Argent.svg";
 import bravoos from "../../public/braavos_icon.jpeg.svg";
 import { BellIcon } from "@/icons/bellIcon";
 import Notification from "./notification";
+import { WalletConnectorModal } from "@/provider/wallet-connector";
 
 export default function DashboardNavBar({ routeType, routes }: route) {
   const path = usePathname();
@@ -21,7 +22,6 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [subMenu, setSubMenu] = useState(false);
   const { address, isConnected, connector } = useAccount();
-  const { disconnect } = useDisconnect();
 
   console.log(connector?.id);
   function connectorHandler() {
@@ -51,7 +51,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           <button
             onClick={() => {
               setIsNotificationOpen((prev) => !prev);
-              setIsDisconnectOpen(false)
+              setIsDisconnectOpen(false);
               setSubMenu(false);
             }}
             className="bg-dark-gray text-2xl px-3 py-3 rounded-full text-white-text md:hidden"
@@ -68,7 +68,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                 onClick={() => {
                   setIsDisconnectOpen((prev) => !prev);
                   setSubMenu(false);
-                  setIsNotificationOpen(false)
+                  setIsNotificationOpen(false);
                 }}
               >
                 <span
@@ -87,88 +87,18 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   </span>
                 </span>
               </button>
-
-              {isDisconnectOpen && (
-                <div className="bg-dark-gray fixed top-16 right-3 translate-y-1/12 max-w-xl p-6 border border-dark-border-gray rounded-[8px] mt-7 w-4/5">
-                  <ul className="flex gap-2 justify-between items-center flex-col">
-                    <button
-                      className="w-full  min-h-16 p-1 sm:p-0.5 group             
-                 from-[#10273E] to-sky-blue-border
-                 bg-gradient-to-r group 
-             rounded-full group"
-                    >
-                      <span
-                        className="sm:px-6 sm:py-3
-                       bg-dark-gray
-                 flex items-center gap-2.5 p-1 justify-center cursor-pointer  rounded-full h-[60px] w-full"
-                      >
-                        {connector?.id == "argentX" && (
-                          <Image
-                            className="w-5"
-                            src={ready}
-                            alt="ready wallet"
-                          />
-                        )}
-                        {connector?.id == "braavos" && (
-                          <Image
-                            className="w-5"
-                            src={bravoos}
-                            alt="Braavos wallet"
-                          />
-                        )}
-                        <span className="">{formatAddress(address)}</span>
-                      </span>
-                    </button>
-                    <button
-                      className="w-full min-h-16 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                      onClick={() => {
-                        disconnect();
-                        setIsDisconnectOpen(false);
-                      }}
-                      type="button"
-                    >
-                      <span
-                        className="px-6 py-3
-                      group-hover:from-sky-from group-hover:to-sky-to
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-[60px] w-full"
-                      >
-                        Disconnect Wallet
-                      </span>
-                    </button>
-                  </ul>
-                </div>
-              )}
             </div>
           )}
-          {!isConnected && (
-            <button
-              className="min-w-157 min-h-50 p-0.5 group             
-                 bg-sky-blue-border
-                 hover:bg-sky-blue-border
-             rounded-full group"
-              onClick={connectorHandler}
-            >
-              <span
-                className="px-6 py-3
-                     from-sky-from to-sky-to
-                     bg-gradient-to-r
-                 flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-              >
-                Connect Wallet
-              </span>
-            </button>
-          )}
+
+          <WalletConnectorModal isDisconnectOpen={isDisconnectOpen} />
+
           <button
             onClick={() => {
               setSubMenu((prev) => !prev);
               setIsConnectorOpen(false);
               setIsDisconnectOpen(false);
             }}
-            className="bg-dark-gray px-3 py-3 rounded-full block md:hidden"
+            className="bg-dark-gray px-3 py-3 rounded-full block xl:hidden"
           >
             <MenuIcon />
           </button>
@@ -176,7 +106,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
       </nav>
       <span className="border-b border-dark-border-gray h-1px w-full block" />
       {/* sub nav Desktop */}
-      <nav className="bg-dark-gray mx-auto max-w-fit  p-1 rounded-full mt-7 hidden md:block">
+      <nav className="bg-dark-gray mx-auto max-w-fit  p-1 rounded-full mt-7 hidden xl:block">
         <ul className="flex justify-between items-center">
           {routes.map((route, i) => {
             return (

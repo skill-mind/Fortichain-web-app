@@ -6,7 +6,7 @@ export default function Page() {
       <h1 className="text-6xl font-medium">
         Empowering Decentralized Vulnerability Disclosure
       </h1>
-      <h1 className="text-6xl font-medium font-walsheim">
+      <h1 className="text-6xl font-normal font-walsheim">
         Empowering Decentralized Vulnerability Disclosure
       </h1>
       <p className={`w-2xl mx-auto font-walsheim`}>

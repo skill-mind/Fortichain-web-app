@@ -79,7 +79,7 @@ export default function Table({type}:{type:string}) {
     <div className="border px-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[650px]">
       <div className="overflow-x-auto scrollbar-hide">
         <table
-          className="w-full min-w-[600px] sticky"
+          className="w-full min-w-[600px] sticky text-base"
           role="table"
           aria-label="Researchers ranking table"
         >

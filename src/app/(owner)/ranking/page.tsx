@@ -7,7 +7,7 @@ export default function Page() {
  
   return (
     <section>
-      <div className="bg-dark-gray rounded-full p-1 w-fit mb-8">
+      <div className="bg-dark-gray rounded-full p-1 w-fit mb-8 text-base">
         <button
           onClick={() => {
             setType("researcher");
@@ -34,7 +34,7 @@ export default function Page() {
         </button>
       </div>
 
-      <h1 className="text-white mb-3">
+      <h1 className="text-white mb-3 text-18">
         {type === "researcher" ? "Researchers Ranking" : "Validators Ranking"}
       </h1>
       <Table type={type} />

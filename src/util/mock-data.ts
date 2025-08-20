@@ -105,7 +105,7 @@ export const mockReports: Report[] = [
 export const mockProjects: Project[] = [
   {
     id: "1",
-    name: "Smart contract audit",
+    title: "Smart contract audit",
     description:
       "Smart Contract Audit is a planned, thorough evaluation of a smart contract’s codebase, designed to equip researchers with a clear framework for assessing its security, functionality, and efficiency within the Mindblitz ecosystem or related blockchain applications. The audit, to be conducted by specialized security experts, will utilize automated analysis tools and in-depth manual code review to uncover potential vulnerabilities, logical errors, or inefficiencies that could lead to exploits or operational issues. Researchers will focus on verifying the contract’s alignment with its specified requirements, compliance with blockchain industry best practices, and robustness against common attack vectors, such as reentrancy, integer overflows, or unauthorized access. The process will result in a detailed report that identifies any issues, evaluates their severity, and provides actionable recommendations for remediation, enabling researchers to ensure the smart contract’s reliability, security, and trustworthiness prior to its deployment in decentralized systems.",
     status: "audited",
@@ -123,7 +123,7 @@ export const mockProjects: Project[] = [
   },
   {
     id: "2",
-    name: "Funding Function audit",
+    title: "Funding Function audit",
     description:
       "Comprehensive audit of the funding mechanism smart contract to ensure security and efficiency.",
     status: "in-progress",
@@ -136,3 +136,77 @@ export const mockProjects: Project[] = [
     createdAt: "2025-08-10",
   },
 ];
+
+export const mockResercher: ProjectCard[] = [
+  {
+    id: "1",
+    title: "Smart contract audit",
+    status: "Available",
+    priority: "Low",
+    deadline: "17th - Aug - 2025",
+  },
+  {
+    id: "2",
+    title: "Funding Function audit",
+    status: "Completed",
+    priority: "High",
+    deadline: "17th - Aug - 2025",
+  },
+  {
+    id: "3",
+    title: "Strategy Review",
+    status: "Completed",
+    priority: "Medium",
+    deadline: "5th - Sep - 2025",
+  },
+  {
+    id: "4",
+    title: "User Experience Testing",
+    status: "Available",
+    priority: "High",
+    deadline: "22nd - Jul - 2025",
+  },
+  {
+    id: "5",
+    title: "Quarterly Financial Report",
+    status: "Completed",
+    priority: "Low",
+    deadline: "30th - Oct - 2025",
+  },
+  {
+    id: "6",
+    title: "Product Launch Plan",
+    status: "Available",
+    priority: "High",
+    deadline: "15th - Nov - 2025",
+  },
+  {
+    id: "7",
+    title: "Analysis",
+    status: "Completed",
+    priority: "Low",
+    deadline: "10th - Dec - 2025",
+  },
+  {
+    id: "8",
+    title: "Social Media Campaign",
+    status: "Available",
+    priority: "Medium",
+    deadline: "25th - Jan - 2026",
+  },
+  {
+    id: "9",
+    title: "Performance Evaluation",
+    status: "Available",
+    priority: "Medium",
+    deadline: "30th - Mar - 2026",
+  },
+];
+
+export interface ProjectCard {
+  id: string;
+  title: string;
+  status: string;
+  priority: string;
+  deadline: string;
+}
