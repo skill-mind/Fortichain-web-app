@@ -1,5 +1,5 @@
 import DashboardNavBar from "@/components/dashbordNav"
-import { ownerRoute } from "@/util/route";
+import { ownerRoute, researcherRoute } from "@/util/route";
 
 export default function Layou({
   children,
@@ -10,7 +10,7 @@ export default function Layou({
       <>
         <DashboardNavBar
           routeType="Project Owner Dashboard"
-          routes={ownerRoute}
+          routes={researcherRoute}
         />
         <main className="max-w-sit-screen mx-auto py-7 px-3">{children}</main>
       </>

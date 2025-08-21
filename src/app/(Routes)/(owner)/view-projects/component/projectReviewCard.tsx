@@ -1,6 +1,6 @@
 import { Project } from "@/util/types";
 import Image from "next/image";
-import avatar from "../../../../../public/Ellipse 1.svg";
+import avatar from "../../../../../../public/Ellipse 1.svg";
 import AuditRating from "./rating";
 
 export default function ProjectReviewCard({

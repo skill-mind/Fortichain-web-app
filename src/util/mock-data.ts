@@ -210,3 +210,66 @@ export interface ProjectCard {
   priority: string;
   deadline: string;
 }
+export type CardPriority = "Low" | "Medium" | "High";
+export interface DetailedProjectCard {
+  id: string;
+  title: string;
+  status: "Audited" | "In Progress";
+  priority: CardPriority;
+  description: string;
+  deadline: string;
+  submittedDate: string;
+  commentCount: number;
+  actionButton: "Go to Project" | "Edit Report";
+}
+
+export const detailedProjectsData: DetailedProjectCard[] = [
+  {
+    id: "1",
+    title: "Smart contract audit",
+    status: "Audited",
+    priority: "Low",
+    description:
+      "SQL injection vulnerability in user profile update functionality allowing data exfiltration.",
+    deadline: "17th - Aug - 2025",
+    submittedDate: "17th - Aug - 2025",
+    commentCount: 4,
+    actionButton: "Go to Project",
+  },
+  {
+    id: "2",
+    title: "Platform migration",
+    status: "In Progress",
+    priority: "Medium",
+    description:
+      "Migration to new hosting service for improved performance and scalability.",
+    deadline: "30th - Sep - 2025",
+    submittedDate: "10th - Sep - 2025",
+    commentCount: 3,
+    actionButton: "Edit Report",
+  },
+  {
+    id: "3",
+    title: "User interface redesign",
+    status: "In Progress",
+    priority: "High",
+    description:
+      "Complete overhaul of the user interface to enhance user experience.",
+    deadline: "22nd - Oct - 2025",
+    submittedDate: "01st - Oct - 2025",
+    commentCount: 5,
+    actionButton: "Edit Report",
+  },
+  {
+    id: "4",
+    title: "New feature implementation",
+    status: "Audited",
+    priority: "High",
+    description:
+      "Implementation of dark mode feature based on user feedback and requests.",
+    deadline: "12th - Nov - 2025",
+    submittedDate: "12th - Nov - 2025",
+    commentCount: 2,
+    actionButton: "Go to Project",
+  },
+];

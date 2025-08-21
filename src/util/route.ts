@@ -4,24 +4,20 @@ export const researcherRoute = [
     url: "/researcher",
   },
   {
-    label: "Submit Report",
-    url: "/reports",
+    label: "projects",
+    url: "/projects",
   },
   {
     label: "My Report",
     url: "/my-reports",
   },
   {
-    label: "Earnings",
-    url: "/earnings",
+    label: "Ranking",
+    url: "/ranking",
   },
   {
-    label: "Reputation",
-    url: "/reputation",
-  },
-  {
-    label: "projects",
-    url: "/projects",
+    label: "Profile",
+    url: "/researcher-profile",
   },
 ];
 

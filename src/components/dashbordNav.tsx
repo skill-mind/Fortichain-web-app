@@ -23,7 +23,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const [subMenu, setSubMenu] = useState(false);
   const { address, isConnected, connector } = useAccount();
 
-  console.log(connector?.id);
+  // console.log(path);
   function connectorHandler() {
     setIsConnectorOpen((isConnect) => !isConnect);
     setSubMenu(false);
@@ -113,7 +113,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
               <li
                 key={i}
                 className={`min-w-157 min-h-50 p-0.5 group ${
-                  path.includes(route.url)
+                  path===route.url
                     ? "bg-sky-blue-border"
                     : "hover:bg-sky-blue-border"
                 } rounded-full group`}
@@ -121,7 +121,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                 <Link
                   href={route.url}
                   className={`px-6 py-3 ${
-                    path.includes(route.url)
+                    path ===route.url
                       ? " bg-gradient-to-r from-sky-from to-sky-to"
                       : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
                   }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full`}
@@ -135,14 +135,14 @@ export default function DashboardNavBar({ routeType, routes }: route) {
       </nav>
       {/*sub nav mobile */}
       {subMenu && (
-        <nav className="bg-dark-gray fixed top-10 left-5 translate-x-1/12 translate-y-1/12 w-4/5 md:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
+        <nav className="bg-dark-gray fixed top-10 left-5 translate-x-1/12 translate-y-1/12 w-4/5 xl:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
           <ul className="flex gap-2 justify-between items-center flex-col">
             {routes.map((route, i) => {
               return (
                 <li
                   key={i}
                   className={`min-w-full min-h-16 p-0.5 group ${
-                    path.includes(route.url)
+                    path===route.url
                       ? "bg-sky-blue-border"
                       : "hover:bg-sky-blue-border bg-dark-gray-bt border border-dark-border-gray"
                   } rounded-full group`}
@@ -153,7 +153,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   <Link
                     href={route.url}
                     className={`px-6 py-3 h-[60px] ${
-                      path.includes(route.url)
+                      path===route.url
                         ? " bg-gradient-to-r from-sky-from to-sky-to"
                         : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
                     }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full  w-full`}
