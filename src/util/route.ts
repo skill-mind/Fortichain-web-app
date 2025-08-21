@@ -6,7 +6,7 @@ export const researcherRoute = [
   {
     label: "projects",
     url: "/projects",
-  },
+  }, 
   {
     label: "My Report",
     url: "/my-reports",
