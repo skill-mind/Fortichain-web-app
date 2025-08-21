@@ -1,10 +1,17 @@
-
-
-
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
+    // Example: app/layout.tsx or a component file
+    import localFont from 'next/font/local';
+import WalletProvider from "@/provider/walletProvider";
 
+    const myCustomFont = localFont({
+      src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
+      display: "swap", // Recommended for better performance
+      weight: "500",
+      style: "medieum",
+      variable: "--font-walsheim",
+    });
 
 
 export const metadata: Metadata = {
@@ -86,12 +93,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-      
-      </head>
-          <body className="bg-[#0F0A0AFA]">
-         {children}
-       </body>
+      <head></head>
+      <body
+        className={`text-white-text mx-auto h-screen bg-main-bg ${myCustomFont.variable}`}
+      >
+        <WalletProvider>{children}</WalletProvider>
+      </body>
     </html>
-  )
+  );
 }
