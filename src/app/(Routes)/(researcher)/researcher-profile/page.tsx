@@ -1,11 +1,10 @@
-import { Badge } from "@/icons/github";
-import { badgesData } from "@/util/mock-data";
-import Table from "../../ranking/component/table";
+import { withdrawalData } from "@/util/mock-data";
+import { WidthrawTable } from "./component/WidthrawTable";
 
 export default function Page() {
   return (
     <section className="grid gap-3">
-      <div className=" grid grid-cols-3 gap-3">
+      <div className=" grid md:grid-cols-2 grid-cols-1 xl:grid-cols-3 gap-3">
         <div className="rounded-[8px] p-6 border border-dark-border-gray bg-dark-gray flex flex-col gap-3">
           <h3>Bounty Reward</h3>
           <div className="grid gap-3  bg-dark-gray-pop rounded-[8px] p-6">
@@ -34,10 +33,10 @@ export default function Page() {
 
         <div className="">
           <div className="rounded-[8px] p-6 border border-dark-border-gray h-full bg-dark-gray flex flex-col gap-3">
-            <h3>Bounty Reward</h3>
+            <h3>Paid Out</h3>
             <div className="grid gap-3  bg-dark-gray-pop rounded-[8px] p-6">
               <h4 className="text-gray-text text-base">
-                Total amount made from bounty
+                Total amount withdrawn
               </h4>
               <h2 className="text-2xl">$9,650</h2>
             </div>
@@ -48,11 +47,11 @@ export default function Page() {
 
         <div className="grid">
           <div className="rounded-[8px] p-6 border border-dark-border-gray bg-dark-gray flex flex-col gap-3 justify-between">
-            <div>
-              <h3>Bounty Reward</h3>
+            <div className="grid gap-3">
+              <h3>Available Bounty for Withdrawal</h3>
               <div className="grid gap-3  bg-dark-gray-pop rounded-[8px] p-6">
                 <h4 className="text-gray-text text-base">
-                  Total amount made from bounty
+                  Available to withdraw
                 </h4>
                 <h2 className="text-2xl">$9,650</h2>
               </div>
@@ -77,48 +76,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="bg-dark-gray p-6 rounded-[8px] grid gap-3">
-        <h3 className="text-18">Badges and Achievements</h3>
-        <div className="grid grid-cols-4 gap-3">
-          {badgesData.map((data) => {
-            const percentage = `w-[${data.progress}%]`;
-            console.log(percentage)
-            return (
-              <div key={data.id}  className="bg-dark-gray-pop border border-dark-border-gray p-6 flex items-center gap-2 flex-col rounded-[8px]">
-                <div className="bg-pririty-low-bg rounded-full p-2 grid place-content-center w-fit">
-                  <Badge />
-                </div>
-                <h3>{data.title}</h3>
-
-                {data.status !== "In Progress" && (
-                  <span
-                    className={`bg-good-bg text-good rounded-full px-3 py-1 w-fit text-12`}
-                  >
-                    {data.status}
-                  </span>
-                )}
-                {data.status !== "In Progress" && (
-                  <h3 className="text-gray-text text-sm mt-6">
-                    {data.description}
-                  </h3>
-                )}
-                {data.status === "In Progress" && (
-                  <div className="w-full text-gray-text">
-                    <span className="text-sm"> {data.description}</span>
-                    <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                      <span
-                        className={`bg-blue-ball rounded-full w-[40%] block h-1.5`}
-                      />
-                    </span>
-                    <span className="text-12">{data.progress}% Completed</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <Table type=""/>
+<WidthrawTable/>
     </section>
   );
 }
