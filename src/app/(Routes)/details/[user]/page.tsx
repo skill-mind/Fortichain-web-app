@@ -1,5 +1,5 @@
 import Image from "next/image";
-import avatar from "../../../../public/Ellipse 1.svg";
+import avatar from "../../../../..//public/Ellipse 1.svg";
 import ValidatorResearcherCard from "./component/validator-researcher-card";
 export default function Page() {
   return (
