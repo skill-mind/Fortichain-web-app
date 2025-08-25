@@ -116,7 +116,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   path===route.url
                     ? "bg-sky-blue-border"
                     : "hover:bg-sky-blue-border"
-                } rounded-full group`}
+                } rounded-full group mx-1`}
               >
                 <Link
                   href={route.url}

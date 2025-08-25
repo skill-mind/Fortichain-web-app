@@ -1,6 +1,6 @@
 import { DetailedProjectCard } from "@/util/mock-data";
 import Image from "next/image";
-import avatar from "../../../../../../public/Ellipse 1.svg"
+import avatar from "../../public/Ellipse 1.svg"
 import { Message } from "@/icons/github";
 
 export default function ReportCard({ project }: { project: DetailedProjectCard}) {

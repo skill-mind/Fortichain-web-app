@@ -45,7 +45,7 @@ export function SubmitReport({
                     Priority: {data.priority}
                   </span>
                 </div>
-                <div className="text-sm text-gray-text flex items-center">
+                <div className="text-sm text-gray-text flex items-center ">
                   <Timer />
                   <span>{data.timestamp}</span>
                 </div>
@@ -109,7 +109,7 @@ export function SubmitReport({
       hover:from-sky-blue-border hover:to-sky-blue-border
       bg-gradient-to-r group to-[#312F2F] from-[#212121]
   rounded-full group hidden sm:block"
-        href="/projects"
+        href="/assigned-project"
       >
         <span
           className="px-6 py-3 text-sm
@@ -315,7 +315,7 @@ export function Earnings({
           </span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
+      {/* <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
         <div className="flex justify-between items-center">
           <h3>Achievements</h3>
           <div className="flex justify-between items-center text-gray-text">
@@ -332,7 +332,7 @@ export function Earnings({
             <span className="text-gray-text">85%+ accuracy for 3 months</span>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

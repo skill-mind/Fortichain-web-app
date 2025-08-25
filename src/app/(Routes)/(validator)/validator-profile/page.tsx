@@ -76,7 +76,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-<WidthrawTable/>
+      <WidthrawTable />
     </section>
   );
 }

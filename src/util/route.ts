@@ -24,23 +24,23 @@ export const researcherRoute = [
 export const validatorRoute = [
   {
     label: "Overview",
-    url: "/overview",
+    url: "/validator",
   },
   {
-    label: "Review Queue",
-    url: "review",
+    label: "Report",
+    url: "/validator-reports",
   },
   {
-    label: "My Votes",
-    url: "vote",
+    label: "Assigned Projects",
+    url: "/assigned-projects",
   },
   {
-    label: "Disputes",
-    url: "dispute",
+    label: "Ranking",
+    url: "/ranking",
   },
   {
-    label: "Performance",
-    url: "performance",
+    label: "Profile",
+    url: "/validator-profile",
   },
 ];
 

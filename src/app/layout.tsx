@@ -1,19 +1,18 @@
-import type React from "react"
-import type { Metadata } from "next"
-import "./globals.css"
-    // Example: app/layout.tsx or a component file
-    import localFont from 'next/font/local';
+import type React from "react";
+import type { Metadata } from "next";
+import "./globals.css";
+// Example: app/layout.tsx or a component file
+import localFont from "next/font/local";
 import WalletProvider from "@/provider/walletProvider";
-import logo from "../../public/Logo.svg"
+import logo from "../../public/Logo (2).svg";
 
-    const myCustomFont = localFont({
-      src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
-      display: "swap", // Recommended for better performance
-      weight: "500",
-      style: "medieum",
-      variable: "--font-walsheim",
-    });
-
+const myCustomFont = localFont({
+  src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
+  display: "swap", // Recommended for better performance
+  weight: "500",
+  style: "medieum",
+  variable: "--font-walsheim",
+});
 
 export const metadata: Metadata = {
   title: "FortiChain - Decentralized Blockchain Security Platform",
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "FortiChain",
     images: [
       {
-        url: "../../public/Logo (2).svg",
+        url: "/favicon.svg",
         width: 1200,
         height: 630,
         alt: "FortiChain - Decentralized Blockchain Security Platform",
@@ -84,23 +83,23 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "../../public/Logo.svg" },
+      { url: "/favicon.svg" },
       {
-        url: "../../public/Logo.svg",
+        url: "/favicon.svg",
         sizes: "192x192",
-        type: "image/svg",
+        type: "image/svg+xml",
       },
       {
-        url: "../../public/Logo.svg",
+        url: "/favicon.svg",
         sizes: "512x512",
-        type: "image/svg",
+        type: "image/svg+xml",
       },
     ],
     apple: [
       {
-        url: "../../public/Logo.svg",
+        url: "/favicon.svg",
         sizes: "180x180",
-        type: "image/svg",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -109,11 +108,10 @@ export const metadata: Metadata = {
     yandex: "your-yandex-verification-code",
   },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
