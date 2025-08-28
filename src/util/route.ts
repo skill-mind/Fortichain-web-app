@@ -4,47 +4,43 @@ export const researcherRoute = [
     url: "/researcher",
   },
   {
-    label: "Submit Report",
-    url: "/reports",
+    label: "projects",
+    url: "/projects",
   },
   {
     label: "My Report",
     url: "/my-reports",
   },
   {
-    label: "Earnings",
-    url: "/earnings",
+    label: "Ranking",
+    url: "/ranking",
   },
   {
-    label: "Reputation",
-    url: "/reputation",
-  },
-  {
-    label: "projects",
-    url: "/projects",
+    label: "Profile",
+    url: "/researcher-profile",
   },
 ];
 
 export const validatorRoute = [
   {
     label: "Overview",
-    url: "/overview",
+    url: "/validator",
   },
   {
-    label: "Review Queue",
-    url: "review",
+    label: "Report",
+    url: "/validator-reports",
   },
   {
-    label: "My Votes",
-    url: "vote",
+    label: "Assigned Projects",
+    url: "/assigned-projects",
   },
   {
-    label: "Disputes",
-    url: "dispute",
+    label: "Ranking",
+    url: "/ranking",
   },
   {
-    label: "Performance",
-    url: "performance",
+    label: "Profile",
+    url: "/validator-profile",
   },
 ];
 
@@ -78,11 +74,11 @@ export const adminRoute = [
 export const ownerRoute = [
   {
     label: "Overview",
-    url: "overview",
+    url: "/overview",
   },
   {
     label: "Upload Project",
-    url: "upload-project",
+    url: "/upload-project",
   },
   {
     label: "View Projects",

@@ -1,7 +1,9 @@
 export type route = {
-  routeType: string;
-  routes: {
-    label: string;
-    url: string;
-  }[];
+  routeType: string | null;
+  routes:
+    | {
+        label: string;
+        url: string;
+      }[]
+    | null;
 };

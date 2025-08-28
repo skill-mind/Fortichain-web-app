@@ -2,9 +2,9 @@
 import { route } from "@/types/types";
 import Logo from "../../public/Logo.svg";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { MenuIcon } from "lucide-react";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import { formatAddress } from "@/util/helper";
@@ -14,6 +14,7 @@ import bravoos from "../../public/braavos_icon.jpeg.svg";
 import { BellIcon } from "@/icons/bellIcon";
 import Notification from "./notification";
 import { WalletConnectorModal } from "@/provider/wallet-connector";
+import { Router } from "@/provider/route-provider";
 
 export default function DashboardNavBar({ routeType, routes }: route) {
   const path = usePathname();
@@ -22,8 +23,8 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [subMenu, setSubMenu] = useState(false);
   const { address, isConnected, connector } = useAccount();
-
-  console.log(connector?.id);
+  const { setter } = useContext(Router);
+  // console.log(path);
   function connectorHandler() {
     setIsConnectorOpen((isConnect) => !isConnect);
     setSubMenu(false);
@@ -32,7 +33,16 @@ export default function DashboardNavBar({ routeType, routes }: route) {
     <>
       <nav className="capitalize font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center px-3 sm:px-3">
         <ul className="flex justify-between items-center gap-4">
-          <Image src={Logo} alt="Forticahin Logo" />
+          <div
+            onClick={() => {
+              setter((prev) => {
+                return { ...prev, isComplete: false, route: "none" };
+              });
+              redirect("/");
+            }}
+          >
+            <Image src={Logo} alt="Forticahin Logo" />
+          </div>
           <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
             {routeType}
           </li>
@@ -108,61 +118,63 @@ export default function DashboardNavBar({ routeType, routes }: route) {
       {/* sub nav Desktop */}
       <nav className="bg-dark-gray mx-auto max-w-fit  p-1 rounded-full mt-7 hidden xl:block">
         <ul className="flex justify-between items-center">
-          {routes.map((route, i) => {
-            return (
-              <li
-                key={i}
-                className={`min-w-157 min-h-50 p-0.5 group ${
-                  path.includes(route.url)
-                    ? "bg-sky-blue-border"
-                    : "hover:bg-sky-blue-border"
-                } rounded-full group`}
-              >
-                <Link
-                  href={route.url}
-                  className={`px-6 py-3 ${
-                    path.includes(route.url)
-                      ? " bg-gradient-to-r from-sky-from to-sky-to"
-                      : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
-                  }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full`}
-                >
-                  {route.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-      {/*sub nav mobile */}
-      {subMenu && (
-        <nav className="bg-dark-gray fixed top-10 left-5 translate-x-1/12 translate-y-1/12 w-4/5 md:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
-          <ul className="flex gap-2 justify-between items-center flex-col">
-            {routes.map((route, i) => {
+          {routes &&
+            routes.map((route, i) => {
               return (
                 <li
                   key={i}
-                  className={`min-w-full min-h-16 p-0.5 group ${
-                    path.includes(route.url)
+                  className={`min-w-157 min-h-50 p-0.5 group ${
+                    path === route.url
                       ? "bg-sky-blue-border"
-                      : "hover:bg-sky-blue-border bg-dark-gray-bt border border-dark-border-gray"
-                  } rounded-full group`}
-                  onClick={() => {
-                    setSubMenu(false);
-                  }}
+                      : "hover:bg-sky-blue-border"
+                  } rounded-full group mx-1`}
                 >
                   <Link
                     href={route.url}
-                    className={`px-6 py-3 h-[60px] ${
-                      path.includes(route.url)
+                    className={`px-6 py-3 ${
+                      path === route.url
                         ? " bg-gradient-to-r from-sky-from to-sky-to"
                         : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
-                    }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full  w-full`}
+                    }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full`}
                   >
                     {route.label}
                   </Link>
                 </li>
               );
             })}
+        </ul>
+      </nav>
+      {/*sub nav mobile */}
+      {subMenu && (
+        <nav className="bg-dark-gray fixed top-10 left-5 translate-x-1/12 translate-y-1/12 w-4/5 xl:hidden p-6 border border-dark-border-gray rounded-[8px] mt-7">
+          <ul className="flex gap-2 justify-between items-center flex-col">
+            {routes &&
+              routes.map((route, i) => {
+                return (
+                  <li
+                    key={i}
+                    className={`min-w-full min-h-16 p-0.5 group ${
+                      path === route.url
+                        ? "bg-sky-blue-border"
+                        : "hover:bg-sky-blue-border bg-dark-gray-bt border border-dark-border-gray"
+                    } rounded-full group`}
+                    onClick={() => {
+                      setSubMenu(false);
+                    }}
+                  >
+                    <Link
+                      href={route.url}
+                      className={`px-6 py-3 h-[60px] ${
+                        path === route.url
+                          ? " bg-gradient-to-r from-sky-from to-sky-to"
+                          : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
+                      }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full  w-full`}
+                    >
+                      {route.label}
+                    </Link>
+                  </li>
+                );
+              })}
           </ul>
         </nav>
       )}

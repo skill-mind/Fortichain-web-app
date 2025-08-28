@@ -7,12 +7,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockProjects } from "@/util/mock-data";
-import ProjectCard from "../../../components/project-card";
+import ProjectCard from "../../../../components/project-card";
 import { useState } from "react";
 import { Project } from "@/util/types";
 import { FileCode, FileMinus, X } from "lucide-react";
 import Image from "next/image";
-import avatar from "../../../../public/Ellipse 1.svg";
+import avatar from "../../../../../public/Ellipse 1.svg";
 import { ArrowGray, GithubIcon } from "@/icons/github";
 import ProjectReviewCard from "./component/projectReviewCard";
 
@@ -79,7 +79,9 @@ export default function Page() {
                   <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
                     Bounty amount
                   </span>
-                  <span className="text-18">${selectedProject.bountyAmount}</span>
+                  <span className="text-18">
+                    ${selectedProject.bountyAmount}
+                  </span>
                 </div>
               </div>
               <div className=" border-b text-sm border-dark-border-gray flex items-center gap-1 pb-8">
@@ -97,7 +99,7 @@ export default function Page() {
                 <div className="flex flex-wrap gap-3 items-center">
                   <button className="text-sm w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
                     <GithubIcon />
-                    <span >GitHub Repo</span>
+                    <span>GitHub Repo</span>
                     <ArrowGray />
                   </button>
                   <button className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]">
