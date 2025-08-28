@@ -6,7 +6,7 @@ export const researcherRoute = [
   {
     label: "projects",
     url: "/projects",
-  }, 
+  },
   {
     label: "My Report",
     url: "/my-reports",
@@ -74,11 +74,11 @@ export const adminRoute = [
 export const ownerRoute = [
   {
     label: "Overview",
-    url: "overview",
+    url: "/overview",
   },
   {
     label: "Upload Project",
-    url: "upload-project",
+    url: "/upload-project",
   },
   {
     label: "View Projects",

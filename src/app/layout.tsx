@@ -5,6 +5,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import WalletProvider from "@/provider/walletProvider";
 import logo from "../../public/Logo (2).svg";
+import RouteProvider from "@/provider/route-provider";
 
 const myCustomFont = localFont({
   src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
@@ -117,9 +118,17 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body
-        className={`text-white-text mx-auto h-screen bg-main-bg ${myCustomFont.variable}`}
+        className={`text-white-text relative mx-auto min-h-screen bg-main-bg ${myCustomFont.variable}`}
       >
-        <WalletProvider>{children}</WalletProvider>
+        <RouteProvider>
+          <WalletProvider>{children}</WalletProvider>
+        </RouteProvider>
+
+        <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit border-dark-border-gray absolute">
+          <span className="text-gray-text text-base">
+            © 2025 FortiChain. All rights reserved. Built on Starknet.
+          </span>
+        </footer>
       </body>
     </html>
   );
