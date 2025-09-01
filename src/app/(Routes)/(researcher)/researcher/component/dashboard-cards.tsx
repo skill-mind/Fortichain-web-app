@@ -1,4 +1,4 @@
-import { Badge } from "@/icons/github";
+import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
 import {
   ArrowRight,

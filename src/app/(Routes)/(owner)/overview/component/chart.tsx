@@ -22,21 +22,21 @@ const chartConfig = {
 
 import type { TooltipProps } from "recharts";
 
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-dark-border-gray border-dark-gray-border p-2 shadow-sm">
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col">
-            <span className="text-[0.70rem] uppercase">
-              Month
-            </span>
+            <span className="text-[0.70rem] uppercase">Month</span>
             <span className="font-bold ">{label}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[0.70rem] uppercase">
-              Reports
-            </span>
+            <span className="text-[0.70rem] uppercase">Reports</span>
             <span
               className="font-bold"
               style={{ color: "hsl(var(--chart-1))" }}
@@ -83,7 +83,7 @@ export function ReportHistoryChart() {
           />
           <ChartTooltip
             content={<CustomTooltip />}
-            cursor={{ fill: "hsl(var(--muted))", opacity: 0.1 }}
+            cursor={{ fill: "#1C1C1C", opacity: 0.1 }}
           />
           <Bar
             dataKey="reports"

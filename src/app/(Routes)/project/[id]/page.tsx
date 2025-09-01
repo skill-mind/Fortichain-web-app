@@ -14,6 +14,7 @@ import { FileCode, FileMinus, X } from "lucide-react";
 import Image from "next/image";
 import avatar from "../../../../../public/Ellipse 1.svg";
 import { ArrowGray, GithubIcon } from "@/icons/github";
+import { Input } from "@/components/ui/input";
 
 export default function PrjoectDetails() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(
@@ -27,10 +28,6 @@ export default function PrjoectDetails() {
             <span className="rounded-full bg-blue-ball w-1 h-1" />
             <h5>{selectedProject?.status}</h5>
           </div>
-
-          {/* <div className="rounded-full bg-dark-gray-pop w-fit p-1">
-                  <X />
-                </div> */}
         </div>
         <div className="pb-6 flex flex-wrap gap-y-3 md:gap-y-0 items-center justify-between">
           <div className="flex items-center gap-3">
@@ -143,6 +140,76 @@ export default function PrjoectDetails() {
                 Edit
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+      <div className="bg-dark-gray p-6 rounded-[8px] grid gap-5">
+        <div className="border-b border-dark-border-gray pb-6 grid gap-1">
+          <h2 className="text-xl">Fortichain Security Vulnerability Report</h2>
+          <span className="text-gray-text text-sm">
+            Submit your security findings and vulnerability reports
+          </span>
+        </div>
+        <div className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1 items-center">
+          <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
+            Section 1
+          </span>
+          <span className="text-18">Description</span>
+        </div>
+        <div className="grid grid-cols-[2fr_1fr_1fr] items-center gap-2">
+          <Input
+            type="text"
+            className="border border-dark-border-gray rounded-full p-6"
+          />
+          <div className="border-dark-border-gray border rounded-full py-2">
+            <Select
+            // value={data.projectType}
+            // onValueChange={(data) => {
+            //   setFormData((userData: UploadProjectProps) => {
+            //     return {
+            //       ...userData,
+            //       projectType: data,
+            //     };
+            //   });
+            // }}
+            >
+              <SelectTrigger className="rounded-full w-full border-none pl-7">
+                <SelectValue placeholder="Select severity level" />
+              </SelectTrigger>
+              <SelectContent className="bg-main-bg text-white-text">
+                <SelectItem value="ALL">ALL</SelectItem>
+                <SelectItem value="Re-entrancy">Re-entrancy</SelectItem>
+                <SelectItem value="Access-Control">Access Control</SelectItem>
+                <SelectItem value="Logic-Error">Logic Error</SelectItem>
+                <SelectItem value="Gas-Optimization">
+                  Gas Optimization
+                </SelectItem>
+                <SelectItem value="Best-Practice">Best Practice</SelectItem>
+                <SelectItem value="Others">Others</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="border-dark-border-gray border rounded-full py-2">
+            <Select
+            // value={data.projectType}
+            // onValueChange={(data) => {
+            //   setFormData((userData: UploadProjectProps) => {
+            //     return {
+            //       ...userData,
+            //       projectType: data,
+            //     };
+            //   });
+            // }}
+            >
+              <SelectTrigger className="rounded-full w-full border-none pl-7">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent className="bg-main-bg text-white-text">
+                <SelectItem value="ALL">ALL</SelectItem>
+                <SelectItem value="High">High</SelectItem>
+                <SelectItem value="Medium">Low</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

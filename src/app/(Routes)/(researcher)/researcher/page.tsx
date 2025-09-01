@@ -1,10 +1,10 @@
-"use client"
-import { Badge } from "@/icons/github";
-import { dashboardData } from "@/util/mock-data";
-import { ArrowRight, CircleDollarSign, FileText, FolderOpen, Timer } from "lucide-react";
-import Link from "next/link";
+"use client";
 import { useState } from "react";
-import { ApproveReport, Earnings, SubmitReport } from "./component/dashboard-cards";
+import {
+  ApproveReport,
+  Earnings,
+  SubmitReport,
+} from "./component/dashboard-cards";
 
 export default function Page() {
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
@@ -12,9 +12,9 @@ export default function Page() {
   const [isEarningOpen, setIsEarningOpen] = useState(false);
 
   function handleOpenSubmit() {
-    setIsSubmitOpen(prev => !prev)
-    setIsApproveOpen(false)
-    setIsEarningOpen(false)
+    setIsSubmitOpen((prev) => !prev);
+    setIsApproveOpen(false);
+    setIsEarningOpen(false);
   }
   function handleOpenEarning() {
     setIsSubmitOpen(false);
@@ -36,7 +36,10 @@ export default function Page() {
         handdleClick={handleOpenApprove}
         isApproveOpen={isApproveOpen}
       />
-      <Earnings handdleClick={handleOpenEarning} isEarningOpen={isEarningOpen} />
+      <Earnings
+        handdleClick={handleOpenEarning}
+        isEarningOpen={isEarningOpen}
+      />
     </section>
   );
 }

@@ -47,27 +47,35 @@ export const validatorRoute = [
 export const adminRoute = [
   {
     label: "Overview",
-    url: "",
+    url: "/admin",
   },
   {
-    label: "Dispute",
-    url: "",
+    label: "projects",
+    url: "/fortichain-projects",
   },
   {
-    label: "Users",
-    url: "",
+    label: "Researchers",
+    url: "/fortichain-researchers",
   },
   {
-    label: "Financial Overview",
-    url: "",
+    label: "Validators",
+    url: "/fortichain-validators",
   },
   {
-    label: "Governance Tools",
-    url: "",
+    label: "Metrics",
+    url: "/fortichain-metrics",
   },
   {
-    label: "Security Settings",
-    url: "",
+    label: "Blog managements",
+    url: "/fortichain-blog",
+  },
+  {
+    label: "Help center",
+    url: "/help-desk",
+  },
+  {
+    label: "Suspention",
+    url: "/suspention",
   },
 ];
 
