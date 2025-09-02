@@ -30,7 +30,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
     setSubMenu(false);
   }
   return (
-    <>
+    <div className="fixed w-full top-0">
       <nav className="capitalize font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center px-3 sm:px-3">
         <ul className="flex justify-between items-center gap-4">
           <div
@@ -178,10 +178,9 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           </ul>
         </nav>
       )}
-
       {/* notification */}
       {isNotificationOpen && <Notification />}
       {isConnectorOpen && <WalletModal close={connectorHandler} />}
-    </>
+    </div>
   );
 }

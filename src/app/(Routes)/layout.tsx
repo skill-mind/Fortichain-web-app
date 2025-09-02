@@ -2,7 +2,12 @@
 import DashboardNavBar from "@/components/dashbordNav";
 import { Router } from "@/provider/route-provider";
 import { route } from "@/types/types";
-import { ownerRoute, researcherRoute, validatorRoute } from "@/util/route";
+import {
+  adminRoute,
+  ownerRoute,
+  researcherRoute,
+  validatorRoute,
+} from "@/util/route";
 import { useContext } from "react";
 
 export default function Layou({
@@ -29,8 +34,11 @@ export default function Layou({
       : null;
   return (
     <>
-      <DashboardNavBar routeType={description} routes={location} />
-      <main className="max-w-sit-screen mx-auto py-7 px-3">{children}</main>
+      {/* <DashboardNavBar routeType={description} routes={location} /> */}
+      <DashboardNavBar routeType="Admin Dashboard" routes={adminRoute} />
+      <main className="max-w-sit-screen mx-auto py-7 px-3 mt-[120px] xl:mt-[180px]">
+        {children}
+      </main>
     </>
   );
 }

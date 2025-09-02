@@ -1,6 +1,12 @@
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
-import { ArrowRight, CircleDollarSign, FileText, FolderOpen, Timer } from "lucide-react";
+import {
+  ArrowRight,
+  CircleDollarSign,
+  FileText,
+  FolderOpen,
+  Timer,
+} from "lucide-react";
 import Link from "next/link";
 
 export function SubmitReport({
@@ -8,7 +14,7 @@ export function SubmitReport({
   handdleClick,
 }: {
   isSubmitOpen: boolean;
-  handdleClick:()=>void;
+  handdleClick: () => void;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 grid gap-3">
@@ -30,7 +36,10 @@ export function SubmitReport({
           <h2 className="text-sm mt-3 ">New Project Alerts</h2>
           {dashboardData.newProjectAlerts.map((data) => {
             return (
-              <div key={data.id}  className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
+              <div
+                key={data.id}
+                className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]"
+              >
                 <div className="flex justify-between items-center border-b border-[#343434] pb-6">
                   <h3>{data.title}</h3>
                   <span
@@ -73,7 +82,11 @@ export function SubmitReport({
       )}
       <div className="text-gray-text flex flex-col gap-1 items-center  justify-center mt-3 sm:hidden">
         Click to expand
-        <button type="button" onClick={handdleClick} className={`${isSubmitOpen ? "rotate-180" : "rotate-0"}`}>
+        <button
+          type="button"
+          onClick={handdleClick}
+          className={`${isSubmitOpen ? "rotate-180" : "rotate-0"}`}
+        >
           <WaveIcon />
         </button>
       </div>
@@ -81,7 +94,10 @@ export function SubmitReport({
       <h2 className="text-sm mt-3 hidden sm:block">New Project Alerts</h2>
       {dashboardData.newProjectAlerts.map((data) => {
         return (
-          <div key={data.id}  className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+          <div
+            key={data.id}
+            className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block"
+          >
             <div className="flex justify-between items-center border-b border-[#343434] pb-6 mb-4">
               <h3>{data.title}</h3>
               <span
@@ -123,7 +139,6 @@ export function SubmitReport({
     </div>
   );
 }
-
 
 export function ApproveReport({
   isApproveOpen,
@@ -227,7 +242,7 @@ export function Earnings({
   handdleClick,
 }: {
   isEarningOpen: boolean;
-  handdleClick:()=>void;
+  handdleClick: () => void;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 flex flex-col gap-3">

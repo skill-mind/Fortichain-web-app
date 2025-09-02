@@ -118,13 +118,15 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body
-        className={`text-white-text relative mx-auto min-h-screen bg-main-bg ${myCustomFont.variable}`}
+        className={`text-white-text relative mx-auto bg-main-bg ${myCustomFont.variable}`}
       >
         <RouteProvider>
-          <WalletProvider>{children}</WalletProvider>
+          <WalletProvider>
+            <div className="min-h-screen">{children}</div>
+          </WalletProvider>
         </RouteProvider>
 
-        <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit border-dark-border-gray absolute">
+        <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
           <span className="text-gray-text text-base">
             © 2025 FortiChain. All rights reserved. Built on Starknet.
           </span>
