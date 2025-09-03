@@ -114,11 +114,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const year = new Date();
   return (
     <html lang="en">
       <head></head>
       <body
-        className={`text-white-text relative mx-auto bg-main-bg ${myCustomFont.variable}`}
+        className={`text-white-text font-walsheim relative mx-auto bg-main-bg ${myCustomFont.variable}`}
       >
         <RouteProvider>
           <WalletProvider>
@@ -128,7 +129,8 @@ export default function RootLayout({
 
         <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
           <span className="text-gray-text text-base">
-            © 2025 FortiChain. All rights reserved. Built on Starknet.
+            © {year.getFullYear()} FortiChain. All rights reserved. Built on
+            Starknet.
           </span>
         </footer>
       </body>

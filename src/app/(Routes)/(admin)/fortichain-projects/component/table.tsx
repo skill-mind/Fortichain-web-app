@@ -88,7 +88,7 @@ const mockProjects: Project[] = [
   },
 ];
 
-export function ProjectTable() {
+export function ProjectTable({ handler }: { handler: () => void }) {
   return (
     <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[750px] font-walsheim">
       <div className="overflow-x-auto scrollbar-hide">
@@ -231,6 +231,7 @@ export function ProjectTable() {
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
       rounded-full group my-auto"
                     type="button"
+                    onClick={handler}
                   >
                     <span
                       className="px-6 py-3 text-sm

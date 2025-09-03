@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,8 +9,14 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
+import { useState } from "react";
+import ReviewModal from "@/components/modals/review-modal";
 
 export default function Projests() {
+  const [isOpen, setIsOpen] = useState(false);
+  function handler() {
+    setIsOpen((prev) => !prev);
+  }
   return (
     <section className="grid gap-5">
       <div className="grid grid-cols-[2fr_1fr_1fr] items-center gap-2 w-1/2">
@@ -50,7 +57,8 @@ export default function Projests() {
           </Select>
         </div>
       </div>
-      <ProjectTable />
+      <ProjectTable handler={handler} />
+      {isOpen && <ReviewModal handler={handler} />}
     </section>
   );
 }
