@@ -69,6 +69,9 @@ export default function Page() {
         <div className="text-gray-text text-center mt-2">
           Subscribe to get updates on bounties, project launches, and security
           insights.
+        <div className="text-gray-text text-center mt-2">
+          Subscribe to get updates on bounties, project launches, and security
+          insights.
         </div>
       </section>
       {/* home footer */}
