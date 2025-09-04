@@ -98,7 +98,7 @@ export function ProjectTable({ handler }: { handler: () => void }) {
                 scope="col"
                 aria-label="date"
               >
-                Researcher
+                Validators
               </th>
               <th
                 className="sticky left-[60px] z-20 px-4 py-3 text-left "
@@ -112,26 +112,19 @@ export function ProjectTable({ handler }: { handler: () => void }) {
                 scope="col"
                 aria-label="Projects"
               >
-                Projects
+                Projects Validated
               </th>
               <th
                 className="px-4 py-3 text-left"
                 scope="col"
                 aria-label="Wallet address transfer to"
               >
-                Vulnerabilities
+                Approval Rate
               </th>
               <th
                 className="px-4 py-3 text-center text-sm"
                 scope="col"
                 aria-label="amount widthraw"
-              >
-                Approval Rate
-              </th>
-              <th
-                className="px-4 py-3 text-center"
-                scope="col"
-                aria-label="status"
               >
                 Actions
               </th>
@@ -162,13 +155,7 @@ export function ProjectTable({ handler }: { handler: () => void }) {
                   >
                     {user.reputation}
                   </td>
-                  <td
-                    className="px-4 py-4 text-xs md:text-sm"
-                    role="gridcell"
-                    aria-label={`transfer to ${user.projects}`}
-                  >
-                    {user.projects}
-                  </td>
+
                   <td
                     className="px-4 py-4 text-xs md:text-sm"
                     role="gridcell"

@@ -1,28 +1,19 @@
+"use client";
+import Rating from "@/components/rating";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 export default function AuditRating() {
+  const [rate, setRating] = useState(1);
   return (
     <form className="bg-dark-gray grid gap-6 p-6 ">
       <h3>My Rating</h3>
       <div className="grid gap-4">
-        <label htmlFor="rate">Rate researcher report using the scale 1 - 10</label>
-        <div className="flex flex-wrap justify-between items-center">
-          {Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).map((num) => {
-            return (
-              <button
-                className="relative p-1 bg-dark-border-gray rounded-full"
-                type="button"
-                key={num}
-                >
-                    <Input id="rate" type="radio" className="w-ful h-full opacity top-0 left-0 absolute"/>
-                <span className="bg-dark-gray-pop rounded-full w-12 h-12 grid place-content-center">
-                  {num}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <label htmlFor="rate">
+          Rate researcher report using the scale 1 - 10
+        </label>
+        <Rating />
         <span className="text-sm text-gray-text">
           On our 10-point rating scale, 1 represents the 10% score and 10
           represents 100% the highest possible rating.

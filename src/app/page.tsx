@@ -6,12 +6,13 @@ import LaunchAppUi from "@/components/ui/launch-app";
 import { Router } from "@/provider/route-provider";
 import { useContext } from "react";
 import avatar from "../../public/dylan.svg";
-import { GithubIcon, Quote, QuoteRight, Telegram, X } from "@/icons/github";
+import { Quote, QuoteRight } from "@/icons/github";
 import { Input } from "@/components/ui/input";
 import Header from "@/components/home-header";
 import ShowCase from "@/components/home-show-case";
 import Metrics from "@/components/fortichain-metrics";
 import Explore from "@/components/explore-fortichain";
+import Footer from "@/components/footer";
 
 export default function Page() {
   const { route, launchModal, setter } = useContext(Router);
@@ -68,32 +69,14 @@ export default function Page() {
         <div className="text-gray-text text-center mt-2">
           Subscribe to get updates on bounties, project launches, and security
           insights.
+          <div className="text-gray-text text-center mt-2">
+            Subscribe to get updates on bounties, project launches, and security
+            insights.
+          </div>
         </div>
       </section>
       {/* home footer */}
-      <div className="px-7 py-5 border-t border-dark-border-gray">
-        <nav className="max-w-sit-screen mx-auto flex gap-24 md:gap-0 py-5 md:py-0 md:justify-between items-center flex-col md:flex-row justify-center">
-          <Image src={logo} alt="forticahin" />
-          <ul className="flex flex-col md:flex-row justify-between items-center gap-2">
-            <li className="bg-dark-gray px-6 py-3 rounded-full">About</li>
-            <li className="bg-dark-gray px-6 py-3 rounded-full ">
-              Documentation
-            </li>
-            <li className="bg-dark-gray px-6 py-3 rounded-full">Blog</li>
-          </ul>
-          <ul className="flex justify-between items-center gap-2">
-            <li className="bg-dark-gray p-3 rounded-full ">
-              <X />
-            </li>
-            <li className="bg-dark-gray p-3 rounded-full ">
-              <Telegram />
-            </li>
-            <li className="bg-dark-gray  p-3 rounded-full ">
-              <GithubIcon />
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <Footer />
       {launchModal && <LaunchAppNavModal />}
     </div>
   );
