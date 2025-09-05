@@ -75,7 +75,7 @@ export const adminRoute = [
   },
   {
     label: "Suspention",
-    url: "/suspention",
+    url: "/suspension",
   },
 ];
 

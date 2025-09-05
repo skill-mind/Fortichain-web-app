@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import Rating from "../rating";
 
 export default function ResearcherModal({ handler }: { handler: () => void }) {
   return (
