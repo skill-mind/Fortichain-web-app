@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 // Example: app/layout.tsx or a component file
 import localFont from "next/font/local";
-import WalletProvider from "@/provider/walletProvider";
+import { StarknetProvider } from "@/provider/walletProvider";
 import logo from "../../public/Logo (2).svg";
 import RouteProvider from "@/provider/route-provider";
 
@@ -121,11 +121,11 @@ export default function RootLayout({
       <body
         className={`text-white-text font-walsheim relative mx-auto bg-main-bg ${myCustomFont.variable}`}
       >
-        <RouteProvider>
-          <WalletProvider>
+        <StarknetProvider>
+          <RouteProvider>
             <div className="min-h-screen">{children}</div>
-          </WalletProvider>
-        </RouteProvider>
+          </RouteProvider>
+        </StarknetProvider>
 
         <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
           <span className="text-gray-text text-base">

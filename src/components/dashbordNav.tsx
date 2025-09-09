@@ -15,6 +15,7 @@ import { BellIcon } from "@/icons/bellIcon";
 import Notification from "./notification";
 import { WalletConnectorModal } from "@/provider/wallet-connector";
 import { Router } from "@/provider/route-provider";
+import { WalletConnect } from "@/connect";
 
 export default function DashboardNavBar({ routeType, routes }: route) {
   const path = usePathname();
@@ -99,7 +100,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
               </button>
             </div>
           )}
-
+          {/* <WalletConnect /> */}
           <WalletConnectorModal isDisconnectOpen={isDisconnectOpen} />
 
           <button

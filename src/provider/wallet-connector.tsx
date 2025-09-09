@@ -13,12 +13,16 @@ import ready from "../../public/Argent.svg";
 import bravoos from "../../public/braavos_icon.jpeg.svg";
 import { useState } from "react";
 
-
-export function WalletConnectorModal({ isDisconnectOpen }: { isDisconnectOpen:boolean}) {
+export function WalletConnectorModal({
+  isDisconnectOpen,
+}: {
+  isDisconnectOpen: boolean;
+}) {
   const { disconnect } = useDisconnect();
   const { connect, connectors } = useConnect();
   const [connector, setConnector] = useState<StarknetkitConnector | string>("");
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
+    modalTheme: "dark",
     connectors: connectors as StarknetkitConnector[],
   });
 
