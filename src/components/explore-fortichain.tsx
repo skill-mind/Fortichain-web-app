@@ -11,7 +11,7 @@ export default function Explore() {
           need to collaborate, secure, and earn on-chain.
         </span>
       </div>
-      <div className=" min-w-80  xl:w-4/5  mx-auto rounded-[8px] md:p-10 gap-10 flex flex-col mt-6 items-center">
+      <div className="xl:w-4/5  mx-auto rounded-[8px] md:p-10 gap-10 flex flex-col mt-6 items-center">
         <div className="flex justify-between items-center gap-6 flex-col xl:flex-row">
           <div className=" border border-dark-border-gray flex flex-col gap-6 rounded-[8px] min-h-[420px] justify-end text-start p-10">
             <div className="grid gap-3">

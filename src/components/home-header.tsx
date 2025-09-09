@@ -9,7 +9,7 @@ export default function Header() {
   const { setter, launchModal } = useContext(Router);
   return (
     <header className="bg-[url(../../public/Hero.svg)] h-[815px] border-b border-dark-border-gray">
-      <div className="px-7 fixed w-full top-0 py-5 border-b border-dark-border-gray bg-main-bg/75">
+      <div className="fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5">
         <nav className="max-w-sit-screen mx-auto flex justify-between items-center">
           <Image src={logo} alt="forticahin" />
           <ul className="flex justify-between items-center gap-2">
