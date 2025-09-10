@@ -4,7 +4,7 @@ import { ReportHistoryChart } from "./component/chart";
 export default function Page() {
   return (
     <div className="text-white-text">
-      <div className="flex flex-wrap justify-between items-center sm:grid sm:grid-cols-2 xl:grid-cols-4 gap-3">
+      <div className="flex flex-wrap justify-between items-center sm:grid sm:grid-cols-2 xl:flex xl:flex-nowrap gap-3">
         <Card type="total" />
         <Card type="progress" />
         <Card type="complete" />

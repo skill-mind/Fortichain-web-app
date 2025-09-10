@@ -8,7 +8,7 @@ import image4 from "../../public/image4.svg";
 
 export default function ShowCase() {
   return (
-    <section className="pb-28 mt-28 border-b border-dark-border-gray px-5 ">
+    <section className="pb-28 mt-28 border-b border-dark-border-gray xl:px-20 px-10">
       <div className="flex items-stretch border h-fit md:h-[610px] max-w-[660px] border-dark-border-gray flex-col md:flex-row mx-auto md:max-w-sit-screen rounded-l-3xl rounded-[8px] ">
         <Image
           src={image1}

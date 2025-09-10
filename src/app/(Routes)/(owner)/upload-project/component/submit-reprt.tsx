@@ -20,12 +20,19 @@ import { CalendarDays } from "lucide-react";
 import { useState } from "react";
 
 export default function SubmitReport({
-  setFormData,data
+  setFormData,
+  data,
 }: {
-        setFormData: React.Dispatch<React.SetStateAction<UploadProjectProps>>;
-    data:UploadProjectProps
+  setFormData: React.Dispatch<React.SetStateAction<UploadProjectProps>>;
+  data: UploadProjectProps;
 }) {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  {
+    isSubmitting && data.projectName.length <= 0 && (
+      <span>This field is required</span>
+    );
+  }
   return (
     <div className="grid text-base gap-4">
       <div className="grid gap-2">
@@ -61,6 +68,9 @@ export default function SubmitReport({
             });
           }}
         />
+        {isSubmitting && data.description.length <= 0 && (
+          <span>This field is required</span>
+        )}
       </div>
       <div className="grid gap-6">
         <div className="flex gap-6 sm:flex-row flex-col justify-between items-center">
@@ -104,9 +114,9 @@ export default function SubmitReport({
                   {data.deadline
                     ? typeof data.deadline === "string"
                       ? data.deadline
-                      : `${new Date(data.deadline).getDate()}-${new Date(
-                          data.deadline
-                        ).getMonth()+1}-${new Date(data.deadline).getFullYear()}`
+                      : `${new Date(data.deadline).getDate()}-${
+                          new Date(data.deadline).getMonth() + 1
+                        }-${new Date(data.deadline).getFullYear()}`
                     : "Select date"}
                   <CalendarDays className="text-gray-text mr-2" />
                 </Button>
@@ -138,28 +148,20 @@ export default function SubmitReport({
         <div className="flex gap-6 justify-between items-center sm:flex-row flex-col">
           <div className="w-full grid gap-2 ">
             <label htmlFor="">Repository URL</label>
-            <div className="h-14 border-dark-border-gray border rounded-full">
-              <Select
-                value={data.repoUrl}
-                onValueChange={(data) => {
-                  setFormData((userData: UploadProjectProps) => {
-                    return {
-                      ...userData,
-                      repoUrl: data,
-                    };
-                  });
-                }}
-              >
-                <SelectTrigger className="rounded-full w-full mt-2 border-none pl-7">
-                  <SelectValue placeholder="Select repo" />
-                </SelectTrigger>
-                <SelectContent className="bg-main-bg text-white-text">
-                  <SelectItem value="repo1">Repo1</SelectItem>
-                  <SelectItem value="repo2">Repo2</SelectItem>
-                  <SelectItem value="repo3">Repo3</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Input
+              value={data.repoUrl}
+              placeholder="Repository URL"
+              className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
+              onChange={(data) => {
+                const value = data.target.value;
+                setFormData((userData: UploadProjectProps) => {
+                  return {
+                    ...userData,
+                    repoUrl: value,
+                  };
+                });
+              }}
+            />
           </div>
           <div className="w-full grid gap-2 ">
             <label htmlFor="">Contract Address</label>
@@ -177,6 +179,9 @@ export default function SubmitReport({
               placeholder="0x0ece324ca23...."
               className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
             />
+            {isSubmitting && data.contractAddress.length <= 66 && (
+              <span>This field is required</span>
+            )}
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { redirect, usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
 import { useContext, useState } from "react";
 import { MenuIcon } from "lucide-react";
-import { useAccount, useDisconnect } from "@starknet-react/core";
+import { useAccount } from "@starknet-react/core";
 import { formatAddress } from "@/util/helper";
 import Image from "next/image";
 import ready from "../../public/Argent.svg";
@@ -15,6 +15,7 @@ import { BellIcon } from "@/icons/bellIcon";
 import Notification from "./notification";
 import { WalletConnectorModal } from "@/provider/wallet-connector";
 import { Router } from "@/provider/route-provider";
+import { WalletConnect } from "@/connect";
 
 export default function DashboardNavBar({ routeType, routes }: route) {
   const path = usePathname();
@@ -24,14 +25,14 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const [subMenu, setSubMenu] = useState(false);
   const { address, isConnected, connector } = useAccount();
   const { setter } = useContext(Router);
-  // console.log(path);
+
   function connectorHandler() {
     setIsConnectorOpen((isConnect) => !isConnect);
     setSubMenu(false);
   }
   return (
-    <div className="fixed w-full top-0">
-      <nav className="capitalize font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center px-3 sm:px-3">
+    <div className="fixed w-full top-0 z-50">
+      <nav className="capitalize xl:px-20 px-10 font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center">
         <ul className="flex justify-between items-center gap-4">
           <div
             onClick={() => {
@@ -99,7 +100,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
               </button>
             </div>
           )}
-
+          {/* <WalletConnect /> */}
           <WalletConnectorModal isDisconnectOpen={isDisconnectOpen} />
 
           <button

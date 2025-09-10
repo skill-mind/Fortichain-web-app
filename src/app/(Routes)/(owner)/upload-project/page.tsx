@@ -1,31 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubmitReport from "./component/submit-reprt";
 import FundProject from "./component/fund-project";
 import Summary from "./component/summary";
 import { UploadProjectProps } from "@/util/types";
+import { useAccount } from "@starknet-react/core";
+import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
 
 export default function Page() {
-    const [formsection, setFormSection] = useState(1);
-    const [formData, setFormData] = useState<UploadProjectProps>({
-      projectName: "",
-      description: "",
-      projectType: "",
-      deadline: new Date(),
-      repoUrl: "",
-      contractAddress: "",
-      amount: 0,
-      tokenType: "",
-    });
-  const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
-    const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
+  const { account } = useAccount();
 
-    const header =
-      formsection == 1
-        ? "Submit New Project for Audit"
-        : formsection == 2
-        ? "Fund project for audit"
-        : "Summary";
+  const [formsection, setFormSection] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<UploadProjectProps>({
+    projectName: "PAYMESH",
+    description: "FAN OF A FAN",
+    projectType: "Security",
+    deadline: new Date(),
+    repoUrl:
+      "https://github.com/FrancescoXX/rust-crud-api/blob/main/docker-compose.yml",
+    contractAddress:
+      "0x043dee9c19e0F1d5d99D728cFc650df5E6646AF87906EcD6C36A5A7fBF811308",
+    amount: null,
+    priority: "HIGH",
+  });
+  const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
+  const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
+
+  const header =
+    formsection == 1
+      ? "Submit New Project for Audit"
+      : formsection == 2
+      ? "Fund project for audit"
+      : "Summary";
+
+  const handleSubmit = async () => {
+    if (!account) {
+      return console.log("Connect Wallet to continue");
+    }
+    await uploadProjectHandle(account, setIsSubmitting, formData);
+  };
   return (
     <div>
       <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center text-base">
@@ -43,7 +57,7 @@ export default function Page() {
         </li>
       </nav>
 
-      <form className="max-w-[750px] mx-auto mt-7 p-6 rounded-[8px] border border-dark-border-gray grid gap-5">
+      <div className="max-w-[750px] mx-auto mt-7 p-6 rounded-[8px] border border-dark-border-gray grid gap-5">
         <div className="mb-3 text-18 grid gap-3">
           <h2>{header}</h2>
           {formsection == 2 && (
@@ -61,51 +75,58 @@ export default function Page() {
         )}
         {formsection == 3 && <Summary {...formData} />}
         <div className="flex sm:flex-row flex-col justify-between items-center gap-6 my-2">
-         {formsection !=1 && <button
-            className="w-full min-h-50 p-0.5 group             
+          {formsection != 1 && (
+            <button
+              className="w-full min-h-50 p-0.5 group             
                   hover:from-sky-blue-border hover:to-sky-blue-border
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
-            type="button"
-            onClick={() => {
-              if (formsection > 1) {
-                setFormSection((prev) => prev - 1);
-              }
-            }}
-          >
-            <span
-              className="px-6 py-3
+              type="button"
+              onClick={() => {
+                if (formsection > 1) {
+                  setFormSection((prev) => prev - 1);
+                }
+                console.log(formData);
+              }}
+            >
+              <span
+                className="px-6 py-3
                       group-hover:from-sky-from group-hover:to-sky-to
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-            >
-              Back
-            </span>
-          </button>}
+              >
+                Back
+              </span>
+            </button>
+          )}
 
           <button
             className="w-full min-h-50 p-0.5 group             
                   from-sky-blue-border to-sky-blue-border
                   bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
               rounded-full group"
-            type="button"
+            type="submit"
+            onClick={(e) => {
+              if (formsection < 3) {
+                setFormSection((prev) => prev + 1);
+              }
+              if (formsection === 3) {
+                console.log("kk");
+                handleSubmit();
+              }
+            }}
           >
             <span
               className="px-6 py-3
                       from-sky-from to-sky-to
                        bg-gradient-to-r group-hover:bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-              onClick={() => {
-                if (formsection < 3) {
-                  setFormSection((prev) => prev + 1);
-                }
-              }}
             >
-              Next
+              {isSubmitting ? "submitting...." : "next"}
             </span>
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

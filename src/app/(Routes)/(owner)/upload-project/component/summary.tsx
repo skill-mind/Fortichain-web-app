@@ -1,9 +1,18 @@
 import { UploadProjectProps } from "@/util/types";
 
-export default function Summary({ deadline, amount, contractAddress, description, projectName, projectType, repoUrl, tokenType }: UploadProjectProps) {
-    const date = `${new Date(deadline).getDate()}-${new Date(
-      deadline
-    ).getMonth() + 1}-${new Date(deadline).getFullYear()}`;
+export default function Summary({
+  deadline,
+  amount,
+  contractAddress,
+  description,
+  projectName,
+  projectType,
+  repoUrl,
+  priority,
+}: UploadProjectProps) {
+  const date = `${new Date(deadline).getDate()}-${
+    new Date(deadline).getMonth() + 1
+  }-${new Date(deadline).getFullYear()}`;
 
   return (
     <section className="grid gap-5 text-base">
@@ -45,8 +54,8 @@ export default function Summary({ deadline, amount, contractAddress, description
       </div>
       <div className="flex justify-between sm:flex-row flex-col items-start gap-2">
         <div className="grid gap-2 w-1/2">
-          <h2>Token Type</h2>
-          <p className="text-gray-text text-sm">{tokenType}</p>
+          <h2>Prority</h2>
+          <p className="text-gray-text text-sm">{priority}</p>
         </div>
       </div>
     </section>

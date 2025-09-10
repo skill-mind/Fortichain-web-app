@@ -36,7 +36,7 @@ export default function Layou({
     <>
       <DashboardNavBar routeType={description} routes={location} />
       {/* <DashboardNavBar routeType="Admin Dashboard" routes={adminRoute} /> */}
-      <main className="max-w-sit-screen mx-auto py-7 px-3 mt-[120px] xl:mt-[180px]">
+      <main className="xl:px-20 px-10 max-w-sit-screen mx-auto py-7 mt-[120px] xl:mt-[180px]">
         {children}
       </main>
     </>

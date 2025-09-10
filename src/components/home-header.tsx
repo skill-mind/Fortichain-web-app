@@ -4,17 +4,18 @@ import LauchAppNav from "./launch-app-nav";
 import { Router } from "@/provider/route-provider";
 import logo from "../../public/Logo.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   const { setter, launchModal } = useContext(Router);
   return (
     <header className="bg-[url(../../public/Hero.svg)] h-[815px] border-b border-dark-border-gray">
-      <div className="px-7 fixed w-full top-0 py-5 border-b border-dark-border-gray">
+      <div className="fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5">
         <nav className="max-w-sit-screen mx-auto flex justify-between items-center">
           <Image src={logo} alt="forticahin" />
           <ul className="flex justify-between items-center gap-2">
             <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
-              About
+              <Link href="/about">About</Link>
             </li>
             <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
               Documentation

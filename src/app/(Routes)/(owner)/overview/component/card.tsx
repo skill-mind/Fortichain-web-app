@@ -31,7 +31,7 @@ export default function Card({ type }: { type: string }) {
                                         <Group />
                                       );
     return (
-      <div className="bg-dark-gray p-6 rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
+      <div className="bg-dark-gray p-6 rounded-[8px] flex flex-col gap-3 w-full">
         <div className="flex justify-between items-center text-18">
           <h3>{text}</h3>
 {icon}

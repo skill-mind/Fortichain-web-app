@@ -26,7 +26,7 @@ export default function Page() {
       <ShowCase />
       <Metrics />
       {/* fortichain testimonies */}
-      <div className="my-20">
+      <div className="xl:px-20 px-1 my-20">
         <div className="flex sm:w-[90%] flex-col items-start gap-5 justify-center px-5 xl:min-w-6xl max-w-6xl mx-auto">
           <div className="flex justify-between w-full">
             <Quote />
@@ -69,10 +69,6 @@ export default function Page() {
         <div className="text-gray-text text-center mt-2">
           Subscribe to get updates on bounties, project launches, and security
           insights.
-          <div className="text-gray-text text-center mt-2">
-            Subscribe to get updates on bounties, project launches, and security
-            insights.
-          </div>
         </div>
       </section>
       {/* home footer */}
