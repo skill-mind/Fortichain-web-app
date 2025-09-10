@@ -20,13 +20,13 @@ export function AboutUsPage({
   setCurrentSection: (section: number) => void;
 }) {
   return (
-    <div className="flex gap-10">
+    <div className="flex gap-10 h-[550px] scrollbar-hide">
       <AboutNavigation
         sections={sections}
         currentSection={currentSection}
         onSectionChange={setCurrentSection}
       />
-      <main className="">
+      <main className="overflow-y-scroll scrollbar-hide">
         <div className="relative">
           <AboutContent currentSection={currentSection} />
         </div>

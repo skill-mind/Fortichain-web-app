@@ -9,7 +9,6 @@ import { useState } from "react";
 
 const sections = [
   "Welcome",
-  "Why FortiChain?",
   "Who Is FortiChain For?",
   "Why Starknet?",
   "What's Next?",
@@ -30,7 +29,7 @@ export default function About() {
       <div className="px-3 py-5 border-t w-full text-center h-fit border-dark-border-gray items-center border-b flex justify-center">
         <Image src={logo} alt="fortichain" />
       </div>
-      <section className="relative max-w-sit-screen mx-auto">
+      <section className="relative max-w-sit-screen mx-auto xl:px-20 px-10">
         <div className=" mx-auto border border-dark-border-gray mt-20 rounded-[8px] py-14 flex items-center  justify-around">
           <div className="space-y- grid gap-5 max-w-80">
             <div className="bg-dark-gray px-6 py-3 rounded-full md:block hidden w-fit">
@@ -52,29 +51,33 @@ export default function About() {
         />
         <div className="flex my-10 justify-end gap-6">
           <button
-            className="w-full sm:w-fit min-h-11 p-0.5 group             
+            className={`${
+              currentSection === 0 ? "cursor-not-allowed" : ""
+            } w-full sm:w-fit min-h-11 p-0.5 group             
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
-      rounded-full group"
+      rounded-full group`}
             type="button"
             onClick={handlePrevious}
             disabled={currentSection === 0}
           >
             <span
-              className="px-6 py-3 text-sm
+              className={`px-6 py-3 text-sm
               group-hover:from-sky-from group-hover:to-sky-to
               group-hover:bg-gradient-to-r bg-[#1C1C1C]
-          flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+          flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full group-disabled:cursor-not-allowed`}
             >
               <MoveLeft />
               Previous
             </span>
           </button>
           <button
-            className="w-full sm:w-fit min-h-11 p-0.5 group             
+            className={`w-full sm:w-fit min-h-11 p-0.5 group             
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
-      rounded-full group"
+      rounded-full group ${
+        currentSection === sections.length - 1 ? "cursor-not-allowed" : ""
+      }`}
             type="button"
             onClick={handleNext}
             disabled={currentSection === sections.length - 1}
@@ -83,7 +86,7 @@ export default function About() {
               className="px-6 py-3 text-sm
               group-hover:from-sky-from group-hover:to-sky-to
               group-hover:bg-gradient-to-r bg-[#1C1C1C]
-          flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+          flex items-center gap-2.5 p-2 group-disabled:cursor-not-allowed justify-center cursor-pointer  rounded-full h-10 w-full"
             >
               Next
               <MoveRight />

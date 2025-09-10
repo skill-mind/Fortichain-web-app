@@ -4,6 +4,7 @@ import LauchAppNav from "./launch-app-nav";
 import { Router } from "@/provider/route-provider";
 import logo from "../../public/Logo.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   const { setter, launchModal } = useContext(Router);
@@ -14,7 +15,7 @@ export default function Header() {
           <Image src={logo} alt="forticahin" />
           <ul className="flex justify-between items-center gap-2">
             <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
-              About
+              <Link href="/about">About</Link>
             </li>
             <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
               Documentation

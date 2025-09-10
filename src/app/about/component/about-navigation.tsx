@@ -33,7 +33,7 @@ export function AboutNavigation({
   ];
 
   return (
-    <aside className="left-0 top-0 z-40 w-fit overflow-y-auto lg:block hidden">
+    <aside className="w-fit overflow-y-auto lg:block hidden">
       <nav className="p-6 space-y-8">
         {navigationItems.map((section, sectionIndex) => (
           <div key={section.title} className="space-y-4">
