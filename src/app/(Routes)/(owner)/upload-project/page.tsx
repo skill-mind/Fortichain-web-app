@@ -4,20 +4,18 @@ import SubmitReport from "./component/submit-reprt";
 import FundProject from "./component/fund-project";
 import Summary from "./component/summary";
 import { UploadProjectProps } from "@/util/types";
-import { FORTICHAINADDRESS, myProvider } from "@/contract/address";
-import { byteArray, cairo, CallData } from "starknet";
 import { useAccount } from "@starknet-react/core";
-import { Connector } from "starknetkit";
+import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
 
 export default function Page() {
-  const { account, address, status, isConnected, isConnecting } = useAccount();
+  const { account } = useAccount();
 
   const [formsection, setFormSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<UploadProjectProps>({
     projectName: "PAYMESH",
     description: "FAN OF A FAN",
-    projectType: "SECURITY",
+    projectType: "Security",
     deadline: new Date(),
     repoUrl:
       "https://github.com/FrancescoXX/rust-crud-api/blob/main/docker-compose.yml",
@@ -36,90 +34,11 @@ export default function Page() {
       ? "Fund project for audit"
       : "Summary";
 
-  // useEffect(() => {
-  //   const TestContract = async () => {
-  //     if (!account) return;
-  //     let execute = await account.execute({
-  //       contractAddress: FORTICHAINADDRESS,
-  //       entrypoint: "upload_project",
-  //       calldata: CallData.compile({
-  //         name: byteArray.byteArrayFromString(formData.projectName),
-  //         description: byteArray.byteArrayFromString(formData.description),
-  //         project_type: byteArray.byteArrayFromString(formData.projectType),
-  //         deadline: +formData.deadline,
-  //         repository_url: byteArray.byteArrayFromString(formData.repoUrl),
-  //         priority: formData.priority,
-  //         smart_contract_address: formData.contractAddress,
-  //         amount: cairo.uint256(44),
-  //       }),
-  //     });
-  //     console.log("account ");
-  //   };
-  //   TestContract();
-  // });
-
   const handleSubmit = async () => {
     if (!account) {
       return console.log("Connect Wallet to continue");
     }
-    try {
-      // const amount = parseFloat(formData.amount);
-      setIsSubmitting(true);
-      console.log(account);
-      // console.log(
-      //   CallData.compile({
-      //     name: byteArray.byteArrayFromString(formData.projectName),
-      //     description: byteArray.byteArrayFromString(formData.description),
-      //     project_type: byteArray.byteArrayFromString(formData.projectType),
-      //     deadline: +formData.deadline,
-      //     repository_url: byteArray.byteArrayFromString(formData.repoUrl),
-      //     priority: formData.priority,
-      //     smart_contract_address: formData.contractAddress,
-      //     amount: cairo.uint256(200),
-      //   })
-      // );
-      console.log(+formData.deadline);
-      if (account != undefined && formData.amount) {
-        const result = await account.execute({
-          contractAddress: FORTICHAINADDRESS,
-          entrypoint: "upload_project",
-          calldata: CallData.compile({
-            name: byteArray.byteArrayFromString(formData.projectName),
-            description: byteArray.byteArrayFromString(formData.description),
-            project_type: byteArray.byteArrayFromString(formData.projectType),
-            deadline: +formData.deadline,
-            repository_url: byteArray.byteArrayFromString(formData.repoUrl),
-            priority: 1751738216,
-            smart_contract_address: formData.contractAddress,
-            amount: cairo.uint256(formData.amount),
-          }),
-        });
-
-        const status = await myProvider.waitForTransaction(
-          result?.transaction_hash as string
-        );
-
-        console.log(result);
-
-        console.log(status);
-      }
-
-      // Reset form
-      // setFormData({
-      //   projectName: "",
-      //   description: "",
-      //   projectType: "",
-      //   deadline: new Date(),
-      //   repoUrl: "",
-      //   contractAddress: "",
-      //   amount: null,
-      //   priority: "",
-      // });
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    await uploadProjectHandle(account, setIsSubmitting, formData);
   };
   return (
     <div>
