@@ -3,11 +3,13 @@ import { UploadProjectProps } from "@/util/types";
 import { AccountInterface, byteArray, cairo, CallData } from "starknet";
 
 type SetIsSubmitting = (isSubmitting: boolean) => void;
+type SetIsOpen = (isSubmitting: boolean) => void;
 
 export const uploadProjectHandle = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
-  formData: UploadProjectProps
+  formData: UploadProjectProps,
+  setIsOpen: SetIsOpen
 ): Promise<void> => {
   try {
     setIsSubmitting(true);
@@ -27,6 +29,7 @@ export const uploadProjectHandle = async (
           amount: cairo.uint256(formData.amount),
         }),
       };
+      console.log(Call);
       const approveCall = {
         contractAddress:
           "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address
@@ -37,12 +40,13 @@ export const uploadProjectHandle = async (
         ],
       };
       const multicallData = [approveCall, Call];
+      console.log(multicallData);
       const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
-
+      setIsOpen(true);
       console.log(result);
 
       console.log(status);

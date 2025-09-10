@@ -6,12 +6,16 @@ import Summary from "./component/summary";
 import { UploadProjectProps } from "@/util/types";
 import { useAccount } from "@starknet-react/core";
 import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
+import SuccessModal from "@/components/modals/succesful-upload-project-model";
+import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
+import { byteArray, cairo, CallData } from "starknet";
 
 export default function Page() {
   const { account } = useAccount();
 
   const [formsection, setFormSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState<UploadProjectProps>({
     projectName: "PAYMESH",
     description: "FAN OF A FAN",
@@ -38,10 +42,59 @@ export default function Page() {
     if (!account) {
       return console.log("Connect Wallet to continue");
     }
-    await uploadProjectHandle(account, setIsSubmitting, formData);
+    try {
+      setIsSubmitting(true);
+      console.log(+formData.deadline);
+      if (account != undefined && formData.amount) {
+        console.log(account);
+        const Call = {
+          contractAddress: FORTICHAINADDRESS,
+          entrypoint: "upload_project",
+          calldata: CallData.compile({
+            name: byteArray.byteArrayFromString(formData.projectName),
+            description: byteArray.byteArrayFromString(formData.description),
+            project_type: byteArray.byteArrayFromString(formData.projectType),
+            deadline: +formData.deadline,
+            repository_url: byteArray.byteArrayFromString(formData.repoUrl),
+            priority: 1751738216,
+            smart_contract_address: formData.contractAddress,
+            amount: cairo.uint256(formData.amount),
+          }),
+        };
+        console.log(Call);
+        const approveCall = {
+          contractAddress:
+            "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address
+          entrypoint: "approve",
+          calldata: [
+            FORTICHAINADDRESS, // spender
+            cairo.uint256(+formData?.amount * ONE_STK),
+          ],
+        };
+        const multicallData = [approveCall, Call];
+        console.log(multicallData);
+        const result = await account.execute(multicallData);
+
+        const status = await myProvider.waitForTransaction(
+          result?.transaction_hash as string
+        );
+        setIsOpen(true);
+        console.log(result);
+
+        console.log(status);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  function handler() {
+    setIsOpen((prev) => !prev);
+  }
   return (
     <div>
+      {isOpen && <SuccessModal handler={handler} />}
       <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center text-base">
         <li className="grid gap-4">
           <span>Submit New Project</span>
