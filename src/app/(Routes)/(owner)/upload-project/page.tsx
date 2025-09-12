@@ -8,7 +8,7 @@ import { useAccount } from "@starknet-react/core";
 import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
 import SuccessModal from "@/components/modals/succesful-upload-project-model";
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
-import { byteArray, cairo, CallData } from "starknet";
+import { byteArray, cairo, CallData, PaymasterDetails } from "starknet";
 
 export default function Page() {
   const { account } = useAccount();
@@ -42,52 +42,7 @@ export default function Page() {
     if (!account) {
       return console.log("Connect Wallet to continue");
     }
-    try {
-      setIsSubmitting(true);
-      console.log(+formData.deadline);
-      if (account != undefined && formData.amount) {
-        console.log(account);
-        const Call = {
-          contractAddress: FORTICHAINADDRESS,
-          entrypoint: "upload_project",
-          calldata: CallData.compile({
-            name: byteArray.byteArrayFromString(formData.projectName),
-            description: byteArray.byteArrayFromString(formData.description),
-            project_type: byteArray.byteArrayFromString(formData.projectType),
-            deadline: +formData.deadline,
-            repository_url: byteArray.byteArrayFromString(formData.repoUrl),
-            priority: 1751738216,
-            smart_contract_address: formData.contractAddress,
-            amount: cairo.uint256(formData.amount),
-          }),
-        };
-        console.log(Call);
-        const approveCall = {
-          contractAddress:
-            "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address
-          entrypoint: "approve",
-          calldata: [
-            FORTICHAINADDRESS, // spender
-            cairo.uint256(+formData?.amount * ONE_STK),
-          ],
-        };
-        const multicallData = [approveCall, Call];
-        console.log(multicallData);
-        const result = await account.execute(multicallData);
-
-        const status = await myProvider.waitForTransaction(
-          result?.transaction_hash as string
-        );
-        setIsOpen(true);
-        console.log(result);
-
-        console.log(status);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    uploadProjectHandle(account, setIsSubmitting, formData, setIsOpen);
   };
   function handler() {
     setIsOpen((prev) => !prev);
@@ -154,11 +109,14 @@ export default function Page() {
           )}
 
           <button
-            className="w-full min-h-50 p-0.5 group             
+            className={`${
+              isSubmitting ? "disabled:cursor-not-allowed" : ""
+            }  w-full min-h-50 p-0.5 group             
                   from-sky-blue-border to-sky-blue-border
                   bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
-              rounded-full group"
+              rounded-full group`}
             type="submit"
+            disabled={isSubmitting}
             onClick={(e) => {
               if (formsection < 3) {
                 setFormSection((prev) => prev + 1);
@@ -171,7 +129,7 @@ export default function Page() {
           >
             <span
               className="px-6 py-3
-                      from-sky-from to-sky-to
+                      from-sky-from to-sky-to group-disabled:cursor-not-allowed
                        bg-gradient-to-r group-hover:bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
             >

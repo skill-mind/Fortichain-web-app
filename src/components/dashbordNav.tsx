@@ -44,7 +44,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           >
             <Image src={Logo} alt="Forticahin Logo" />
           </div>
-          <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
+          <li className="bg-dark-gray px-6 py-3 rounded-full lg:block hidden">
             {routeType}
           </li>
         </ul>
@@ -133,7 +133,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   <Link
                     href={route.url}
                     className={`px-6 py-3 ${
-                      path === route.url
+                      path === route.url || path.includes(route.url)
                         ? " bg-gradient-to-r from-sky-from to-sky-to"
                         : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
                     }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full`}

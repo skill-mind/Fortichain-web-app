@@ -1,84 +1,109 @@
-// "use client";
+"use client";
 
-// import { UploadProjectProps } from "@/util/types";
-// import { useAccount } from "@starknet-react/core";
+import { FORTICHAINABI } from "@/contract/abi";
+import { FORTICHAINADDRESS } from "@/contract/address";
+import { useReadContract } from "@starknet-react/core";
+import { useEffect, useState } from "react";
+import { Abi, shortString } from "starknet";
 
-// const handleSubmit = async ({ formData }: { formData: UploadProjectProps }) => {
-//   // e.preventDefault();
+export function useContractFetch(
+  abi: Abi,
+  functionName: string,
+  args: [string | number]
+) {
+  const {
+    data: readData,
+    refetch: dataRefetch,
+    isError: readIsError,
+    isLoading: readIsLoading,
+    error: readError,
+    isFetching: readRefetching,
+  } = useReadContract({
+    abi: abi,
+    functionName: functionName,
+    address: FORTICHAINADDRESS,
+    args: args,
+    refetchInterval: 600000,
+  });
 
-//   // Basic validation
-//   if (!formData.projectName.trim()) {
-//     console.error("Group name is required");
-//     return;
-//   }
+  return {
+    readData,
+    dataRefetch,
+    readIsError,
+    readIsLoading,
+    readError,
+    readRefetching,
+  };
+}
 
-//   try {
-//     // const amount = parseFloat(formData.amount);
+export interface Project {
+  created_at: string;
+  deadline: string;
+  description: string;
+  id: number;
+  is_active: boolean; //
+  is_completed: boolean; //
+  name: string;
+  priority: string;
+  project_owner: { toString: (radix: number) => string };
+  project_type: string;
+  repository_url: string;
+  researchers_paid: boolean; //
+  smart_contract_address: { toString: (radix: number) => string };
+  updated_at: string;
+  validator_paid: boolean; //
+}
 
-//     if (account != undefined && formData.usage) {
-//       const swiftpayCall = {
-//         contractAddress: PAYMESH_ADDRESS,
-//         entrypoint: "create_group",
-//         calldata: CallData.compile({
-//           name: byteArray.byteArrayFromString(formData.name),
-//           members: formData.members,
-//           usage_count: cairo.uint256(+formData?.usage),
-//         }),
-//       };
-//       const approveCall = {
-//         contractAddress: strkTokenAddress,
-//         entrypoint: "approve",
-//         calldata: [
-//           PAYMESH_ADDRESS, // spender
-//           cairo.uint256(+formData?.usage * ONE_STK),
-//           // "1000000000000000000",
-//           // "0"
-//         ],
-//       };
+export function useUserProject(address: string) {
+  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+  const { readData: projectList } = useContractFetch(
+    FORTICHAINABI,
+    "get_user_projects",
+    [address]
+  );
 
-//       const multicallData = [approveCall, swiftpayCall];
-//       // const result = await account.execute(multicallData)
+  useEffect(() => {
+    if (!projectList || !address) return; //
+    const projectData: Project[] = [];
+    projectList.forEach((data: Project) => {
+      projectData.push({
+        validator_paid: data.validator_paid,
+        researchers_paid: data.researchers_paid,
+        repository_url: data.repository_url,
+        smart_contract_address: `0x0${data["smart_contract_address"].toString(
+          16
+        )}`,
+        name: data.name,
+        id: +data.id.toString(),
+        description: data.description,
+        is_active: data.is_active,
+        is_completed: data.is_completed,
+        created_at: getTimeFromEpoch(data.created_at.toString()),
+        deadline: getTimeFromEpoch(data.deadline.toString()),
+        priority: shortString.decodeShortString(data.priority),
+        project_type: data.project_type,
+        updated_at: epocTime(data.deadline.toString()),
+        project_owner: `0x0${data["project_owner"].toString(16)}`,
+      });
+    });
+    setProjectsData(projectData);
+  }, [projectList, address]);
 
-//       const feeDetails: PaymasterDetails = {
-//         feeMode: {
-//           mode: "sponsored",
-//         },
-//       };
+  return projectsData;
+}
 
-//       const feeEstimation = await account?.estimatePaymasterTransactionFee(
-//         [...multicallData],
-//         feeDetails
-//       );
+export function getTimeFromEpoch(time: string) {
+  const epochSeconds = time.replace("n", "");
+  const date = new Date(+epochSeconds * 1000);
+  return `${date.getHours().toString().padStart(2, "0")}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+}
+export function epocTime(time: string) {
+  const epochSeconds = time.replace("n", "");
 
-//       const result = await account?.executePaymasterTransaction(
-//         [...multicallData],
-//         feeDetails,
-//         feeEstimation?.suggested_max_fee_in_gas_token
-//       );
+  const date = new Date(+epochSeconds * 1000); // multiply by 1000 to convert to milliseconds
 
-//       const status = await myProvider.waitForTransaction(
-//         result?.transaction_hash as string
-//       );
-
-//       console.log(result);
-//       setResultHash(result.transaction_hash);
-//       console.log(status);
-//     }
-
-//     // Reset form
-//     setFormData({
-//       name: "",
-//       usage: null,
-//       tokenAddress: "",
-//       members: [
-//         { addr: "", percentage: 0 },
-//         { addr: "", percentage: 0 },
-//       ],
-//     });
-//     setIsCheckboxChecked(false);
-//   } catch (error) {
-//     console.error("Error creating group:", error);
-//   } finally {
-//     setIsSubmitting(false);
-//   }
-// };
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+}

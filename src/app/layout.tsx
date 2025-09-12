@@ -120,6 +120,7 @@ export default function RootLayout({
       <head></head>
       <body
         className={`text-white-text font-walsheim relative mx-auto bg-main-bg ${myCustomFont.variable}`}
+        suppressHydrationWarning={true}
       >
         <StarknetProvider>
           <RouteProvider>

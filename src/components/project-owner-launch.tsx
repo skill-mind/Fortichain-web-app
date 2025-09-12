@@ -83,7 +83,8 @@ export default function ProjectOwnerLauncher() {
               </span>
             </button>
           </div>
-          <div className="p-6 gap-6 flex flex-col items-center max-w-80 border bg-black/80 border-dark-border-gray rounded-[8px] justify-between">
+          {/* no use case for github app at the moment */}
+          {/* <div className="p-6 gap-6 flex flex-col items-center max-w-80 border bg-black/80 border-dark-border-gray rounded-[8px] justify-between">
             <div className="w-fit bg-[#BB00C133] p-4 rounded-full">
               <Github className="text-[#BB00C1] " />
             </div>
@@ -111,7 +112,7 @@ export default function ProjectOwnerLauncher() {
                 Link GitHub
               </span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex justify-center">

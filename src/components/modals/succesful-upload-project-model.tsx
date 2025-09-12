@@ -1,5 +1,7 @@
 import { CheckMark } from "@/icons/github";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { redirect } from "next/navigation";
 
 export default function SuccessModal({ handler }: { handler: () => void }) {
   return (
@@ -20,14 +22,17 @@ export default function SuccessModal({ handler }: { handler: () => void }) {
             Your Project was uploaded successfully. You can view all project
             under view projects
           </p>
-          <Link
-            href="/overview"
-            className="w-full min-h-14 p-0.5 group             
+
+          <button
+            className="w-full min-h-14 p-0.5 group      
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
       rounded-full group"
             type="button"
-            onClick={handler}
+            onClick={() => {
+              handler();
+              redirect("/overview");
+            }}
           >
             <span
               className="px-6 py-7 text-sm
@@ -37,7 +42,7 @@ export default function SuccessModal({ handler }: { handler: () => void }) {
             >
               Return to dashboard
             </span>
-          </Link>
+          </button>
         </div>
       </div>
     </>

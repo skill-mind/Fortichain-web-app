@@ -1,6 +1,13 @@
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
 import { UploadProjectProps } from "@/util/types";
-import { AccountInterface, byteArray, cairo, CallData } from "starknet";
+import {
+  AccountInterface,
+  byteArray,
+  cairo,
+  CallData,
+  PaymasterDetails,
+  shortString,
+} from "starknet";
 
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
@@ -13,7 +20,7 @@ export const uploadProjectHandle = async (
 ): Promise<void> => {
   try {
     setIsSubmitting(true);
-    console.log(+formData.deadline);
+    console.log(formData);
     if (account != undefined && formData.amount) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
@@ -24,7 +31,7 @@ export const uploadProjectHandle = async (
           project_type: byteArray.byteArrayFromString(formData.projectType),
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
-          priority: 1751738216,
+          priority: formData.priority,
           smart_contract_address: formData.contractAddress,
           amount: cairo.uint256(formData.amount),
         }),
@@ -40,7 +47,22 @@ export const uploadProjectHandle = async (
         ],
       };
       const multicallData = [approveCall, Call];
-      console.log(multicallData);
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
       const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(

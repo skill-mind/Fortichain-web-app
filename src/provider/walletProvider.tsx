@@ -68,6 +68,8 @@ import {
   voyager,
   InjectedConnector,
   Connector,
+  paymasterRpcProvider,
+  jsonRpcProvider,
 } from "@starknet-react/core";
 import { WebWalletConnector } from "starknetkit/webwallet";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
@@ -100,14 +102,24 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <StarknetConfig
+      paymasterProvider={paymasterRpcProvider({
+        rpc: () => {
+          return {
+            nodeUrl: "https://starknet.paymaster.avnu.fi",
+            headers: {
+              "https://sepolia.paymaster.avnu.fi":
+                process.env.NEXT_PUBLIC_PAYMASTER_API ?? "",
+            },
+          };
+        },
+      })}
       chains={[sepolia]}
-      provider={publicProvider()}
       connectors={connectors as Connector[]}
       explorer={voyager}
       autoConnect={true}
-      // provider={jsonRpcProvider({
-      //   rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
-      // })}
+      provider={jsonRpcProvider({
+        rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
+      })}
     >
       {children}
     </StarknetConfig>
