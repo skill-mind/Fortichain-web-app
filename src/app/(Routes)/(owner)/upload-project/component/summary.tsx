@@ -10,9 +10,11 @@ export default function Summary({
   repoUrl,
   priority,
 }: UploadProjectProps) {
-  const date = `${new Date(deadline).getDate()}-${
-    new Date(deadline).getMonth() + 1
-  }-${new Date(deadline).getFullYear()}`;
+  const date = deadline
+    ? `${new Date(deadline).getDate()}-${
+        new Date(deadline).getMonth() + 1
+      }-${new Date(deadline).getFullYear()}`
+    : "N/A";
 
   return (
     <section className="grid gap-5 text-base">

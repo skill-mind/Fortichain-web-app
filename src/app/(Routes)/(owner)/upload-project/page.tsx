@@ -9,6 +9,7 @@ import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
 import SuccessModal from "@/components/modals/succesful-upload-project-model";
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
 import { byteArray, cairo, CallData, PaymasterDetails } from "starknet";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const { account } = useAccount();
@@ -16,17 +17,16 @@ export default function Page() {
   const [formsection, setFormSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [formData, setFormData] = useState<UploadProjectProps>({
-    projectName: "PAYMESH",
-    description: "FAN OF A FAN",
-    projectType: "Security",
-    deadline: new Date(),
-    repoUrl:
-      "https://github.com/FrancescoXX/rust-crud-api/blob/main/docker-compose.yml",
-    contractAddress:
-      "0x043dee9c19e0F1d5d99D728cFc650df5E6646AF87906EcD6C36A5A7fBF811308",
+    projectName: "",
+    description: "",
+    projectType: "",
+    deadline: null,
+    repoUrl: "",
+    contractAddress: "",
     amount: null,
-    priority: "HIGH",
+    priority: "",
   });
   const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
   const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
@@ -40,16 +40,30 @@ export default function Page() {
 
   const handleSubmit = async () => {
     if (!account) {
-      return console.log("Connect Wallet to continue");
+      return toast.error("Connect Wallet to continue");
     }
-    uploadProjectHandle(account, setIsSubmitting, formData, setIsOpen);
+    uploadProjectHandle(
+      account,
+      setIsSubmitting,
+      formData,
+      setIsOpen,
+      handler,
+      setIsError
+    );
   };
   function handler() {
     setIsOpen((prev) => !prev);
   }
   return (
     <div>
-      {isOpen && <SuccessModal handler={handler} />}
+      {isOpen && (
+        <SuccessModal
+          handler={handler}
+          isSubmitting={isSubmitting}
+          isError={isError}
+          setIsError={setIsError}
+        />
+      )}
       <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center text-base">
         <li className="grid gap-4">
           <span>Submit New Project</span>

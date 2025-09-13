@@ -19,6 +19,24 @@ import { UploadProjectProps } from "@/util/types";
 import { CalendarDays } from "lucide-react";
 import { useState } from "react";
 
+const PROJECT_TYPES = [
+  "Web3 Application",
+  "Smart Contract / dApp",
+  "DeFi Protocol",
+  "NFT Marketplace / Project",
+  "DAO Platform",
+  "Wallet / Key Management",
+  "Cross-Chain Bridge",
+  "Oracle Protocol",
+  "Layer 1 Blockchain",
+  "Layer 2 Scaling Solution",
+  "RPC / API Provider",
+  "Smart Contract Library / SDK",
+  "zk / Privacy Protocol",
+  "Decentralized Storage",
+  "Decentralized Compute",
+];
+
 export default function SubmitReport({
   setFormData,
   data,
@@ -40,6 +58,7 @@ export default function SubmitReport({
         <Input
           value={data.projectName}
           placeholder="Enter project name"
+          max={100}
           className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
           onChange={(data) => {
             const value = data.target.value;
@@ -55,6 +74,7 @@ export default function SubmitReport({
       <div className="grid gap-2">
         <label htmlFor="">Description</label>
         <Textarea
+          maxLength={500}
           value={data.description}
           placeholder="Describe your project and its security requirements"
           className="border border-dark-border-gray rounded-[8px] min-h-28 pl-7 outline:border-blue-ball"
@@ -92,9 +112,13 @@ export default function SubmitReport({
                   <SelectValue placeholder="Select project type" />
                 </SelectTrigger>
                 <SelectContent className="bg-main-bg text-white-text">
-                  <SelectItem value="Escrow">Escrow</SelectItem>
-                  <SelectItem value="Security">Security</SelectItem>
-                  <SelectItem value="Finace">Finace</SelectItem>
+                  {PROJECT_TYPES.map((data, index) => {
+                    return (
+                      <SelectItem key={index} value={data}>
+                        {data}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -127,7 +151,7 @@ export default function SubmitReport({
               >
                 <Calendar
                   mode="single"
-                  selected={data.deadline}
+                  selected={data.deadline ?? undefined}
                   captionLayout="dropdown"
                   onSelect={(date) => {
                     setFormData((userData: UploadProjectProps) => {

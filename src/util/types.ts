@@ -2,7 +2,7 @@ export type UploadProjectProps = {
   projectName: string;
   description: string;
   projectType: string;
-  deadline: Date;
+  deadline: Date | null;
   repoUrl: string;
   contractAddress: string;
   amount: number | null;
