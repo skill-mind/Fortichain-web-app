@@ -138,17 +138,14 @@ export default function RootLayout({
         <StarknetProvider>
           <RouteProvider>
             <div className="min-h-screen">{children}</div>
+            <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
+              <span className="text-gray-text text-base">
+                © {year.getFullYear()} FortiChain. All rights reserved. Built on
+                Starknet.
+              </span>
+            </footer>
           </RouteProvider>
         </StarknetProvider>
-          </RouteProvider>
-        </StarknetProvider>
-
-        <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
-          <span className="text-gray-text text-base">
-            © {year.getFullYear()} FortiChain. All rights reserved. Built on
-            Starknet.
-          </span>
-        </footer>
       </body>
     </html>
   );
