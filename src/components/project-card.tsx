@@ -1,9 +1,10 @@
 import Image from "next/image";
 import avatar from "../../public/Ellipse 1.svg";
 import type { ProjectCard } from "@/util/mock-data";
+import { Project } from "@/hook/useBlockchain";
+import Link from "next/link";
 
-
-export default function ProjectCard({ project }: { project: ProjectCard }) {
+export default function ProjectCard({ project }: { project: Project }) {
   const bg =
     project.priority === "Low" || project.priority == "low"
       ? "bg-pririty-low-bg text-blue-ball"
@@ -13,23 +14,21 @@ export default function ProjectCard({ project }: { project: ProjectCard }) {
   return (
     <div
       className={`border ${
-        project.status == "audited" || project.status == "Available"
-          ? "border-pririty-low-bg"
-          : "border-dark-border-gray"
+        project.is_active ? "border-pririty-low-bg" : "border-dark-border-gray"
       } bg-dark-gray rounded-[8px] min-h-52 p-4 grid gap-3.5  font-walsheim font-medium`}
     >
       <div className="flex items-center gap-1">
         <span
           className={`text-12 rounded-full  w-1 h-1 ${
-            project.status == "Completed" ? "bg-good" : "bg-blue-ball"
+            project.is_completed ? "bg-good" : "bg-blue-ball"
           } `}
         />
-        <h5>{project.status}</h5>
+        <h5>{project.is_active ? "Available" : "audited"}</h5>
       </div>
       <div className="border-b border-dark-border-gray pb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Image src={avatar} alt="pririty type" />
-          <h3 className="text-base ">{project.title}</h3>
+          <h3 className="text-base ">{project.name}</h3>
         </div>
         <span className={` ${bg} rounded-full py-1.5 px-3 text-sm`}>
           Priority: {project.priority}
@@ -42,7 +41,8 @@ export default function ProjectCard({ project }: { project: ProjectCard }) {
             {project.deadline}
           </span>
         </div>
-        <button
+        <Link
+          href={`/view-projects/${project.id}`}
           className="w-full sm:w-fit min-h-11 p-0.5 group             
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
@@ -57,7 +57,7 @@ export default function ProjectCard({ project }: { project: ProjectCard }) {
           >
             View details
           </span>
-        </button>
+        </Link>
       </div>
     </div>
   );

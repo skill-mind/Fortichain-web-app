@@ -1,28 +1,32 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SubmitReport from "./component/submit-reprt";
 import FundProject from "./component/fund-project";
 import Summary from "./component/summary";
 import { UploadProjectProps } from "@/util/types";
 import { useAccount } from "@starknet-react/core";
 import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
+import SuccessModal from "@/components/modals/succesful-upload-project-model";
+import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
+import { byteArray, cairo, CallData, PaymasterDetails } from "starknet";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const { account } = useAccount();
 
   const [formsection, setFormSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [formData, setFormData] = useState<UploadProjectProps>({
-    projectName: "PAYMESH",
-    description: "FAN OF A FAN",
-    projectType: "Security",
-    deadline: new Date(),
-    repoUrl:
-      "https://github.com/FrancescoXX/rust-crud-api/blob/main/docker-compose.yml",
-    contractAddress:
-      "0x043dee9c19e0F1d5d99D728cFc650df5E6646AF87906EcD6C36A5A7fBF811308",
+    projectName: "",
+    description: "",
+    projectType: "",
+    deadline: null,
+    repoUrl: "",
+    contractAddress: "",
     amount: null,
-    priority: "HIGH",
+    priority: "",
   });
   const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
   const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
@@ -36,12 +40,30 @@ export default function Page() {
 
   const handleSubmit = async () => {
     if (!account) {
-      return console.log("Connect Wallet to continue");
+      return toast.error("Connect Wallet to continue");
     }
-    await uploadProjectHandle(account, setIsSubmitting, formData);
+    uploadProjectHandle(
+      account,
+      setIsSubmitting,
+      formData,
+      setIsOpen,
+      handler,
+      setIsError
+    );
   };
+  function handler() {
+    setIsOpen((prev) => !prev);
+  }
   return (
     <div>
+      {isOpen && (
+        <SuccessModal
+          handler={handler}
+          isSubmitting={isSubmitting}
+          isError={isError}
+          setIsError={setIsError}
+        />
+      )}
       <nav className="flex justify-center max-w-fit mx-auto gap-6 list-none  items-center text-base">
         <li className="grid gap-4">
           <span>Submit New Project</span>
@@ -77,10 +99,7 @@ export default function Page() {
         <div className="flex sm:flex-row flex-col justify-between items-center gap-6 my-2">
           {formsection != 1 && (
             <button
-              className="w-full min-h-50 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
+              className="w-full min-h-50 p-0.5 group hover:from-sky-blue-border hover:to-sky-blue-border bg-gradient-to-r group to-[#312F2F] from-[#212121] rounded-full group"
               type="button"
               onClick={() => {
                 if (formsection > 1) {
@@ -101,11 +120,14 @@ export default function Page() {
           )}
 
           <button
-            className="w-full min-h-50 p-0.5 group             
+            className={`${
+              isSubmitting ? "disabled:cursor-not-allowed" : ""
+            }  w-full min-h-50 p-0.5 group             
                   from-sky-blue-border to-sky-blue-border
                   bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
-              rounded-full group"
+              rounded-full group`}
             type="submit"
+            disabled={isSubmitting}
             onClick={(e) => {
               if (formsection < 3) {
                 setFormSection((prev) => prev + 1);
@@ -118,7 +140,7 @@ export default function Page() {
           >
             <span
               className="px-6 py-3
-                      from-sky-from to-sky-to
+                      from-sky-from to-sky-to group-disabled:cursor-not-allowed
                        bg-gradient-to-r group-hover:bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
             >

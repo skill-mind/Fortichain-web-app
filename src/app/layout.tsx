@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 // Example: app/layout.tsx or a component file
 import localFont from "next/font/local";
 import { StarknetProvider } from "@/provider/walletProvider";
@@ -120,19 +121,31 @@ export default function RootLayout({
       <head></head>
       <body
         className={`text-white-text font-walsheim relative mx-auto bg-main-bg ${myCustomFont.variable}`}
+        suppressHydrationWarning={true}
       >
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              padding: "20px 20px",
+              background: "#101011",
+              color: "#E2E2E2",
+              border: "1px solid #1F1F1F",
+            },
+          }}
+        />
         <StarknetProvider>
           <RouteProvider>
             <div className="min-h-screen">{children}</div>
+            <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
+              <span className="text-gray-text text-base">
+                © {year.getFullYear()} FortiChain. All rights reserved. Built on
+                Starknet.
+              </span>
+            </footer>
           </RouteProvider>
         </StarknetProvider>
-
-        <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
-          <span className="text-gray-text text-base">
-            © {year.getFullYear()} FortiChain. All rights reserved. Built on
-            Starknet.
-          </span>
-        </footer>
       </body>
     </html>
   );

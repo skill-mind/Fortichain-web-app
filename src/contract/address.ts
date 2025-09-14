@@ -1,7 +1,8 @@
 import { RpcProvider } from "starknet";
 
 export const FORTICHAINADDRESS =
-  "0x05885250a8c218ae396281965daf8ab011c3e5ca12d4d8ac12e46199cd5e432a";
+  // "0x3b97fd08a4c09446276618dfee6ef13f223aab50c135e86b871962b8369e36"; //latest working ca by gideon
+  "0x05885250a8c218ae396281965daf8ab011c3e5ca12d4d8ac12e46199cd5e432a"; // the one i deploy that work
 // "0x008c46c6442a61c5e61e5a5353b42394db7fb2e627e73250109368a0beb0fc2d";
 // "0x00b33437d7d836069f3446addc9f150017f2d6d5f0b23e2eec9fac12cd72323e";
 // "0x76ff3f9fb2242a63d6fca83f8034969cc344b0da2e7a289594027cfeb08fe60";
