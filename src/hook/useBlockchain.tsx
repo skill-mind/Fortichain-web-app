@@ -78,8 +78,8 @@ export function useUserProject(address: string) {
         description: data.description,
         is_active: data.is_active,
         is_completed: data.is_completed,
-        created_at: getTimeFromEpoch(data.created_at.toString()),
-        deadline: getTimeFromEpoch(data.deadline.toString()),
+        created_at: epocTime(data.created_at.toString()),
+        deadline: epocTime(data.deadline.toString()),
         priority: shortString.decodeShortString(data.priority),
         project_type: data.project_type,
         updated_at: epocTime(data.deadline.toString()),
@@ -103,7 +103,6 @@ export function getTimeFromEpoch(time: string) {
 export function epocTime(time: string) {
   const epochSeconds = time.replace("n", "");
 
-  const date = new Date(+epochSeconds * 1000); // multiply by 1000 to convert to milliseconds
-
+  const date = new Date(+epochSeconds); // multiply by 1000 to convert to milliseconds
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }

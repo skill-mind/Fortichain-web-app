@@ -1,3 +1,4 @@
+import { EditProjectProps } from "@/components/modals/edit-project";
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
 import { UploadProjectProps } from "@/util/types";
 import toast from "react-hot-toast";
@@ -68,7 +69,7 @@ export const uploadProjectHandle = async (
   handler();
   try {
     setIsSubmitting(true);
-    console.log(formData);
+
     if (account != undefined && formData.amount && formData.deadline) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
@@ -95,23 +96,23 @@ export const uploadProjectHandle = async (
         ],
       };
       const multicallData = [approveCall, Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
 
-      const feeEstimation = await account?.estimatePaymasterTransactionFee(
-        [...multicallData],
-        feeDetails
-      );
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
 
-      const result = await account?.executePaymasterTransaction(
-        [...multicallData],
-        feeDetails,
-        feeEstimation?.suggested_max_fee_in_gas_token
-      );
-      // const result = await account.execute(multicallData);
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
@@ -125,6 +126,75 @@ export const uploadProjectHandle = async (
     console.error("Error:", error);
     setIsError(true);
     toast.error("error uploading project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const EditProjectHandle = async (
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  formData: EditProjectProps,
+  setIsOpen: SetIsOpen,
+  handler: () => void,
+  setIsError: SetIsError
+): Promise<void> => {
+  const { projectId, description, repoUrl } = formData;
+
+  if (!description) {
+    toast.error("project description is required!");
+    return;
+  }
+  if (!repoUrl) {
+    toast.error("project  is required!");
+    return;
+  }
+  // handler();
+  try {
+    setIsSubmitting(true);
+
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "edit_project",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(formData.projectId),
+          description: byteArray.byteArrayFromString(formData.description),
+          repository_url: byteArray.byteArrayFromString(formData.repoUrl),
+        }),
+      };
+      console.log(Call);
+      const multicallData = [Call];
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setIsError(true);
+    toast.error("error editing project");
   } finally {
     setIsSubmitting(false);
   }

@@ -17,6 +17,7 @@ import { ArrowGray, GithubIcon } from "@/icons/github";
 import ProjectReviewCard from "./component/projectReviewCard";
 import { useAccount } from "@starknet-react/core";
 import { useUserProject } from "@/hook/useBlockchain";
+import Loader from "@/app/loading";
 
 export default function Page() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(
@@ -25,6 +26,19 @@ export default function Page() {
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
   console.log(projects);
+  if (projects == undefined) {
+    return <Loader />;
+  }
+  if (projects.length == 0) {
+    return (
+      <div className="bg-main-bg p-1 md:p-2.5 w-full h-screen flex justify-center items-center text-center text-gray-text text-2xl md:text-[32px]">
+        <h2>
+          You currently do not have a project on fortichain, might want to
+          upload your project to get fortified
+        </h2>
+      </div>
+    );
+  }
   return (
     <div className=" font-walsheim">
       <div className="h-11 border-dark-border-gray border rounded-full py-1 md:max-w-[450px] mb-3">
