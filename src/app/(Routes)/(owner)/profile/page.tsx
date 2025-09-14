@@ -47,6 +47,7 @@ export default function Profile() {
           <div className="flex flex-wrap gap-3">
             {projects?.map((data, index) => (
               <Link
+                key={index}
                 href={data.repository_url}
                 target="_blank"
                 className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2"
