@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SubmitReport from "./component/submit-reprt";
 import FundProject from "./component/fund-project";
 import Summary from "./component/summary";
@@ -29,6 +30,7 @@ export default function Page() {
     priority: "",
   });
   const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
+  const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
   const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
 
   const header =
@@ -80,6 +82,7 @@ export default function Page() {
       </nav>
 
       <div className="max-w-[750px] mx-auto mt-7 p-6 rounded-[8px] border border-dark-border-gray grid gap-5">
+      <div className="max-w-[750px] mx-auto mt-7 p-6 rounded-[8px] border border-dark-border-gray grid gap-5">
         <div className="mb-3 text-18 grid gap-3">
           <h2>{header}</h2>
           {formsection == 2 && (
@@ -100,6 +103,9 @@ export default function Page() {
           {formsection != 1 && (
             <button
               className="w-full min-h-50 p-0.5 group             
+          {formsection != 1 && (
+            <button
+              className="w-full min-h-50 p-0.5 group             
                   hover:from-sky-blue-border hover:to-sky-blue-border
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
@@ -113,9 +119,24 @@ export default function Page() {
             >
               <span
                 className="px-6 py-3
+              type="button"
+              onClick={() => {
+                if (formsection > 1) {
+                  setFormSection((prev) => prev - 1);
+                }
+                console.log(formData);
+              }}
+            >
+              <span
+                className="px-6 py-3
                       group-hover:from-sky-from group-hover:to-sky-to
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+              >
+                Back
+              </span>
+            </button>
+          )}
               >
                 Back
               </span>
@@ -148,9 +169,11 @@ export default function Page() {
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
             >
               {isSubmitting ? "submitting...." : "next"}
+              {isSubmitting ? "submitting...." : "next"}
             </span>
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

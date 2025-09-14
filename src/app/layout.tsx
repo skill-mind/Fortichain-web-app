@@ -140,6 +140,8 @@ export default function RootLayout({
             <div className="min-h-screen">{children}</div>
           </RouteProvider>
         </StarknetProvider>
+          </RouteProvider>
+        </StarknetProvider>
 
         <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
           <span className="text-gray-text text-base">

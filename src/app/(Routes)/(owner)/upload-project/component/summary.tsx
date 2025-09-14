@@ -58,6 +58,8 @@ export default function Summary({
         <div className="grid gap-2 w-1/2">
           <h2>Prority</h2>
           <p className="text-gray-text text-sm">{priority}</p>
+          <h2>Prority</h2>
+          <p className="text-gray-text text-sm">{priority}</p>
         </div>
       </div>
     </section>
