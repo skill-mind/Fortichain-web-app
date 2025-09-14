@@ -113,23 +113,15 @@
 // export default StarknetProvider;
 
 "use client";
-import React from "react";
-
 import { sepolia, mainnet } from "@starknet-react/chains";
 import React from "react";
-
-import { sepolia, mainnet } from "@starknet-react/chains";
 import {
   StarknetConfig,
   publicProvider,
   ready,
   braavos,
   useInjectedConnectors,
-  ready,
-  braavos,
-  useInjectedConnectors,
   voyager,
-  InjectedConnector,
   InjectedConnector,
   Connector,
   paymasterRpcProvider,
