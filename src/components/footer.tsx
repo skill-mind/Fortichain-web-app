@@ -20,6 +20,12 @@ export default function Footer() {
           <li className="bg-dark-gray px-6 py-3 rounded-full">
             <Link href="/blog">Blog</Link>
           </li>
+          <li className="bg-dark-gray px-6 py-3 rounded-full">
+            <Link href="/privacy">Privacy</Link>
+          </li>
+          <li className="bg-dark-gray px-6 py-3 rounded-full">
+            <Link href="/help-center">Help Center</Link>
+          </li>
         </ul>
         <ul className="flex justify-between items-center gap-2">
           <li className="bg-dark-gray p-3 rounded-full ">

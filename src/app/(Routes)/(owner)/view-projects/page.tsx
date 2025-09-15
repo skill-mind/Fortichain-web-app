@@ -25,7 +25,6 @@ export default function Page() {
   );
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
-  console.log(projects);
   if (projects == undefined) {
     return <Loader />;
   }

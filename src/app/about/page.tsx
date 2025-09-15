@@ -6,6 +6,7 @@ import { MoveLeft, MoveRight } from "lucide-react";
 import Footer from "@/components/footer";
 import { AboutUsPage } from "./component/about-us-page";
 import { useState } from "react";
+import Nav from "@/components/nav";
 
 const sections = [
   "Welcome",
@@ -26,12 +27,10 @@ export default function About() {
   };
   return (
     <>
-      <div className="px-3 py-5 border-t w-full text-center h-fit border-dark-border-gray items-center border-b flex justify-center">
-        <Image src={logo} alt="fortichain" />
-      </div>
-      <section className="relative max-w-sit-screen mx-auto xl:px-20 px-10">
-        <div className=" mx-auto border border-dark-border-gray mt-20 rounded-[8px] py-14 flex items-center  justify-around">
-          <div className="space-y- grid gap-5 max-w-80">
+      <Nav />
+      <section className="relative max-w-sit-screen mx-auto xl:px-20 px-10 pt-20 grid gap-8">
+        <div className="w-full bg-dark-gray mx-auto border border-dark-border-gray mt-20 rounded-[8px] py-14 flex items-center  justify-around p-6">
+          <div className="space-y- grid gap-5 w-full md:max-w-80">
             <div className="bg-dark-gray px-6 py-3 rounded-full md:block hidden w-fit">
               Powered by Starknet
             </div>
@@ -41,7 +40,7 @@ export default function About() {
               researchers and projects with seamless on-chain payouts.
             </p>
           </div>
-          <div>
+          <div className=" md:block hidden">
             <Image src={folder} alt="folder" />
           </div>
         </div>

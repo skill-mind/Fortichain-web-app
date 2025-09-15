@@ -73,7 +73,6 @@ export default function Page() {
       </section>
       {/* home footer */}
       <Footer />
-      {launchModal && <LaunchAppNavModal />}
     </div>
   );
 }

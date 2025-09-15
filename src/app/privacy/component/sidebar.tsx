@@ -27,7 +27,7 @@ export function Sidebar({
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="xl:hidden fixed top-28 left-4 z-50">
         <Button
           variant="outline"
           size="icon"
@@ -45,7 +45,7 @@ export function Sidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed h-fit left-0 w-80 z-40 transform bg-main-bg transition-transform duration-300 ease-in-out lg:translate-x-0",
+          "fixed h-fit w-80 z-40 transform bg-main-bg transition-transform duration-300 ease-in-out xl:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -81,7 +81,7 @@ export function Sidebar({
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-30 xl:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

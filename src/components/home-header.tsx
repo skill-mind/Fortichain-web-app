@@ -1,54 +1,11 @@
-"use client";
-import { useContext } from "react";
 import LauchAppNav from "./launch-app-nav";
-import { Router } from "@/provider/route-provider";
-import logo from "../../public/Logo.svg";
-import Image from "next/image";
-import Link from "next/link";
+import Nav from "./nav";
 
 export default function Header() {
-  const { setter, launchModal } = useContext(Router);
   return (
     <header className="bg-[url(../../public/Hero.svg)] h-[815px] border-b border-dark-border-gray">
-      <div className="fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5">
-        <nav className="max-w-sit-screen mx-auto flex justify-between items-center">
-          <Image src={logo} alt="forticahin" />
-          <ul className="flex justify-between items-center gap-2">
-            <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
-              <Link href="/about">About</Link>
-            </li>
-            <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
-              Documentation
-            </li>
-            <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
-              Blog
-            </li>
-          </ul>
-          <button
-            className="min-w-157 min-h-50 p-0.5 group
-           bg-sky-blue-border
-           hover:bg-sky-blue-border
-       rounded-full group"
-            type="button"
-            onClick={() => {
-              setter((prev) => {
-                return { ...prev, launchModal: !launchModal };
-              });
-            }}
-          >
-            <span
-              className="px-6 py-3
-               from-sky-from to-sky-to
-               bg-gradient-to-r
-           flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-            >
-              Launch app
-            </span>
-          </button>
-        </nav>
-      </div>
-
-      <div className="flex h-11/12 md:h-full justify-center items-center flex-col gap-5 max-w-fix text-center mx-auto px-5">
+      <Nav />
+      <div className="flex h-11/12 md:h-full justify-center items-center flex-col gap-5 max-w-fix text-center mx-auto px-5 md:mt-0 mt-36">
         <span className="w-fit bg-dark-gray px-6 py-3 rounded-full ">
           Powered by Starknet
         </span>
