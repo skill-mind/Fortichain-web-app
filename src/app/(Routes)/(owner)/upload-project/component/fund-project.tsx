@@ -31,7 +31,7 @@ export default function FundProject({
           value={data.amount ?? ""}
           min={100}
           type="number"
-          placeholder="100"
+          placeholder="1000"
           className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
           onChange={(data) => {
             const value = Number(data.target.value);
@@ -43,7 +43,7 @@ export default function FundProject({
             });
           }}
         />
-        <span className="text-gray-text">Minimum deposit: $100</span>
+        <span className="text-gray-text">Minimum deposit: $1000</span>
       </div>
       <div className="w-full grid gap-2 ">
         <label htmlFor="">Priority</label>
