@@ -172,7 +172,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       chains={[sepolia]}
       connectors={connectors as Connector[]}
       explorer={voyager}
-      autoConnect={true}
+      autoConnect
       provider={jsonRpcProvider({
         rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
       })}
