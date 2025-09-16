@@ -17,7 +17,7 @@ export default function Layou({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { account, address } = useAccount();
+  const { account, address, isConnected } = useAccount();
   const { route, setter } = useContext(Router);
   const location =
     route === "owner"
@@ -35,14 +35,14 @@ export default function Layou({
       : route === "validator"
       ? "Validator Dashboard"
       : null;
-  // useEffect(() => {
-  //   if (!address) {
-  //     setter((prev) => {
-  //       return { ...prev, isComplete: false, route: "none" };
-  //     });
-  //     redirect("/");
-  //   }
-  // }, [account]);
+  useEffect(() => {
+    if (!isConnected) {
+      setter((prev) => {
+        return { ...prev, isComplete: false, route: "none" };
+      });
+      redirect("/");
+    }
+  }, [account]);
   return (
     <>
       <DashboardNavBar routeType={description} routes={location} />

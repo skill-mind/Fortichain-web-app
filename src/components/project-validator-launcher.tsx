@@ -8,6 +8,8 @@ import { Connector, useAccount, useConnect } from "@starknet-react/core";
 import toast from "react-hot-toast";
 import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
 import { create_validator_profile } from "@/hook/blockchainWriteFunction";
+import { useContractFetch } from "@/hook/useBlockchain";
+import { FORTICHAINABI } from "@/contract/abi";
 
 export interface validatorType {
   address: string;
@@ -30,7 +32,13 @@ export default function ProjectValidatorLauncher() {
   const [connector, setConnector] = useState<StarknetkitConnector | string>("");
   const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
   const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
+  // const { readData: validators } = useContractFetch(
+  //   FORTICHAINABI,
+  //   "get_all_validators",
 
+  //   []
+  // );
+  // console.log(validators);
   const [formData, setFormData] = useState({
     address: "",
     userName: "",
@@ -43,6 +51,18 @@ export default function ProjectValidatorLauncher() {
         return { ...prev, address };
       });
     }
+    // const fortichain_valodators = validators?.map((data) => {
+    //   return `0x0${data.validator_address.toString(16)}`;
+    // });
+    // console.log(address);
+    // let m = fortichain_valodators?.filter((data) => data === address);
+
+    // if (m?.lenght > 0) {
+    //   setFormData((prev) => {
+    //     return { ...prev, isComplete: true };
+    //   });
+    //   redirect("/validator");
+    // }
     if (
       formData.address &&
       formData.githubLink &&
@@ -66,9 +86,10 @@ export default function ProjectValidatorLauncher() {
       setIsOpen,
       setIsError
     );
-    if (isComplete && route === "validator") {
-      redirect("/validator");
-    }
+    setFormData((prev) => {
+      return { ...prev, isComplete: true };
+    });
+    redirect("/validator");
   }
   async function connectWallet() {
     const { connector } = await starknetkitConnectModal();
