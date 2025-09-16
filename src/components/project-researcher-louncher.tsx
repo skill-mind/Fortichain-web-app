@@ -50,7 +50,8 @@ export default function ProjectValidatorLauncher() {
     //   setIsOpen,
     //   setIsError
     // );
-    if (isComplete && route == "researcher") {
+    console.log(isComplete);
+    if (!isComplete && route == "researcher") {
       redirect("/researcher");
     }
   }
