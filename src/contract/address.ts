@@ -1,7 +1,8 @@
 import { RpcProvider } from "starknet";
 
 export const FORTICHAINADDRESS =
-  "0x04f8730d129390eb7c0c2f86a1949e0701f1fe930f8f54acd37d31a16661fcd7"; // latest ca woith project bounty
+  "0x04554dca71a6227d3933d01d42c96fa1e2e85281ff528a0d1a9dbcc686e4c34a"; // latest with validator creating currect flow
+// "0x04f8730d129390eb7c0c2f86a1949e0701f1fe930f8f54acd37d31a16661fcd7"; // latest ca woith project bounty
 // "0x3b97fd08a4c09446276618dfee6ef13f223aab50c135e86b871962b8369e36"; //latest working ca by gideon
 // "0x05885250a8c218ae396281965daf8ab011c3e5ca12d4d8ac12e46199cd5e432a"; // the one i deploy that work
 // "0x008c46c6442a61c5e61e5a5353b42394db7fb2e627e73250109368a0beb0fc2d";

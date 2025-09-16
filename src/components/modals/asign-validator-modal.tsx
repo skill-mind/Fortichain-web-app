@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import Rating from "../rating";
 import { mockUserAccountData } from "@/app/(Routes)/(admin)/suspension/component/suspention-table";
 import { useState } from "react";
 

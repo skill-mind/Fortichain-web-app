@@ -4,14 +4,30 @@ import { useContext, useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Router } from "@/provider/route-provider";
 import { redirect } from "next/navigation";
-import { useAccount } from "@starknet-react/core";
+import { Connector, useAccount, useConnect } from "@starknet-react/core";
 import toast from "react-hot-toast";
+import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
+import { create_validator_profile } from "@/hook/blockchainWriteFunction";
 
+export interface validatorType {
+  address: string;
+  userName: string;
+  githubLink: string;
+  passworks: string[];
+}
 export default function ProjectValidatorLauncher() {
   const { isComplete, route, setter } = useContext(Router);
-  const { address } = useAccount();
+  const { address, isConnected, account } = useAccount();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [formsection, setFormSection] = useState(1);
   const [passWork, setPassWork] = useState(1);
+  const { connect, connectors } = useConnect();
+  const { starknetkitConnectModal } = useStarknetkitConnectModal({
+    connectors: connectors as StarknetkitConnector[],
+  });
+  const [connector, setConnector] = useState<StarknetkitConnector | string>("");
   const style1 = formsection >= 2 ? "bg-blue-ball" : "bg-dark-gray-pop";
   const style2 = formsection == 3 ? "bg-blue-ball" : "bg-dark-gray-pop";
 
@@ -38,34 +54,29 @@ export default function ProjectValidatorLauncher() {
       });
     }
   }, [formsection]);
-  interface FormData {
-    address: string;
-    userName: string;
-    githubLink: string;
-    passworks: string[];
-  }
 
-  function handleSubmit(e: React.FormEvent): void {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (formData.githubLink.startsWith("https://github.com/")) {
-      toast.error("A valid github link is required");
-      return;
-    }
-    if (formData.passworks.length < 0) {
-      toast.error("passwork link is required");
-      return;
-    }
-    const wrongPassWorkLink: string[] = formData.passworks.filter(
-      (m: string) => !m.startsWith("https://github.com/")
+    console.log(formData);
+    await create_validator_profile(
+      account,
+      setIsSubmitting,
+      formData,
+      setIsOpen,
+      setIsError
     );
-    if (wrongPassWorkLink.length > 0) {
-      toast.error("A valid github link is required for passworks");
-      return;
-    }
     if (isComplete && route === "validator") {
       redirect("/validator");
     }
+  }
+  async function connectWallet() {
+    const { connector } = await starknetkitConnectModal();
+    if (!connector) {
+      return;
+    }
+    setConnector(connector);
+    await connect({ connector: connector as Connector });
   }
   return (
     <div className="flex h-4/5 justify-center items-center gap-10 flex-col">
@@ -109,19 +120,24 @@ export default function ProjectValidatorLauncher() {
                     </span>
                   </div>
                   <button
-                    className="w-full min-h-11 p-0.5 group             
+                    className={`w-full min-h-11 p-0.5 group
               hover:from-sky-blue-border hover:to-sky-blue-border
-              bg-gradient-to-r group to-[#312F2F] from-[#212121] text-base
-          rounded-full group"
+              bg-gradient-to-r ${
+                isConnected
+                  ? "from-sky-blue-border to-sky-blue-border bg-gradient-to-r"
+                  : ""
+              } to-[#312F2F] from-[#212121] text-base rounded-full`}
                     type="button"
+                    onClick={connectWallet}
                   >
                     <span
-                      className="px-6 py-3
-                  group-hover:from-sky-from group-hover:to-sky-to
-                  group-hover:bg-gradient-to-r bg-[#1C1C1C]
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                      className={`px-6 py-3 ${
+                        isConnected
+                          ? "from-sky-from to-sky-to bg-gradient-to-r"
+                          : ""
+                      } group-hover:from-sky-from group-hover:to-sky-to group-hover:bg-gradient-to-r bg-[#1C1C1C] flex items-center gap-2.5 p-2 justify-center cursor-pointer rounded-full h-10 w-full`}
                     >
-                      Connect Wallet
+                      {isConnected ? "Connected" : "Connect Wallet"}
                     </span>
                   </button>
                 </div>
@@ -244,7 +260,8 @@ export default function ProjectValidatorLauncher() {
             </span>
           </button>
           <button
-            className={`min-w-72  min-h-11 p-0.5 group             
+            disabled={!isConnected}
+            className={`min-w-72 disabled:cursor-not-allowed  min-h-11 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group to-[#312F2F] from-[#212121] text-base
           rounded-full group ${formsection == 3 ? "hidden" : "block"} ${
@@ -254,14 +271,14 @@ export default function ProjectValidatorLauncher() {
             }`}
             type="button"
             onClick={() => {
-              if (formData.address.length < 5) {
+              if (!isConnected) {
                 toast.error("connect your wallet");
                 return;
               }
-              if (formData.userName.length < 5 && formsection === 2) {
-                toast.error("username lenght has to be 5 character min");
-                return;
-              }
+              // if (formData.userName.length < 5 && formsection === 2) {
+              //   toast.error("username lenght has to be 5 character min");
+              //   return;
+              // }
               setFormSection((prev) => {
                 if (prev === 4) return prev;
                 return prev + 1;
@@ -269,7 +286,7 @@ export default function ProjectValidatorLauncher() {
             }}
           >
             <span
-              className={`px-6 py-3 h-60
+              className={`px-6 py-3 h-60 group-disabled:cursor-not-allowed
                   group-hover:from-sky-from group-hover:to-sky-to
                   group-hover:bg-gradient-to-r 
               flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full w-full ${
@@ -279,7 +296,6 @@ export default function ProjectValidatorLauncher() {
               }`}
             >
               Continue
-              {}
             </span>
           </button>
           <button
@@ -302,7 +318,7 @@ export default function ProjectValidatorLauncher() {
                   from-sky-from to-sky-to bg-gradient-to-r
               `}
             >
-              Proceed to dashboard
+              {isSubmitting ? "submitting...." : " Proceed to dashboard"}
             </span>
           </button>
         </div>

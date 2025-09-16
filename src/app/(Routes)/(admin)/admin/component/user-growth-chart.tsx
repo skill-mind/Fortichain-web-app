@@ -1,15 +1,7 @@
 "use client";
 
-import {
-  Bar,
-  BarChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { ChartTooltip } from "@/components/ui/chart";
 
 const data = [
   { month: "Jan", projectOwners: 15, researchers: 25, validators: 20 },

@@ -15,7 +15,7 @@ import Explore from "@/components/explore-fortichain";
 import Footer from "@/components/footer";
 
 export default function Page() {
-  const { route, launchModal, setter } = useContext(Router);
+  const { route, setter } = useContext(Router);
 
   if (route !== "none") {
     return <LaunchAppUi />;

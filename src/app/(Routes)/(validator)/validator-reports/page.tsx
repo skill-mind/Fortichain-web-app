@@ -8,10 +8,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUserProject } from "@/hook/useBlockchain";
-import { mockResercher } from "@/util/mock-data";
 import { useAccount } from "@starknet-react/core";
 
-export default function Page() {
+export default function ValidatorReport() {
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
   return (

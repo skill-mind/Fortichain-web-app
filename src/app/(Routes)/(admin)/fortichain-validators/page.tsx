@@ -1,6 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
 import ValidatorModal from "@/components/modals/validator-details-modal";

@@ -1,5 +1,3 @@
-import { FileText } from "lucide-react";
-import Card from "../../(owner)/overview/component/card";
 import MetricsCard from "./component/metrics-card";
 import { UserGrowthChart } from "./component/user-growth-chart";
 // import TypeScriptRadialBars from "./component/donot-chart";

@@ -10,7 +10,6 @@ import {
 import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
-import ReviewModal from "@/components/modals/review-modal";
 import AsignValidorModal from "@/components/modals/asign-validator-modal";
 
 export default function Projests() {

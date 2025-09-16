@@ -7,7 +7,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockProjects } from "@/util/mock-data";
-import ProjectCard from "../../../../components/project-card";
 import { useState } from "react";
 import { Project } from "@/util/types";
 import { FileCode, FileMinus, X } from "lucide-react";

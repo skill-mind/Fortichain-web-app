@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 // Example: app/layout.tsx or a component file
 import localFont from "next/font/local";
 import { StarknetProvider } from "@/provider/walletProvider";
-import logo from "../../public/Logo (2).svg";
 import RouteProvider from "@/provider/route-provider";
 
 const myCustomFont = localFont({

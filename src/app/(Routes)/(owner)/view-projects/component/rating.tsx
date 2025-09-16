@@ -1,6 +1,5 @@
 "use client";
 import Rating from "@/components/rating";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
