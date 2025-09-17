@@ -1,15 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
-import ReviewModal from "@/components/modals/review-modal";
 import { useState } from "react";
 import ResearcherModal from "@/components/modals/researcher-details-modal";
 

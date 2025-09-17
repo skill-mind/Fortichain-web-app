@@ -1,4 +1,3 @@
-import { withdrawalData } from "@/util/mock-data";
 import { WidthrawTable } from "../../../../components/WidthrawTable";
 
 export default function Page() {
@@ -76,7 +75,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-<WidthrawTable/>
+      <WidthrawTable />
     </section>
   );
 }

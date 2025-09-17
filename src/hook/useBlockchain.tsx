@@ -52,6 +52,7 @@ export interface Project {
   smart_contract_address: { toString: (radix: number) => string };
   updated_at: string;
   validator_paid: boolean; //
+  amount: number;
 }
 
 export function useUserProject(address: string) {
@@ -61,7 +62,7 @@ export function useUserProject(address: string) {
     "get_user_projects",
     [address]
   );
-
+  console.log(projectList);
   useEffect(() => {
     if (!projectList || !address) return; //
     const projectData: Project[] = [];
@@ -84,8 +85,10 @@ export function useUserProject(address: string) {
         project_type: data.project_type,
         updated_at: epocTime(data.deadline.toString()),
         project_owner: `0x0${data["project_owner"].toString(16)}`,
+        amount: +data.amount?.toString(), //
       });
     });
+    // console.log(projectData);
     setProjectsData(projectData);
   }, [projectList, address]);
 

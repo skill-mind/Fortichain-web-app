@@ -10,22 +10,16 @@ import { mockProjects } from "@/util/mock-data";
 import ProjectCard from "../../../../components/project-card";
 import { useState } from "react";
 import { Project } from "@/util/types";
-import { FileCode, FileMinus, X } from "lucide-react";
-import Image from "next/image";
-import avatar from "../../../../../public/Ellipse 1.svg";
-import { ArrowGray, GithubIcon } from "@/icons/github";
-import ProjectReviewCard from "./component/projectReviewCard";
 import { useAccount } from "@starknet-react/core";
 import { useUserProject } from "@/hook/useBlockchain";
 import Loader from "@/app/loading";
 
 export default function Page() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(
-    mockProjects[0]
-  );
+  // const [selectedProject, setSelectedProject] = useState<Project | null>(
+  //   mockProjects[0]
+  // );
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
-  console.log(projects);
   if (projects == undefined) {
     return <Loader />;
   }

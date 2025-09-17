@@ -5,6 +5,8 @@ import { Sidebar } from "./component/sidebar";
 import { PrivacyContent } from "./component/content";
 import Image from "next/image";
 import logo from "../../../public/Logo (2).svg";
+import Nav from "@/components/nav";
+import Footer from "@/components/footer";
 export default function PrivacyPolicyPage() {
   const {
     sections,
@@ -15,25 +17,26 @@ export default function PrivacyPolicyPage() {
   } = usePrivacyNavigation();
 
   return (
-    <section className="relative max-w-sit-screen mx-auto">
-      <div className="px-3 py-5 border-t w-full text-center h-fit border-dark-border-gray items-center border-b flex justify-center">
-        <Image src={logo} alt="fortichain" />
-      </div>
-      <div className="min-h-screen">
-        <div className="flex text-white-text">
-          <Sidebar
-            sections={sections}
-            activeSection={activeSection}
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            scrollToSection={scrollToSection}
-          />
+    <>
+      <Nav />
+      <section className="relative px-6 max-w-sit-screen mx-auto mt-36 ">
+        <div className="min-h-screen">
+          <div className="flex text-white-text justify-between">
+            <Sidebar
+              sections={sections}
+              activeSection={activeSection}
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              scrollToSection={scrollToSection}
+            />
 
-          <main className="flex-1  px-4 sm:px-6 lg:px-8 py-8 max-w-4xl mx-auto">
-            <PrivacyContent />
-          </main>
+            <main className="px-6 sm:px-6 lg:pl-28 py-8 max-w-4xl mx-auto">
+              <PrivacyContent />
+            </main>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <Footer />
+    </>
   );
 }

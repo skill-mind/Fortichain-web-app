@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 // Example: app/layout.tsx or a component file
 import localFont from "next/font/local";
 import { StarknetProvider } from "@/provider/walletProvider";
-import logo from "../../public/Logo (2).svg";
 import RouteProvider from "@/provider/route-provider";
 
 const myCustomFont = localFont({
@@ -49,14 +48,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://fortichain.io",
+    url: "https://forti-chain.xyz",
     title: "FortiChain - Decentralized Blockchain Security Platform",
     description:
       "Enhance blockchain security through automated vulnerability disclosure and bug bounty processes. Trustless, transparent, and secure smart contract auditing.",
     siteName: "FortiChain",
     images: [
       {
-        url: "/favicon.svg",
+        url: "https://forti-chain.xyz/favicon.svg",
         width: 1200,
         height: 630,
         alt: "FortiChain - Decentralized Blockchain Security Platform",
@@ -68,7 +67,7 @@ export const metadata: Metadata = {
     title: "FortiChain - Decentralized Blockchain Security Platform",
     description:
       "Enhance blockchain security through automated vulnerability disclosure and bug bounty processes.",
-    images: ["/favicon.svg"],
+    images: ["https://forti-chain.xyz/favicon.svg"],
     creator: "@fortichain",
     site: "@fortichain",
   },

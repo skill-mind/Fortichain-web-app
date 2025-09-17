@@ -62,6 +62,7 @@ export default function Page() {
         project_type: project.project_type,
         updated_at: epocTime(project.deadline.toString()),
         project_owner: `0x0${project["project_owner"].toString(16)}`,
+        amount: +project?.amount.toString(),
       });
     }
   }, [project]);

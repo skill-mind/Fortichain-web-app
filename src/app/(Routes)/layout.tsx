@@ -8,14 +8,17 @@ import {
   researcherRoute,
   validatorRoute,
 } from "@/util/route";
-import { useContext } from "react";
+import { useAccount } from "@starknet-react/core";
+import { redirect } from "next/navigation";
+import { useContext, useEffect } from "react";
 
 export default function Layou({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { route } = useContext(Router);
+  const { account, address, isConnected } = useAccount();
+  const { route, setter } = useContext(Router);
   const location =
     route === "owner"
       ? ownerRoute
@@ -32,6 +35,14 @@ export default function Layou({
       : route === "validator"
       ? "Validator Dashboard"
       : null;
+  useEffect(() => {
+    if (!isConnected) {
+      setter((prev) => {
+        return { ...prev, isComplete: false, route: "none" };
+      });
+      redirect("/");
+    }
+  }, [account]);
   return (
     <>
       <DashboardNavBar routeType={description} routes={location} />

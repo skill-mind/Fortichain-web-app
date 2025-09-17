@@ -1,4 +1,4 @@
-import { FadeLoader, GridLoader, RingLoader } from "react-spinners";
+import { RingLoader } from "react-spinners";
 const Loader = () => {
   return (
     <div className="h-full mt-36 w-full flex justify-center items-center">

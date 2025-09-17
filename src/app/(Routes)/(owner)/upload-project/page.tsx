@@ -7,8 +7,6 @@ import { UploadProjectProps } from "@/util/types";
 import { useAccount } from "@starknet-react/core";
 import { uploadProjectHandle } from "@/hook/blockchainWriteFunction";
 import SuccessModal from "@/components/modals/succesful-upload-project-model";
-import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
-import { byteArray, cairo, CallData, PaymasterDetails } from "starknet";
 import toast from "react-hot-toast";
 
 export default function Page() {
@@ -128,7 +126,7 @@ export default function Page() {
               rounded-full group`}
             type="submit"
             disabled={isSubmitting}
-            onClick={(e) => {
+            onClick={() => {
               if (formsection < 3) {
                 setFormSection((prev) => prev + 1);
               }

@@ -6,9 +6,10 @@ import Link from "next/link";
 
 export default function ProjectCard({ project }: { project: Project }) {
   const bg =
-    project.priority === "Low" || project.priority == "low"
+    project.priority.toLocaleUpperCase() === "Low".toLocaleUpperCase() ||
+    project.priority.toLocaleUpperCase() == "low".toLocaleUpperCase()
       ? "bg-pririty-low-bg text-blue-ball"
-      : project.priority === "Medium"
+      : project.priority.toLocaleUpperCase() === "Medium".toLocaleUpperCase()
       ? "bg-warning-bg text-warning"
       : "bg-pririty-high-bg text-pririty-high-text";
   return (
@@ -31,7 +32,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           <h3 className="text-base ">{project.name}</h3>
         </div>
         <span className={` ${bg} rounded-full py-1.5 px-3 text-sm`}>
-          Priority: {project.priority}
+          Priority: {project.priority.toLocaleUpperCase()}
         </span>
       </div>
       <div className="flex justify-between items-center my-3 flex-wrap gap-2">

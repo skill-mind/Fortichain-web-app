@@ -10,7 +10,7 @@ import {
 import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
-import ReviewModal from "@/components/modals/review-modal";
+import AsignValidorModal from "@/components/modals/asign-validator-modal";
 
 export default function Projests() {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +58,8 @@ export default function Projests() {
         </div>
       </div>
       <ProjectTable handler={handler} />
-      {isOpen && <ReviewModal handler={handler} />}
+      {/* {isOpen && <ReviewModal handler={handler} />} */}
+      {isOpen && <AsignValidorModal handler={handler} />}
     </section>
   );
 }

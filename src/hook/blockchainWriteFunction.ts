@@ -1,4 +1,5 @@
 import { EditProjectProps } from "@/components/modals/edit-project";
+import { validatorType } from "@/components/project-validator-launcher";
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
 import { UploadProjectProps } from "@/util/types";
 import toast from "react-hot-toast";
@@ -96,23 +97,23 @@ export const uploadProjectHandle = async (
         ],
       };
       const multicallData = [approveCall, Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
+      const feeDetails: PaymasterDetails = {
+        feeMode: {
+          mode: "sponsored",
+        },
+      };
 
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
+      const feeEstimation = await account?.estimatePaymasterTransactionFee(
+        [...multicallData],
+        feeDetails
+      );
 
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
-      const result = await account.execute(multicallData);
+      const result = await account?.executePaymasterTransaction(
+        [...multicallData],
+        feeDetails,
+        feeEstimation?.suggested_max_fee_in_gas_token
+      );
+      // const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
@@ -151,6 +152,7 @@ export const EditProjectHandle = async (
   }
   // handler();
   try {
+    setIsOpen(true);
     setIsSubmitting(true);
 
     if (account != undefined) {
@@ -161,6 +163,153 @@ export const EditProjectHandle = async (
           project_id: cairo.uint256(formData.projectId),
           description: byteArray.byteArrayFromString(formData.description),
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
+        }),
+      };
+      console.log(Call);
+      const multicallData = [Call];
+      const feeDetails: PaymasterDetails = {
+        feeMode: {
+          mode: "sponsored",
+        },
+      };
+
+      const feeEstimation = await account?.estimatePaymasterTransactionFee(
+        [...multicallData],
+        feeDetails
+      );
+
+      const result = await account?.executePaymasterTransaction(
+        [...multicallData],
+        feeDetails,
+        feeEstimation?.suggested_max_fee_in_gas_token
+      );
+      // const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const create_validator_profile = async (
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  formData: validatorType,
+  setIsOpen: SetIsOpen,
+  // handler: () => void,
+  setIsError: SetIsError
+): Promise<void> => {
+  const { userName, address, githubLink, passworks } = formData;
+
+  if (githubLink.startsWith("https://github.com/")) {
+    toast.error("A valid github link is required");
+    return;
+  }
+  if (passworks.length < 0) {
+    toast.error("passwork link is required");
+    return;
+  }
+  const wrongPassWorkLink: string[] = passworks.filter(
+    (m: string) => !m.startsWith("https://github.com/")
+  );
+  if (wrongPassWorkLink.length > 0) {
+    toast.error("A valid github link is required for passworks");
+    return;
+  }
+  // handler();
+  try {
+    setIsOpen(true);
+    setIsSubmitting(true);
+    const pass = passworks.filter((data) => data !== "");
+    console.log(pass);
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "create_validator",
+        calldata: CallData.compile({
+          validator_address: address,
+          username: byteArray.byteArrayFromString(userName),
+          github_profile_url: byteArray.byteArrayFromString(githubLink),
+          pass_work: pass,
+        }),
+      };
+      console.log(Call);
+      const multicallData = [Call];
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const create_resercher_profile = async (
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  formData: { userName: string; address: string },
+  setIsOpen: SetIsOpen,
+  // handler: () => void,
+  setIsError: SetIsError
+): Promise<void> => {
+  const { userName, address } = formData;
+  if (!address) {
+    toast.error("connect your wallet");
+    return;
+  }
+  if (!userName) {
+    toast.error("user name with minimum 5 charcter is required");
+    return;
+  }
+  // handler();
+  try {
+    setIsOpen(true);
+    setIsSubmitting(true);
+
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "create_validator",
+        calldata: CallData.compile({
+          validator_address: address,
+          username: byteArray.byteArrayFromString(userName),
         }),
       };
       console.log(Call);

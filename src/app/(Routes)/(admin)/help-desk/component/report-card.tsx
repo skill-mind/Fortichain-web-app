@@ -1,11 +1,9 @@
-import Image from "next/image";
-
 export default function HelpReportCard() {
-  const bg = true
-    ? "bg-pririty-low-bg text-blue-ball"
-    : true
-    ? "bg-warning-bg text-warning"
-    : "bg-pririty-high-bg text-pririty-high-text";
+  // const bg = true
+  //   ? "bg-pririty-low-bg text-blue-ball"
+  //   : true
+  //   ? "bg-warning-bg text-warning"
+  //   : "bg-pririty-high-bg text-pririty-high-text";
   return (
     <div
       className={`border border-dark-border-gray w-full

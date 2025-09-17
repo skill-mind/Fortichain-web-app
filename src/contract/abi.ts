@@ -117,6 +117,10 @@ export const FORTICHAINABI: Abi = [
         name: "researchers_paid",
         type: "core::bool",
       },
+      {
+        name: "amount",
+        type: "core::integer::u256",
+      },
     ],
   },
   {
@@ -289,6 +293,18 @@ export const FORTICHAINABI: Abi = [
         name: "kyc_approved",
         type: "core::bool",
       },
+      {
+        name: "username",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "github_profile_url",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "is_open_for_work",
+        type: "core::bool",
+      },
     ],
   },
   {
@@ -320,6 +336,40 @@ export const FORTICHAINABI: Abi = [
       {
         name: "rating",
         type: "core::integer::u8",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "fortichain_contracts::base::types::SecurityResearcher",
+    members: [
+      {
+        name: "id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "researcher_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "username",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "created_at",
+        type: "core::integer::u64",
+      },
+      {
+        name: "updated_at",
+        type: "core::integer::u64",
+      },
+      {
+        name: "status",
+        type: "core::felt252",
+      },
+      {
+        name: "is_active",
+        type: "core::bool",
       },
     ],
   },
@@ -425,6 +475,22 @@ export const FORTICHAINABI: Abi = [
           },
         ],
         outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "create_security_researcher",
+        inputs: [
+          {
+            name: "username",
+            type: "core::byte_array::ByteArray",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
         state_mutability: "external",
       },
       {
@@ -641,6 +707,34 @@ export const FORTICHAINABI: Abi = [
           },
         ],
         outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "create_validator",
+        inputs: [
+          {
+            name: "validator_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+          {
+            name: "username",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "github_profile_url",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "pass_work",
+            type: "core::array::Array::<core::byte_array::ByteArray>",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
         state_mutability: "external",
       },
       {
@@ -1431,6 +1525,33 @@ export const FORTICHAINABI: Abi = [
         ],
         state_mutability: "view",
       },
+      {
+        type: "function",
+        name: "get_security_researcher",
+        inputs: [
+          {
+            name: "researcher_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "(core::integer::u256, fortichain_contracts::base::types::SecurityResearcher)",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_total_security_researchers",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
     ],
   },
   {
@@ -2048,6 +2169,33 @@ export const FORTICHAINABI: Abi = [
   },
   {
     type: "event",
+    name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGrantedWithDelay",
+    kind: "struct",
+    members: [
+      {
+        name: "role",
+        type: "core::felt252",
+        kind: "data",
+      },
+      {
+        name: "account",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "sender",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "delay",
+        type: "core::integer::u64",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleRevoked",
     kind: "struct",
     members: [
@@ -2098,6 +2246,11 @@ export const FORTICHAINABI: Abi = [
       {
         name: "RoleGranted",
         type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
+        kind: "nested",
+      },
+      {
+        name: "RoleGrantedWithDelay",
+        type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGrantedWithDelay",
         kind: "nested",
       },
       {
