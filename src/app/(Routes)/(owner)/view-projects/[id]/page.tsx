@@ -35,8 +35,7 @@ export default function Page() {
   const { readData: project } = useContractFetch(
     FORTICHAINABI,
     "view_project",
-    // @ts-expect-error parmas can be undefined
-    [+id]
+    typeof id !== "undefined" ? [+id] : []
   );
   const handleBack = () => {
     router.back();
@@ -104,9 +103,7 @@ export default function Page() {
                   <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
                     Bounty amount
                   </span>
-                  <span className="text-18">
-                    ${selectedProject.bountyAmount}
-                  </span>
+                  <span className="text-18">${projectDetail?.amount}</span>
                 </div>
               </div>
               <div className=" border-b text-sm border-dark-border-gray flex items-center gap-1 pb-8 justify-between">

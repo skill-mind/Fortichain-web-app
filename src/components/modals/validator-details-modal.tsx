@@ -1,13 +1,22 @@
+import { validatorType } from "@/hook/useBlockchain";
 import { X } from "lucide-react";
+import Link from "next/link";
 
-export default function ValidatorModal({ handler }: { handler: () => void }) {
+export default function ValidatorModal({
+  handler,
+  selectedValidator,
+}: {
+  handler: () => void;
+  selectedValidator: validatorType;
+}) {
+  console.log(selectedValidator);
   return (
     <>
       <div
-        className="bg-main-bg/75 fixed top-0 h-screen w-full"
+        className="bg-main-bg/75 fixed top-0 h-screen w-full z-[300]"
         onClick={handler}
       ></div>
-      <div className="p-6 max-w-[700px] w-full bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-40 left-1/2 -translate-x-[50%]">
+      <div className="p-6 max-w-[700px] w-full bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-40 left-1/2 -translate-x-[50%] z-[400]">
         <div className="flex justify-between">
           <h3>Researchers Details</h3>
           <button
@@ -21,7 +30,7 @@ export default function ValidatorModal({ handler }: { handler: () => void }) {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text">Ebube One</span>
+            <span className="text">{selectedValidator?.username}</span>
             <span className="bg-pririty-low-bg text-blue-ball rounded-full py-1 px-2 text-">
               Active
             </span>
@@ -53,7 +62,12 @@ export default function ValidatorModal({ handler }: { handler: () => void }) {
         </div>
         <div className="grid gap-3 mt-3 text-base">
           <span className="text-gray-text">GitHub Profile URL</span>
-          <span className="text-blue-ball">Https://github.com/ebube</span>
+          <Link
+            href={selectedValidator.github_profile_url ?? " "}
+            className="text-blue-ball"
+          >
+            {/* {selectedValidator?.github_profile_url} */}
+          </Link>
         </div>
 
         <div className="grid gap-6 mt-3 text-base">
@@ -65,7 +79,7 @@ export default function ValidatorModal({ handler }: { handler: () => void }) {
             https://github.com/fortichain/smartcontractaudit
           </span>
         </div>
-        <div>
+        {/* <div>
           <div className="flex sm:flex-row flex-col justify-between items-center gap-6 my-2">
             <button
               className="w-full min-h-50 p-0.5 group             
@@ -101,7 +115,7 @@ export default function ValidatorModal({ handler }: { handler: () => void }) {
               </span>
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

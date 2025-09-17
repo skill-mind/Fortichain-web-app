@@ -23,11 +23,11 @@ export default function Summary({
           <h2>Project Name</h2>
           <p className="text-gray-text">{projectName}</p>
         </div>
-        <aside className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1 items-center">
+        <aside className="bg-dark-gray-pop rounded-[8px] min-w-56 py-3 px-6 flex gap-1 items-center">
           <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
             Bounty amount
           </span>
-          <span className="text-18">${amount}</span>
+          <span className="text-18">${amount?.toFixed(2)}</span>
         </aside>
       </div>
       <div className="grid gap-2">

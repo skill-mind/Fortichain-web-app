@@ -1,94 +1,16 @@
-import { withdrawalData } from "@/util/mock-data";
-import { use } from "react";
-interface Project {
-  id: string;
-  name: string;
-  owner: string;
-  severity: "High" | "Medium" | "Low";
-  payout: number;
-  status: "Available" | "Validated";
-  deadline: string;
-  vulnerabilities?: number;
-  repository?: string;
-  researchers?: string[];
-  validators?: string[];
-  researcherRating?: number;
-  validatorRating?: number;
-}
-
-const mockProjects: Project[] = [
-  {
-    id: "1",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "High",
-    payout: 7000,
-    status: "Available",
-    deadline: "2024-04-05",
-    vulnerabilities: 3,
-    repository: "https://github.com/fortichain/smartcontractaudit",
-    researchers: ["Ebube", "Oshioke"],
-    validators: ["Yunus"],
-    researcherRating: 6,
-    validatorRating: 6,
-  },
-  {
-    id: "2",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "Low",
-    payout: 7000,
-    status: "Available",
-    deadline: "2024-04-05",
-  },
-  {
-    id: "3",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "Medium",
-    payout: 7000,
-    status: "Validated",
-    deadline: "2024-04-05",
-  },
-  {
-    id: "4",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "Low",
-    payout: 7000,
-    status: "Validated",
-    deadline: "2024-04-05",
-  },
-  {
-    id: "5",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "High",
-    payout: 7000,
-    status: "Validated",
-    deadline: "2024-04-05",
-  },
-  {
-    id: "6",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "Medium",
-    payout: 7000,
-    status: "Validated",
-    deadline: "2024-04-05",
-  },
-  {
-    id: "7",
-    name: "Smart Contract Audit",
-    owner: "Saun Jerry",
-    severity: "Low",
-    payout: 7000,
-    status: "Validated",
-    deadline: "2024-04-05",
-  },
-];
-
-export function ProjectTable({ handler }: { handler: () => void }) {
+import { Project } from "@/hook/useBlockchain";
+import { formatAddress } from "@/util/helper";
+type SetId = (setId: number) => void;
+export function ProjectTable({
+  handler,
+  projects,
+  setId,
+}: {
+  handler: () => void;
+  projects: Project[];
+  setId: SetId;
+}) {
+  console.log(projects);
   return (
     <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[750px] font-walsheim">
       <div className="overflow-x-auto scrollbar-hide">
@@ -151,79 +73,81 @@ export function ProjectTable({ handler }: { handler: () => void }) {
             </tr>
           </thead>
           <tbody>
-            {mockProjects.map((user) => (
+            {projects?.map((project) => (
               <tr
-                key={user.id}
+                key={project.id}
                 className={`border-b text-sm border-dark-border-gray last:border-b-0 transition-colors `}
                 role="row"
               >
                 <td
                   className="sticky left-0 z-10 bg-inherit px-4 py-4"
                   role="gridcell"
-                  aria-label={`${user.name}`}
+                  aria-label={`${project.name}`}
                 >
                   <span className="w-fit h-6 rounded-full flex items-center justify-start">
-                    {user.name}
+                    {project.name}
                   </span>
                 </td>
                 <td
                   className="sticky left-[60px] z-10 px-4 py-4 font-medium"
                   role="gridcell"
-                  aria-label={`${user.owner}`}
+                  aria-label={``}
                 >
-                  {user.owner}
+                  {formatAddress(project.project_owner?.toString(16))}
                 </td>
                 <td
                   className="px-4 py-4 text-xs md:text-sm"
                   role="gridcell"
-                  aria-label={`transfer to ${user.severity}`}
+                  aria-label={`transfer to ${project.priority}`}
                 >
                   <span
                     className={`${
-                      user.severity === "Medium"
+                      project.priority.toLocaleUpperCase() ===
+                      "Medium".toLocaleUpperCase()
                         ? "bg-warning-bg text-warning-text"
-                        : user.severity === "High"
+                        : project.priority.toLocaleUpperCase() ===
+                          "High".toLocaleUpperCase()
                         ? "bg-pririty-high-bg text-pririty-high-text"
                         : "bg-pririty-low-bg text-blue-ball"
                     } px-3 py-1.5 text-12 rounded-full w-full block text-center`}
                   >
-                    {user.severity}
+                    {project.priority}
                   </span>
                 </td>
                 <td
                   className="px-4 py-4 text-center"
                   role="gridcell"
-                  aria-label={`${user.payout} widthraw`}
+                  aria-label={`${project.amount} widthraw`}
                 >
-                  {user.payout}
+                  ${project.amount.toFixed(2)}
                 </td>
                 <td
                   className={`px-4 py-4 text-center `}
                   role="gridcell"
-                  aria-label={`${user.status}`}
+                  aria-label="availability"
                 >
                   <span
                     className={`${
-                      user.status === "Validated"
+                      project.is_completed
                         ? "bg-good-bg text-good"
                         : "bg-pririty-low-bg text-blue-ball"
                     } px-3 py-1.5 text-12 rounded-full w-full block text-center`}
                   >
-                    {user.status}
+                    {project.is_active ? "Available" : "Validated"}
                   </span>
                 </td>
                 <td
                   className="px-4 py-4 text-center"
                   role="gridcell"
-                  aria-label={`${user.deadline} widthraw`}
+                  aria-label={`${project.deadline} widthraw`}
                 >
-                  {user.deadline}
+                  {project.deadline}
                 </td>
 
                 <td
                   className="px-4 py-4 text-center"
                   role="gridcell"
-                  aria-label={`${user.deadline} widthraw`}
+                  aria-label={`${project.deadline} widthraw`}
                 >
                   <button
                     className="w-fit min-h-11 p-0.5 group             
@@ -231,7 +155,10 @@ export function ProjectTable({ handler }: { handler: () => void }) {
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
       rounded-full group my-auto"
                     type="button"
-                    onClick={handler}
+                    onClick={() => {
+                      setId(project.id);
+                      handler();
+                    }}
                   >
                     <span
                       className="px-6 py-3 text-sm

@@ -4,12 +4,17 @@ import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
 import ValidatorModal from "@/components/modals/validator-details-modal";
+import { useValidators } from "@/hook/useBlockchain";
 
 export default function Researcher() {
+  const validators = useValidators();
+
+  const [validatorID, setValidatorId] = useState<number | null>(0);
   const [isOpen, setIsOpen] = useState(false);
   function handler() {
     setIsOpen((prev) => !prev);
   }
+
   return (
     <section className="grid gap-5">
       <div className="flex pl-5 max-w-96 items-center border border-dark-border-gray rounded-full">
@@ -17,7 +22,12 @@ export default function Researcher() {
         <Input type="text" className="p-6 pl-0" placeholder="Search Projects" />
       </div>
       <ProjectTable handler={handler} />
-      {isOpen && <ValidatorModal handler={handler} />}
+      {validatorID && isOpen && validators && validators[validatorID - 1] && (
+        <ValidatorModal
+          handler={handler}
+          selectedValidator={validators[validatorID - 1]} //Todos
+        />
+      )}
     </section>
   );
 }
