@@ -11,11 +11,18 @@ import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
 import AsignValidorModal from "@/components/modals/asign-validator-modal";
+import { useAllProjects } from "@/hook/useBlockchain";
+import Loader from "@/app/loading";
 
 export default function Projests() {
   const [isOpen, setIsOpen] = useState(false);
+  const [projectId, setProjectId] = useState<number>(0);
+  const projects = useAllProjects();
   function handler() {
     setIsOpen((prev) => !prev);
+  }
+  if (projects == undefined) {
+    return <Loader />;
   }
   return (
     <section className="grid gap-5">
@@ -57,9 +64,13 @@ export default function Projests() {
           </Select>
         </div>
       </div>
-      <ProjectTable handler={handler} />
+      <ProjectTable
+        handler={handler}
+        projects={projects}
+        setId={setProjectId}
+      />
       {/* {isOpen && <ReviewModal handler={handler} />} */}
-      {isOpen && <AsignValidorModal handler={handler} />}
+      {isOpen && <AsignValidorModal handler={handler} id={projectId} />}
     </section>
   );
 }

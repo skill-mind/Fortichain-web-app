@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     siteName: "FortiChain",
     images: [
       {
-        url: "https://forti-chain.xyz/favicon.svg",
+        url: "https://forti-chain.xyz/Logo plain.svg",
         width: 1200,
         height: 630,
         alt: "FortiChain - Decentralized Blockchain Security Platform",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     title: "FortiChain - Decentralized Blockchain Security Platform",
     description:
       "Enhance blockchain security through automated vulnerability disclosure and bug bounty processes.",
-    images: ["https://forti-chain.xyz/favicon.svg"],
+    images: ["https://forti-chain.xyz/Logo plain.svg"],
     creator: "@fortichain",
     site: "@fortichain",
   },

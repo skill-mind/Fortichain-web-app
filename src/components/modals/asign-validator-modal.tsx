@@ -1,15 +1,50 @@
+"use client";
 import { X } from "lucide-react";
 import { mockUserAccountData } from "@/app/(Routes)/(admin)/suspension/component/suspention-table";
 import { useState } from "react";
+import ValidatorModal from "./validator-details-modal";
+import { FORTICHAINABI } from "@/contract/abi";
+import { useContractFetch, useValidators } from "@/hook/useBlockchain";
+import { formatAddress } from "@/util/helper";
+import Link from "next/link";
+import { useAccount } from "@starknet-react/core";
+import { assign_validator } from "@/hook/blockchainWriteFunction";
 
 export default function AsignValidorModal({
   handler,
+  id,
 }: {
   handler: () => void;
+  id: number;
 }) {
   const [isExpand, setIsExpand] = useState(false);
+  const [isShowDetail, setIsShowDetail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const { account } = useAccount();
+  const validators = useValidators();
+  function validatorDetailhandler() {
+    setIsShowDetail((prev) => !prev);
+  }
+  const [validatorID, setValidatorId] = useState<number | null>(0);
+  const { readData: project } = useContractFetch(
+    FORTICHAINABI,
+    "view_project",
+    typeof id !== "undefined" ? [+id] : []
+  );
+  console.log(validators);
   return (
     <>
+      {validatorID &&
+        isShowDetail &&
+        validators &&
+        validators[validatorID - 1] && (
+          <ValidatorModal
+            handler={validatorDetailhandler}
+            selectedValidator={validators[validatorID - 1]}
+          />
+        )}
       <div
         className=" bg-main-bg/75 z-50 fixed top-0 h-screen w-full"
         onClick={handler}
@@ -29,11 +64,15 @@ export default function AsignValidorModal({
         <div className="flex sm:flex-row gap-1 flex-col justify-between">
           <div className="text-sm">
             <span className="text-gray-text"> Project Name:</span>
-            <span>Smart Contract Audit</span>
+            <span>{project?.name}</span>
           </div>
           <div className="text-sm">
             <span className="text-gray-text"> Owner:</span>
-            <span> Fortichain</span>
+            <span>
+              {" "}
+              {project?.project_owner &&
+                `0x0${formatAddress(project?.project_owner?.toString(16))}`}
+            </span>
           </div>
         </div>
         <div className="flex justify-between flex-col sm:flex-row gap-1">
@@ -41,23 +80,33 @@ export default function AsignValidorModal({
             <span className="text-gray-text">Vulnerabilities Found:</span>
             <span>3</span>
           </div>
-          <div className="text-sm">
+          <div className="text-sm flex items-center gap-2">
             <span className="text-gray-text">Status:</span>
-            <span className="text-good bg-good-bg rounded-full py-1.5 px-3">
-              Validated
+            <span
+              className={`${
+                project?.is_completed
+                  ? "bg-good-bg text-good"
+                  : "bg-pririty-low-bg text-blue-ball"
+              } px-3 py-1.5 text-12 rounded-full w-full block text-center`}
+            >
+              {project?.is_active ? "Available" : "Validated"}
             </span>
           </div>
         </div>
         <div className="flex justify-between">
           <div className="text-sm">
             <span className="text-gray-text">Repository:</span>
-            <span className="text-blue-ball break-all">
-              https://github.com/fortichain/smartcontractaudit
-            </span>
+            <Link
+              href={project?.repository_url ?? "#"}
+              target="_blank"
+              className="text-blue-ball break-all"
+            >
+              {project?.repository_url}
+            </Link>
           </div>
         </div>
         <div className="flex rounded-[8px] justify-between items-center my-3 bg-dark-gray-bt py-3 px-6">
-          <h3>View Report</h3>
+          <h3>Assign Validator</h3>
 
           <button
             onClick={() => {
@@ -120,7 +169,7 @@ export default function AsignValidorModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {mockUserAccountData.map((user, key) => {
+                  {validators?.map((user, key) => {
                     return (
                       <tr
                         key={key}
@@ -130,17 +179,23 @@ export default function AsignValidorModal({
                         <td
                           className="sticky left-0 z-10 bg-inherit px-4 py-4"
                           role="gridcell"
-                          aria-label={`${user.user}`}
+                          aria-label={`${user?.username}`}
                         >
                           <span className="w-fit h-6 rounded-full flex items-center justify-start">
-                            {user.user}
+                            {user.username}
                           </span>
-                          <span className="text-gray-text">{user.id}</span>
+                          <span className="text-gray-text">
+                            {formatAddress(
+                              user?.validator_address?.toString(16),
+                              15,
+                              12
+                            )}
+                          </span>
                         </td>
                         <td
                           className="sticky left-[60px] z-10 px-4 py-4 font-medium"
                           role="gridcell"
-                          aria-label={`${user.accountType}`}
+                          aria-label=""
                         >
                           80
                         </td>
@@ -153,6 +208,16 @@ export default function AsignValidorModal({
                           <button
                             className={`relative p-1 bg-gradient-to-r rounded-full from-[#2AA479] to-[#103E13]`}
                             type="button"
+                            onClick={() => {
+                              assign_validator(
+                                id,
+                                user?.validator_address.toString(16),
+                                account,
+                                setIsSubmitting,
+                                setIsOpen,
+                                setIsError
+                              );
+                            }}
                           >
                             <span
                               className={`bg-gradient-to-r px-6 py-2  to-[#2AA479] from-[#103E13] rounded-full w-full h-full grid place-content-center`}
@@ -172,7 +237,10 @@ export default function AsignValidorModal({
                         bg-gradient-to-r group to-[#312F2F] from-[#212121]
                     rounded-full group my-auto"
                             type="button"
-                            onClick={handler}
+                            onClick={() => {
+                              setValidatorId(Number(user.id));
+                              validatorDetailhandler();
+                            }}
                           >
                             <span
                               className="px-6 py-3 text-sm
