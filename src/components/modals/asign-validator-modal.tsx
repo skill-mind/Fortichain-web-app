@@ -3,28 +3,19 @@
 import { X } from "lucide-react";
 import { mockUserAccountData } from "@/app/(Routes)/(admin)/suspension/component/suspention-table";
 import { useState } from "react";
-import ValidatorModal from "./validator-details-modal";
 import { FORTICHAINABI } from "@/contract/abi";
-import { useContractFetch, useValidators } from "@/hook/useBlockchain";
-import { formatAddress } from "@/util/helper";
-import Link from "next/link";
 import { useAccount } from "@starknet-react/core";
 import { assign_validator } from "@/hook/blockchainWriteFunction";
 import ValidatorModal from "./validator-details-modal";
-import { FORTICHAINABI } from "@/contract/abi";
 import { useContractFetch, useValidators } from "@/hook/useBlockchain";
 import { formatAddress } from "@/util/helper";
 import Link from "next/link";
-import { useAccount } from "@starknet-react/core";
-import { assign_validator } from "@/hook/blockchainWriteFunction";
 
 export default function AsignValidorModal({
   handler,
   id,
-  id,
 }: {
   handler: () => void;
-  id: number;
   id: number;
 }) {
   const [isExpand, setIsExpand] = useState(false);
