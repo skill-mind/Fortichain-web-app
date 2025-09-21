@@ -1,6 +1,8 @@
 "use client";
-
-import { formatAddress } from "@/util/helper";
+export const formatAddress = (address: string, len = 6, lenRight = 4) => {
+  return `${address.slice(0, len)}...${address.slice(-lenRight)}`;
+};
+// import { formatAddress } from "@/util/helper";
 import {
   Connector,
   useAccount,
@@ -9,8 +11,8 @@ import {
 } from "@starknet-react/core";
 import Image from "next/image";
 import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
-import ready from "../../public/Argent.svg";
-import bravoos from "../../public/braavos_icon.jpeg.svg";
+// import ready from "../../public/Argent.svg";
+// import bravoos from "../../public/braavos_icon.jpeg.svg";
 import { useState } from "react";
 
 export function WalletConnectorModal({
@@ -72,12 +74,12 @@ rounded-full group"
         bg-dark-gray
   flex items-center gap-2.5 p-1 justify-center cursor-pointer  rounded-full h-[60px] w-full"
               >
-                {connector == "argentX" && (
+                {/* {connector == "argentX" && (
                   <Image className="w-5" src={ready} alt="ready wallet" />
                 )}
                 {connector == "braavos" && (
                   <Image className="w-5" src={bravoos} alt="Braavos wallet" />
-                )}
+                )} */}
                 <span className="">{formatAddress(address)}</span>
               </span>
             </button>

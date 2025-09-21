@@ -55,14 +55,6 @@ export function WhatsNextSection() {
                 • Join the community on X
               </Link>
             </div>
-            <div>
-              <a
-                href="#"
-                className="text-blue-ball hover:text-blue-300 transition-colors"
-              >
-                • Api licensing
-              </a>
-            </div>
           </div>
         </div>
       </div>

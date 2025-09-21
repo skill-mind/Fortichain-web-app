@@ -181,7 +181,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
       )}
       {/* notification */}
       {isNotificationOpen && <Notification />}
-      {isConnectorOpen && <WalletModal close={connectorHandler} />}
+      {/* {isConnectorOpen && <WalletModal close={connectorHandler} />} */}
     </div>
   );
 }

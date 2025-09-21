@@ -89,13 +89,13 @@ export default function LauchAppNav() {
           </li>
         </ul>
       </nav>
-      <nav className="w-4/5 grid gap-3 xl:hidden">
-        <ul className="bg-dark-gray flex flex-col sm:flex-row justify-between p-4 sm:p-1 rounded-[12px] sm:rounded-full gap-2 items-center w-full">
+      <nav className="w-full grid gap-3 xl:hidden">
+        <ul className=" flex flex-col sm:flex-row justify-between p-4 sm:p-1 rounded-[12px] sm:rounded-full gap-2 items-stretch w-full">
           <li
-            className="w-full min-h-50 p-0.5 group             
+            className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group text-base
-          rounded-full group"
+          rounded-sm group"
             onClick={() => {
               setter((prev) => {
                 return { ...prev, route: "owner" };
@@ -106,17 +106,17 @@ export default function LauchAppNav() {
               className="px-6 py-3
                   group-hover:from-sky-from group-hover:to-sky-to
                   group-hover:bg-gradient-to-r
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-sm h-full w-full"
             >
               Project Owner
             </span>
           </li>
           <span className="w-0.5 min-h-10 bg-dark-border-gray hidden sm:block" />
           <li
-            className="w-full min-h-50 p-0.5 group             
+            className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group text-base
-          rounded-full group"
+          rounded-sm group"
             onClick={() => {
               setter((prev) => {
                 return { ...prev, route: "researcher" };
@@ -127,18 +127,18 @@ export default function LauchAppNav() {
               className="px-6 py-3
                   group-hover:from-sky-from group-hover:to-sky-to
                   group-hover:bg-gradient-to-r 
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-sm h-full w-full"
             >
               Security Researcher
             </span>
           </li>
         </ul>
-        <ul className="bg-dark-gray flex flex-col sm:flex-row justify-between p-4 sm:p-1 rounded-[12px] sm:rounded-full gap-2 items-center w-full">
+        <ul className="flex flex-col sm:flex-row justify-between p-4 sm:p-1 rounded-[12px] sm:rounded-full gap-2 items-stretch w-full">
           <li
-            className="w-full min-h-50 p-0.5 group             
+            className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group text-base
-          rounded-full group"
+          rounded-sm group"
             onClick={() => {
               setter((prev) => {
                 return { ...prev, route: "validator" };
@@ -149,23 +149,23 @@ export default function LauchAppNav() {
               className="px-6 py-3
                   group-hover:from-sky-from group-hover:to-sky-to
                   group-hover:bg-gradient-to-r
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-sm h-full w-full"
             >
               Validator
             </span>
           </li>
           <span className="w-0.5 min-h-10 bg-dark-border-gray hidden sm:block" />
           <li
-            className="w-full min-h-50 p-0.5 group             
+            className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group text-base
-          rounded-full group"
+          rounded-sm group"
           >
             <span
               className="px-6 py-3
                   group-hover:from-sky-from group-hover:to-sky-to
                   group-hover:bg-gradient-to-r 
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
+              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-sm h-full w-full"
             >
               Lauch App
             </span>

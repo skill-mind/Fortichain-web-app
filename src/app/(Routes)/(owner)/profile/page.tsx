@@ -18,9 +18,7 @@ export default function Profile() {
         <div className="flex justify-between items-center gap-3 md:gap-0 flex-wrap">
           <div className="grid gap-3">
             <h3 className="text-base">Organization</h3>
-            <h5 className="text-gray-text text-sm break-all">
-              0x4A7d5cB67eA4F6e4B7cC3B3aE3f8fD9bB2cF9a1B
-            </h5>
+            <h5 className="text-gray-text text-sm break-all">{address}</h5>
           </div>
           <button
             className="w-fit min-h-11 p-0.5 group             

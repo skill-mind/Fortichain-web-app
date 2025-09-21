@@ -182,6 +182,29 @@ export function useValidators() {
   return validators;
 }
 
+export function useResearchers() {
+  const [researchers, setResearchers] = useState<string[]>();
+
+  const { readData: researchersData } = useContractFetch(
+    FORTICHAINABI,
+    "get_security_researchers",
+    []
+  );
+  console.log(researchersData);
+  useEffect(() => {
+    if (!researchersData) return; //
+    const rawResearchers: string[] = [];
+    researchersData.forEach((data: string) => {
+      // @ts-expect-error parmas can be undefined
+      rawResearchers.push(`0x0${data.toString(16)}`);
+    });
+    console.log(rawResearchers);
+    setResearchers(rawResearchers);
+  }, [researchersData]);
+
+  return researchers;
+}
+
 export function useValidatorDetail() {
   const [validators, setValidators] = useState<validatorType>();
 

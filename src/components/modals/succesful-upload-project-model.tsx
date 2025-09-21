@@ -54,17 +54,17 @@ export default function SuccessModal({
               type="button"
               onClick={() => {
                 handler();
-                redirect("/overview");
+                redirect("/view-projects");
                 setIsError(false);
               }}
             >
               <span
-                className="px-6 py-7 text-sm
+                className="px-6 py-7 capitalize text-sm
               group-hover:from-sky-from group-hover:to-sky-to
               group-hover:bg-gradient-to-r bg-[#1C1C1C]
           flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
               >
-                Return to dashboard
+                view projects
               </span>
             </button>
           </div>

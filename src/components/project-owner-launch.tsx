@@ -1,10 +1,15 @@
 "use client";
 import { Router } from "@/provider/route-provider";
-import { Connector, useAccount, useConnect } from "@starknet-react/core";
-import { Github, WalletCards } from "lucide-react";
+import { type Connector, useAccount, useConnect } from "@starknet-react/core";
+import { WalletCards } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
+import {
+  type StarknetkitConnector,
+  useStarknetkitConnectModal,
+} from "starknetkit";
+import { motion } from "framer-motion";
+import { WalletConnectionCard } from "./wallet-connection-card";
 
 export default function ProjectOwnerLauncher() {
   const { address, isConnected } = useAccount();
@@ -37,102 +42,93 @@ export default function ProjectOwnerLauncher() {
 
   return (
     <div className="flex h-4/5 justify-center items-center flex-col">
-      <div className="text-center grid gap-10">
-        <div>
-          <h2 className="text-xl sm:text-28">
-            Welcome to Fortichain’s Project Owners Dashboard
-          </h2>
-          <span className="text-gray-text text-sm sm:text-18">
+      <motion.div
+        className="text-center grid gap-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <motion.h2
+            className="text-xl sm:text-28"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            Welcome to Fortichain`&apos;s Project Owners Dashboard
+          </motion.h2>
+          <motion.span
+            className="text-gray-text text-sm sm:text-18"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             Connect your wallet and GitHub to get started
-          </span>
-        </div>
-        <div className="flex items-itceb justify-center p-6 gap-6 flex-wrap ">
-          <div className="p-6 gap-6 flex flex-col items-center max-w-80 border bg-black/80 border-dark-border-gray rounded-[8px] justify-between">
-            <div className="w-fit bg-pririty-low-bg p-4 rounded-full">
-              <WalletCards className="text-blue-ball" />
-            </div>
-            <div>
-              <h2 className="text-18">Connect Wallet</h2>
-
-              <span className="text-sm text-gray-text">
-                Effortlessly connect your wallet to securely manage and oversee
-                your projects.
-              </span>
-            </div>
-            <button
-              className={`w-full min-h-11 p-0.5 group
-              hover:from-sky-blue-border hover:to-sky-blue-border
-              bg-gradient-to-r ${
-                isConnected
-                  ? "from-sky-blue-border to-sky-blue-border bg-gradient-to-r"
-                  : ""
-              } to-[#312F2F] from-[#212121] text-base rounded-full`}
-              type="button"
-              onClick={connectWallet}
-            >
-              <span
-                className={`px-6 py-3 ${
-                  isConnected ? "from-sky-from to-sky-to bg-gradient-to-r" : ""
-                } group-hover:from-sky-from group-hover:to-sky-to group-hover:bg-gradient-to-r bg-[#1C1C1C] flex items-center gap-2.5 p-2 justify-center cursor-pointer rounded-full h-10 w-full`}
-              >
-                {isConnected ? "Connected" : "Connect Wallet"}
-              </span>
-            </button>
-          </div>
-          {/* no use case for github app at the moment */}
-          {/* <div className="p-6 gap-6 flex flex-col items-center max-w-80 border bg-black/80 border-dark-border-gray rounded-[8px] justify-between">
-            <div className="w-fit bg-[#BB00C133] p-4 rounded-full">
-              <Github className="text-[#BB00C1] " />
-            </div>
-            <div>
-              <h2 className="text-18">Link GitHub to Fortichain</h2>
-
-              <span className="text-sm text-gray-text leading-none">
-                Link your GitHub to grant access to fortichain, and securely
-                manage projects.
-              </span>
-            </div>
-            <button
-              className="w-full min-h-11 p-0.5 group             
-              hover:from-sky-blue-border hover:to-sky-blue-border
-              bg-gradient-to-r group to-[#312F2F] from-[#212121] text-base
-          rounded-full group"
-              type="button"
-            >
-              <span
-                className="px-6 py-3
-                  group-hover:from-sky-from group-hover:to-sky-to
-                  group-hover:bg-gradient-to-r bg-[#1C1C1C]
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-              >
-                Link GitHub
-              </span>
-            </button>
-          </div> */}
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <button
-          className={`min-w-72 min-h-11 p-0.5 group ${
-            isConnected
-              ? "from-sky-blue-border to-sky-blue-border bg-gradient-to-r"
-              : "disabled:cursor-not-allowed"
-          } hover:from-sky-blue-border hover:to-sky-blue-border bg-gradient-to-r to-[#312F2F] from-[#212121] text-base rounded-full`}
-          type="button"
-          disabled={!isConnected}
+          </motion.span>
+        </motion.div>
+        <motion.div
+          key="wallet-section"
+          className="flex items-center justify-center p-6 gap-6 flex-wrap"
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 100 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+        >
+          <WalletConnectionCard
+            isConnected={isConnected ?? false}
+            onConnect={connectWallet}
+          />
+        </motion.div>
+      </motion.div>
+      <motion.div
+        className="flex justify-center"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+      >
+        <motion.button
+          className={`min-w-72 min-h-11 p-0.5 group
+            ${
+              isConnected
+                ? "from-sky-blue-border to-sky-blue-border bg-gradient-to-r"
+                : "disabled:cursor-not-allowed"
+            } hover:from-sky-blue-border hover:to-sky-blue-border bg-gradient-to-r to-[#312F2F] from-[#212121]
+           group text-base
+            rounded-full group`}
+          type="submit"
           onClick={Handler}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          animate={
+            isConnected
+              ? {
+                  boxShadow: [
+                    "0 0 0 rgba(0, 150, 255, 0)",
+                    "0 0 20px rgba(0, 150, 255, 0.3)",
+                    "0 0 0 rgba(0, 150, 255, 0)",
+                  ],
+                }
+              : {}
+          }
         >
           <span
-            className={`px-6 py-3 ${
-              isConnected
-                ? "from-sky-from to-sky-to bg-gradient-to-r"
-                : "group-disabled:cursor-not-allowed"
-            } group-hover:from-sky-from group-hover:to-sky-to group-hover:bg-gradient-to-r bg-[#1C1C1C] flex items-center gap-2.5 p-2 justify-center cursor-pointer rounded-full h-10 w-full`}
+            className={`px-6 py-3 h-60
+              ${
+                isConnected
+                  ? "from-sky-from to-sky-to bg-gradient-to-r"
+                  : "group-disabled:cursor-not-allowed"
+              } group-hover:from-sky-from group-hover:to-sky-to group-hover:bg-gradient-to-r bg-[#1C1C1C] 
+              flex items-center gap-2.5 p-2 justify-center cursor-pointer rounded-full w-full
+             `}
           >
             Proceed to dashboard
           </span>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 }

@@ -1,17 +1,45 @@
+"use client";
+import { motion } from "framer-motion";
 import { ArrowUp } from "@/icons/arrowUp";
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
-import image1 from "../../public/Image1.svg";
-import image2 from "../../public/image2.svg";
-import image3 from "../../public/image3.svg";
-import image4 from "../../public/image4.svg";
+import img from "../../public/Image1.svg";
 
 export default function ShowCase() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
+
+  const featureVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.5 },
+    },
+  };
+
   return (
     <section className="pb-28 mt-28 border-b border-dark-border-gray xl:px-20 px-10">
       <div className="flex items-stretch border h-fit md:h-[610px] max-w-[660px] border-dark-border-gray flex-col md:flex-row mx-auto md:max-w-sit-screen rounded-l-3xl rounded-[8px] ">
         <Image
-          src={image1}
+          src={img}
           alt=""
           className="h-full w-full bg-dark-gray rounded-l-3xl md:w-2/5 xl:w-fit "
         />
@@ -75,9 +103,26 @@ export default function ShowCase() {
           </div>
         </div>
       </div>
-
-      <div className="mt-24 grid gap-8 w-[90%] xl:w-fit mx-auto">
-        <div className="md:p-3 md:h-[374px] flex-col md:flex-row p-6  md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl">
+      <motion.div
+        className="mt-24 grid gap-8 w-[90%] xl:w-fit mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        <motion.div
+          className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
+          initial={{ opacity: 0, x: -100, rotateY: -10 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{
+            duration: 0.8,
+            delay: 0.1,
+            type: "spring",
+            stiffness: 100,
+          }}
+          whileHover={{ y: -8, scale: 1.02, rotateY: 2 }}
+        >
           <div className="flex flex-col gap-3 mb-3 md:mb-0 md:max-w-2/5">
             <h2 className="text-sky-from text-18 md:text-2xl">
               For Project Owners
@@ -91,10 +136,23 @@ export default function ShowCase() {
             </span>
           </div>
           <div className="bg-dark-gray md:w-1/2 w-full flex justify-end h-full items-end pl-8">
-            <Image src={image2} alt="" />
+            <Image src="/image2.svg" alt="Projects" width={300} height={300} />
           </div>
-        </div>
-        <div className="md:p-3 md:h-[374px] flex-col md:flex-row p-6  md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl">
+        </motion.div>
+
+        <motion.div
+          className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
+          initial={{ opacity: 0, x: 100, rotateY: 10 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{
+            duration: 0.8,
+            delay: 0.2,
+            type: "spring",
+            stiffness: 100,
+          }}
+          whileHover={{ y: -8, scale: 1.02, rotateY: -2 }}
+        >
           <div className="flex flex-col gap-3 mb-3 md:mb-0 md:max-w-2/5">
             <h2 className="text-sky-from text-18 md:text-2xl">
               For Validators
@@ -108,10 +166,28 @@ export default function ShowCase() {
             </span>
           </div>
           <div className="bg-dark-gray md:w-1/2 w-full flex justify-end h-full items-end pl-8">
-            <Image src={image3} alt="" />
+            <Image
+              src="/image3.svg"
+              alt="Validation"
+              width={300}
+              height={300}
+            />
           </div>
-        </div>
-        <div className="md:p-3 md:h-[374px] flex-col md:flex-row p-6  md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl">
+        </motion.div>
+
+        <motion.div
+          className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
+          initial={{ opacity: 0, x: -100, rotateY: -10 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{
+            duration: 0.8,
+            delay: 0.3,
+            type: "spring",
+            stiffness: 100,
+          }}
+          whileHover={{ y: -8, scale: 1.02, rotateY: 2 }}
+        >
           <div className="flex flex-col gap-3 mb-3 md:mb-0 md:max-w-2/5">
             <h2 className="text-sky-from text-18 md:text-2xl">
               For Security Researchers
@@ -121,14 +197,14 @@ export default function ShowCase() {
             </h3>
             <span className="text-gray-text text-base md:text-18">
               Detect vulnerabilities, report issues, and safeguard project
-              integrity to uphold the network’s security
+              integrity to uphold the network`&apos;s security
             </span>
           </div>
           <div className="bg-dark-gray md:w-1/2 w-full flex justify-end h-full items-end pl-8">
-            <Image src={image4} alt="" />
+            <Image src="/image4.svg" alt="Security" width={300} height={300} />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -8,7 +8,7 @@ import {
 } from "react";
 
 // Define the state type
-type RouteState = {
+export type RouteState = {
   route: "validator" | "researcher" | "owner" | "none";
   connect_wallet: boolean;
   validator_github: {
@@ -22,7 +22,7 @@ type RouteState = {
 };
 
 // Define the context type
-type RouterContextType = RouteState & {
+export type RouterContextType = RouteState & {
   setter: Dispatch<SetStateAction<RouteState>>;
 };
 
