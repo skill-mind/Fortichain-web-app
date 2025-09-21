@@ -10,6 +10,7 @@ export function useContractFetch(
   abi: Abi,
   functionName: string,
   args: Array<string | number>
+  args: Array<string | number>
 ) {
   const {
     data: readData,

@@ -28,6 +28,7 @@ export interface validatorType {
 
 export default function ProjectValidatorLauncher() {
   const { setter } = useContext(Router);
+  const { setter } = useContext(Router);
   const { address, isConnected, account } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);

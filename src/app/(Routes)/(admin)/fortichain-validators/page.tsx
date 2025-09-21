@@ -11,6 +11,9 @@ export default function Researcher() {
   const validators = useValidators();
 
   const [validatorID, setValidatorId] = useState<number | null>(0);
+  const validators = useValidators();
+
+  const [validatorID, setValidatorId] = useState<number | null>(0);
   const [isOpen, setIsOpen] = useState(false);
   function handler() {
     setIsOpen((prev) => !prev);

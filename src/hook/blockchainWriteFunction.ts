@@ -431,3 +431,64 @@ export const assign_validator = async (
     setIsSubmitting(false);
   }
 };
+
+export const assign_validator = async (
+  projectId: number,
+  address: string,
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  setIsOpen: SetIsOpen,
+  // handler: () => void,
+  setIsError: SetIsError
+): Promise<void> => {
+  // handler();
+  console.log(address);
+  try {
+    setIsOpen(true);
+    setIsSubmitting(true);
+
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "assign_validator",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(projectId),
+          validator_address: address,
+        }),
+      };
+      console.log(Call);
+      const multicallData = [Call];
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
