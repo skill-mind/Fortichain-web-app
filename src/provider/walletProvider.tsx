@@ -3,16 +3,12 @@ import { sepolia, mainnet } from "@starknet-react/chains";
 import React from "react";
 import {
   StarknetConfig,
-  publicProvider,
-  ready,
-  braavos,
-  useInjectedConnectors,
   voyager,
-  InjectedConnector,
   Connector,
   paymasterRpcProvider,
   jsonRpcProvider,
 } from "@starknet-react/core";
+import { InjectedConnector } from "starknetkit/injected";
 import { WebWalletConnector } from "starknetkit/webwallet";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 
@@ -58,7 +54,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       chains={[sepolia]}
       connectors={connectors as Connector[]}
       explorer={voyager}
-      autoConnect={true}
+      // autoConnect={true}
       provider={jsonRpcProvider({
         rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
       })}
@@ -67,3 +63,17 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
     </StarknetConfig>
   );
 }
+// export function StarknetProvider({ children }: { children: React.ReactNode }) {
+
+//   return (
+//     <StarknetConfig
+//       chains={[sepolia]}
+//       provider={publicProvider()}
+//       connectors={connectors as Connector[]}
+//       explorer={voyager}
+//       autoConnect={true}
+//     >
+//       {children}
+//     </StarknetConfig>
+//   );
+// }

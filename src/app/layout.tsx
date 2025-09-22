@@ -4,8 +4,9 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 // Example: app/layout.tsx or a component file
 import localFont from "next/font/local";
-import { StarknetProvider } from "@/provider/walletProvider";
+
 import RouteProvider from "@/provider/route-provider";
+import { StarknetProvider } from "@/provider/walletProvider";
 
 const myCustomFont = localFont({
   src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file

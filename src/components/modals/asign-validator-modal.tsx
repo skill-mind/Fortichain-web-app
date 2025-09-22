@@ -1,14 +1,15 @@
 "use client";
+"use client";
 import { X } from "lucide-react";
 import { mockUserAccountData } from "@/app/(Routes)/(admin)/suspension/component/suspention-table";
 import { useState } from "react";
-import ValidatorModal from "./validator-details-modal";
 import { FORTICHAINABI } from "@/contract/abi";
+import { useAccount } from "@starknet-react/core";
+import { assign_validator } from "@/hook/blockchainWriteFunction";
+import ValidatorModal from "./validator-details-modal";
 import { useContractFetch, useValidators } from "@/hook/useBlockchain";
 import { formatAddress } from "@/util/helper";
 import Link from "next/link";
-import { useAccount } from "@starknet-react/core";
-import { assign_validator } from "@/hook/blockchainWriteFunction";
 
 export default function AsignValidorModal({
   handler,
@@ -20,6 +21,7 @@ export default function AsignValidorModal({
   const [isExpand, setIsExpand] = useState(false);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selected, setSelected] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const { account } = useAccount();
@@ -33,7 +35,7 @@ export default function AsignValidorModal({
     "view_project",
     typeof id !== "undefined" ? [+id] : []
   );
-  console.log(validators);
+  console.log("iiiiiiii");
   return (
     <>
       {validatorID &&
@@ -206,9 +208,11 @@ export default function AsignValidorModal({
                           aria-label={`transfer to ${user.status}`}
                         >
                           <button
-                            className={`relative p-1 bg-gradient-to-r rounded-full from-[#2AA479] to-[#103E13]`}
+                            disabled={isSubmitting}
+                            className={`relative disabled:cursor-not-allowed p-1 bg-gradient-to-r rounded-full from-[#2AA479] to-[#103E13]`}
                             type="button"
                             onClick={() => {
+                              setSelected(user.id);
                               assign_validator(
                                 id,
                                 user?.validator_address.toString(16),
@@ -220,9 +224,11 @@ export default function AsignValidorModal({
                             }}
                           >
                             <span
-                              className={`bg-gradient-to-r px-6 py-2  to-[#2AA479] from-[#103E13] rounded-full w-full h-full grid place-content-center`}
+                              className={`bg-gradient-to-r px-6 py-2  to-[#2AA479] from-[#103E13] rounded-full w-full h-full grid place-content-center group-disabled:cursor-not-allowed`}
                             >
-                              Assign
+                              {isSubmitting && selected == user.id
+                                ? "submitting..."
+                                : "assign"}
                             </span>
                           </button>
                         </td>

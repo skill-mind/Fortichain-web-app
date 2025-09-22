@@ -1,7 +1,9 @@
 import { EditProjectProps } from "@/components/modals/edit-project";
 import { validatorType } from "@/components/project-validator-launcher";
 import { FORTICHAINADDRESS, myProvider, ONE_STK } from "@/contract/address";
+import { RouterContextType, RouteState } from "@/provider/route-provider";
 import { UploadProjectProps } from "@/util/types";
+import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
 import {
   AccountInterface,
@@ -89,7 +91,7 @@ export const uploadProjectHandle = async (
       console.log(Call);
       const approveCall = {
         contractAddress:
-          "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address
+          "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address // api i licencing comment out
         entrypoint: "approve",
         calldata: [
           FORTICHAINADDRESS, // spender
@@ -97,23 +99,23 @@ export const uploadProjectHandle = async (
         ],
       };
       const multicallData = [approveCall, Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
 
-      const feeEstimation = await account?.estimatePaymasterTransactionFee(
-        [...multicallData],
-        feeDetails
-      );
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
 
-      const result = await account?.executePaymasterTransaction(
-        [...multicallData],
-        feeDetails,
-        feeEstimation?.suggested_max_fee_in_gas_token
-      );
-      // const result = await account.execute(multicallData);
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
@@ -173,17 +175,17 @@ export const EditProjectHandle = async (
         },
       };
 
-      const feeEstimation = await account?.estimatePaymasterTransactionFee(
-        [...multicallData],
-        feeDetails
-      );
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
 
-      const result = await account?.executePaymasterTransaction(
-        [...multicallData],
-        feeDetails,
-        feeEstimation?.suggested_max_fee_in_gas_token
-      );
-      // const result = await account.execute(multicallData);
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
@@ -208,7 +210,9 @@ export const create_validator_profile = async (
   formData: validatorType,
   setIsOpen: SetIsOpen,
   // handler: () => void,
-  setIsError: SetIsError
+  setIsError: SetIsError,
+  setter: Dispatch<SetStateAction<RouteState>>,
+  redirect: (url: string) => void
 ): Promise<void> => {
   const { userName, address, githubLink, passworks } = formData;
 
@@ -267,15 +271,19 @@ export const create_validator_profile = async (
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
-      setIsOpen(true);
+      setter((prev) => {
+        return { ...prev, isComplete: true };
+      });
       console.log(result);
 
       console.log(status);
+      redirect("/validator");
+      setIsOpen(true);
     }
   } catch (error) {
     console.error("Error:", error);
     setIsError(true);
-    toast.error("error editing project");
+    toast.error("error creating validator profile");
   } finally {
     setIsSubmitting(false);
   }
@@ -287,7 +295,9 @@ export const create_resercher_profile = async (
   formData: { userName: string; address: string },
   setIsOpen: SetIsOpen,
   // handler: () => void,
-  setIsError: SetIsError
+  setIsError: SetIsError,
+  setter: Dispatch<SetStateAction<RouteState>>,
+  redirect: (url: string) => void
 ): Promise<void> => {
   const { userName, address } = formData;
   if (!address) {
@@ -306,7 +316,7 @@ export const create_resercher_profile = async (
     if (account != undefined) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
-        entrypoint: "create_validator",
+        entrypoint: "create_security_researcher",
         calldata: CallData.compile({
           validator_address: address,
           username: byteArray.byteArrayFromString(userName),
@@ -339,6 +349,10 @@ export const create_resercher_profile = async (
       console.log(result);
 
       console.log(status);
+      setter((prev) => {
+        return { ...prev, isComplete: true };
+      });
+      redirect("/researcher");
     }
   } catch (error) {
     console.error("Error:", error);

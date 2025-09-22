@@ -42,7 +42,7 @@ export default function Layou({
       });
       redirect("/");
     }
-  }, [account]);
+  }, [account, isConnected]);
   return (
     <>
       <DashboardNavBar routeType={description} routes={location} />

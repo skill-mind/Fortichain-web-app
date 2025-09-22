@@ -74,9 +74,9 @@ export default function SubmitReport({
       <div className="grid gap-2">
         <label htmlFor="">Description</label>
         <Textarea
-          maxLength={500}
+          maxLength={2000}
           value={data.description}
-          placeholder="Describe your project and its security requirements"
+          placeholder="Describe your project and its security requirements" // add indication
           className="border border-dark-border-gray rounded-[8px] min-h-28 pl-7 outline:border-blue-ball"
           onChange={(data) => {
             const value = data.target.value;
@@ -133,7 +133,7 @@ export default function SubmitReport({
                   id="date"
                   className={`w-full ${
                     !data.deadline ? "text-gray-text" : ""
-                  } bg-main-bg border pl-7 h-14 rounded-full border-dark-border-gray justify-between font-normal`}
+                  } border pl-7 h-14 rounded-full border-dark-border-gray justify-between font-normal`}
                 >
                   {data.deadline
                     ? typeof data.deadline === "string"
@@ -163,7 +163,6 @@ export default function SubmitReport({
 
                     setOpen(false);
                   }}
-                  className=""
                 />
               </PopoverContent>
             </Popover>

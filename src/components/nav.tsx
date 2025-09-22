@@ -8,6 +8,11 @@ import LaunchAppNavModal from "./modals/lauch-app-modal";
 
 export default function Nav() {
   const { setter, launchModal } = useContext(Router);
+  function handleCloseAppLouncher() {
+    setter((prev) => {
+      return { ...prev, launchModal: !launchModal };
+    });
+  }
   return (
     <div className="fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5 z-50">
       <nav className="max-w-sit-screen mx-auto flex justify-between items-center">
@@ -21,9 +26,9 @@ export default function Nav() {
           <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
             Documentation
           </li>
-          <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
+          {/* <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
             Blog
-          </li>
+          </li> */}
         </ul>
         <button
           className="min-w-157 min-h-50 p-0.5 group
@@ -31,11 +36,7 @@ export default function Nav() {
      hover:bg-sky-blue-border
  rounded-full group"
           type="button"
-          onClick={() => {
-            setter((prev) => {
-              return { ...prev, launchModal: !launchModal };
-            });
-          }}
+          onClick={handleCloseAppLouncher}
         >
           <span
             className="px-6 py-3
@@ -47,7 +48,7 @@ export default function Nav() {
           </span>
         </button>
       </nav>
-      {launchModal && <LaunchAppNavModal />}
+      {launchModal && <LaunchAppNavModal closeModal={handleCloseAppLouncher} />}
     </div>
   );
 }

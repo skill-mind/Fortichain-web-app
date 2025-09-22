@@ -1,6 +1,9 @@
+"use client";
+import { useDisconnect } from "@starknet-react/core";
 import { WidthrawTable } from "../../../../components/WidthrawTable";
 
 export default function Page() {
+  const { disconnect } = useDisconnect();
   return (
     <section className="grid gap-3">
       <div className=" grid md:grid-cols-2 grid-cols-1 xl:grid-cols-3 gap-3">
@@ -22,11 +25,23 @@ export default function Page() {
             0x4A7d5cB67eA4F6e4B7cC3B3aE3f8fD9bB2cF9a1B
           </span>
           <button
-            className={`
-           w-fit
-                 bg-dark-gray-pop border border-dark-border-gray py-2 px-[18px] rounded-full `}
+            className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+            onClick={() => {
+              disconnect();
+            }}
+            type="button"
           >
-            Disconnect Wallet
+            <span
+              className="px-6 py-3
+                      group-hover:from-sky-from group-hover:to-sky-to
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C] text-sm font-normal
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+            >
+              Disconnect Wallet
+            </span>
           </button>
         </div>
 
