@@ -1,14 +1,23 @@
+"use client";
+import { useProjectOwner } from "@/hook/useBlockchain";
 import Card from "./component/card";
 import { ReportHistoryChart } from "./component/chart";
+import { useAccount } from "@starknet-react/core";
+import Loader from "@/app/loading";
 
 export default function Page() {
+  const { address } = useAccount();
+  const projectOwner = useProjectOwner(address ?? "");
+  // if (projectOwner === undefined) {
+  //   return <Loader />;
+  // }
   return (
     <div className="text-white-text">
       <div className="flex flex-wrap justify-between items-center sm:grid sm:grid-cols-2 xl:flex xl:flex-nowrap gap-3">
-        <Card type="total" />
-        <Card type="progress" />
-        <Card type="complete" />
-        <Card type="active" />
+        <Card type="total" ownerData={projectOwner ?? undefined} />
+        <Card type="progress" ownerData={projectOwner ?? undefined} />
+        <Card type="complete" ownerData={projectOwner ?? undefined} />
+        <Card type="active" ownerData={projectOwner ?? undefined} />
       </div>
       <div className="w-fit gap-3 mt-3 grid-cols-1 grid md:grid-cols-2">
         <div className="bg-dark-gray rounded-[8px] order-1">

@@ -15,7 +15,7 @@ export default function Profile() {
           <h3 className="text-gray-text text-base">Wallet Balance</h3>
           <h2 className="text-2xl">$9,650</h2>
         </div>
-        <div className="flex justify-between items-center gap-3 md:gap-0 flex-wrap">
+        <div className="flex justify-between items-center gap-3 md:gap-6 flex-wrap">
           <div className="grid gap-3">
             <h3 className="text-base">Organization</h3>
             <h5 className="text-gray-text text-sm break-all">{address}</h5>
@@ -52,16 +52,19 @@ export default function Profile() {
           <h3 className="text-gray-text text-base">Links</h3>
           <div className="flex flex-wrap gap-3">
             {projects?.map((data, index) => (
-              <Link
-                key={index}
-                href={data.repository_url}
-                target="_blank"
-                className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2"
-              >
-                <GithubIcon />
-                <span className="text-sm">GitHub Repo</span>
-                <ArrowGray />
-              </Link>
+              <div key={index} className="flex items-center gap-5">
+                <h2 className="capitalize">{data.name}</h2>
+                <Link
+                  key={index}
+                  href={data.repository_url}
+                  target="_blank"
+                  className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2"
+                >
+                  <GithubIcon />
+                  <span className="text-sm">GitHub Repo</span>
+                  <ArrowGray />
+                </Link>
+              </div>
             ))}
           </div>
         </div>

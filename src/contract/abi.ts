@@ -287,6 +287,70 @@ export const FORTICHAINABI: Abi = [
         name: "vulnerability",
         type: "core::integer::u256",
       },
+      {
+        name: "reports_submitted_count",
+        type: "core::integer::u256",
+      },
+      {
+        name: "reports_approved_count",
+        type: "core::integer::u256",
+      },
+      {
+        name: "total_bounty_won",
+        type: "core::integer::u256",
+      },
+      {
+        name: "total_amount_withdrawn",
+        type: "core::integer::u256",
+      },
+      {
+        name: "available_amount_to_withdraw",
+        type: "core::integer::u256",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "fortichain_contracts::base::types::ProjectOwner",
+    members: [
+      {
+        name: "address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "total_allocated_bounty",
+        type: "core::integer::u256",
+      },
+      {
+        name: "in_progress_audits",
+        type: "core::integer::u256",
+      },
+      {
+        name: "completed_audits",
+        type: "core::integer::u256",
+      },
+      {
+        name: "active_researchers",
+        type: "core::integer::u256",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "fortichain_contracts::base::types::UserRoles",
+    members: [
+      {
+        name: "is_project_owner",
+        type: "core::bool",
+      },
+      {
+        name: "is_validator",
+        type: "core::bool",
+      },
+      {
+        name: "is_security_researcher",
+        type: "core::bool",
+      },
     ],
   },
   {
@@ -1107,6 +1171,38 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_project_owner",
+        inputs: [
+          {
+            name: "owner",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "fortichain_contracts::base::types::ProjectOwner",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_user_roles",
+        inputs: [
+          {
+            name: "address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "fortichain_contracts::base::types::UserRoles",
           },
         ],
         state_mutability: "view",

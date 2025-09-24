@@ -36,6 +36,15 @@ export const uploadProjectHandle = async (
     projectType,
     repoUrl,
   } = formData;
+  const minimun_amount =
+    projectType === "L1 (Layer 1 Protocols)"
+      ? 50000
+      : projectType === "L2 (Layer 2 Protocols)"
+      ? 20000
+      : projectType === "dApps (Decentralized Applications)"
+      ? 2000
+      : 1000;
+
   if (!projectName) {
     toast.error("project name is required!");
     return;
@@ -57,12 +66,14 @@ export const uploadProjectHandle = async (
     return;
   }
 
-  if (contractAddress.length != 66) {
+  if (contractAddress.length > 1 && contractAddress.length != 66) {
     toast.error("input a valid contract address");
     return;
   }
-  if (amount == null || amount < 2) {
-    toast.error("minimum baounty amount is $100");
+  if (amount == null || amount < minimun_amount) {
+    toast.error(
+      `minimum baounty amount for ${projectType} is ${minimun_amount}`
+    );
     return;
   }
   if (!priority) {
@@ -216,7 +227,7 @@ export const create_validator_profile = async (
 ): Promise<void> => {
   const { userName, address, githubLink, passworks } = formData;
 
-  if (githubLink.startsWith("https://github.com/")) {
+  if (!githubLink.startsWith("https://github.com/")) {
     toast.error("A valid github link is required");
     return;
   }

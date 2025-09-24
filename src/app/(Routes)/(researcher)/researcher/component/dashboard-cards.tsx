@@ -1,3 +1,4 @@
+import { SecurityResearcher } from "@/hook/useBlockchain";
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
 import {
@@ -12,9 +13,11 @@ import Link from "next/link";
 export function SubmitReport({
   isSubmitOpen,
   handdleClick,
+  researcher,
 }: {
   isSubmitOpen: boolean;
   handdleClick: () => void;
+  researcher: SecurityResearcher;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 grid gap-3">
@@ -23,7 +26,7 @@ export function SubmitReport({
           <h3>Reports Submitted</h3>
           <FolderOpen className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">4</h2>
+        <h2 className="text-2xl">{researcher.reports_submitted_count}</h2>
         <span
           className={`bg-good-bg text-good rounded-full px-3 py-1 w-fit text-12`}
         >
@@ -143,9 +146,11 @@ export function SubmitReport({
 export function ApproveReport({
   isApproveOpen,
   handdleClick,
+  researcher,
 }: {
   isApproveOpen: boolean;
   handdleClick: () => void;
+  researcher: SecurityResearcher;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6  flex flex-col gap-3">
@@ -154,7 +159,7 @@ export function ApproveReport({
           <h3>Reports Approved</h3>
           <FileText className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">3</h2>
+        <h2 className="text-2xl">{researcher.reports_approved_count}</h2>
         <span
           className={`bg-pririty-low-bg text-blue-ball rounded-full px-3 py-1 w-fit text-12`}
         >
@@ -169,9 +174,23 @@ export function ApproveReport({
             <h3>Report Score</h3>
 
             <div>
-              <h3 className="text-2xl">70%</h3>
+              <h3 className="text-2xl">
+                {calculatePercentage(
+                  researcher.total_projects_worked_on,
+                  researcher.reports_approved_count
+                )}
+                %
+              </h3>
               <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                <span className="bg-blue-ball rounded-full w-[70%] block h-1.5" />
+                <span
+                  className="bg-blue-ball rounded-full block h-1.5"
+                  style={{
+                    width: `${calculatePercentage(
+                      researcher.total_projects_worked_on,
+                      researcher.reports_approved_count
+                    )}%`,
+                  }}
+                />
               </span>
             </div>
           </div>
@@ -179,17 +198,24 @@ export function ApproveReport({
             <h3>Report Score</h3>
 
             <div>
-              <h3 className="text-2xl">4</h3>
+              <h3 className="text-2xl">
+                {researcher.total_projects_worked_on}
+              </h3>
               <span className="text-gray-text text-sm">
-                1 Report in progress
+                {researcher.total_projects_worked_on -
+                  researcher.reports_approved_count}
+                Report in progress
               </span>
             </div>
           </div>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
-            <h3>Report Score</h3>
+            <h3>Approval Rate</h3>
 
             <div>
-              <h3 className="text-2xl">3/4</h3>
+              <h3 className="text-2xl">
+                {researcher.reports_approved_count}/
+                {researcher.total_projects_worked_on}
+              </h3>
               <span className="text-gray-text text-sm">Correct Report</span>
             </div>
           </div>
@@ -211,25 +237,46 @@ export function ApproveReport({
         <h3>Report Score</h3>
 
         <div>
-          <h3 className="text-2xl">70%</h3>
+          <h3 className="text-2xl">
+            {calculatePercentage(
+              researcher.total_projects_worked_on,
+              researcher.reports_approved_count
+            )}
+            %
+          </h3>
           <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-            <span className="bg-blue-ball rounded-full w-[70%] block h-1.5" />
+            <span
+              className="bg-blue-ball rounded-full w-[70%] block h-1.5"
+              style={{
+                width: `${calculatePercentage(
+                  researcher.total_projects_worked_on,
+                  researcher.reports_approved_count
+                )}%`,
+              }}
+            />
           </span>
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
-        <h3>Report Score</h3>
+        <h3>Total Reports</h3>
 
         <div>
-          <h3 className="text-2xl">4</h3>
-          <span className="text-gray-text text-sm">1 Report in progress</span>
+          <h3 className="text-2xl"> {researcher.total_projects_worked_on}</h3>
+          <span className="text-gray-text text-sm">
+            {researcher.total_projects_worked_on -
+              researcher.reports_approved_count}{" "}
+            Report in progress
+          </span>
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
-        <h3>Report Score</h3>
+        <h3>Approval Rate</h3>
 
         <div>
-          <h3 className="text-2xl">3/4</h3>
+          <h3 className="text-2xl">
+            {researcher.reports_approved_count}/
+            {researcher.total_projects_worked_on}
+          </h3>
           <span className="text-gray-text text-sm">Correct Report</span>
         </div>
       </div>
@@ -240,9 +287,11 @@ export function ApproveReport({
 export function Earnings({
   isEarningOpen,
   handdleClick,
+  researcher,
 }: {
   isEarningOpen: boolean;
   handdleClick: () => void;
+  researcher: SecurityResearcher;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 flex flex-col gap-3">
@@ -251,7 +300,7 @@ export function Earnings({
           <h3>Token Earnings</h3>
           <CircleDollarSign className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">$9,650</h2>
+        <h2 className="text-2xl">${researcher.total_bounty_won.toFixed(2)}</h2>
         <span
           className={`bg-[#320D35] text-[#BB00C1] rounded-full px-3 py-1 w-fit text-12`}
         >
@@ -273,9 +322,12 @@ export function Earnings({
             <h3>Reputation</h3>
 
             <div>
-              <h3 className="text-2xl">90%</h3>
+              <h3 className="text-2xl">{researcher.reputation}%</h3>
               <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                <span className="bg-blue-ball rounded-full w-[90%] block h-1.5" />
+                <span
+                  className="bg-blue-ball rounded-full block h-1.5"
+                  style={{ width: `${researcher.reputation}%` }}
+                />
               </span>
             </div>
           </div>
@@ -324,13 +376,16 @@ export function Earnings({
         <h3>Reputation</h3>
 
         <div>
-          <h3 className="text-2xl">90%</h3>
+          <h3 className="text-2xl">{researcher.reputation}%</h3>
           <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-            <span className="bg-blue-ball rounded-full w-[90%] block h-1.5" />
+            <span
+              className="bg-blue-ball rounded-full w-[90%] block h-1.5"
+              style={{ width: `${researcher.reputation}%` }}
+            />
           </span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
+      {/* <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
         <div className="flex justify-between items-center">
           <h3>Achievements</h3>
           <div className="flex justify-between items-center text-gray-text">
@@ -347,7 +402,15 @@ export function Earnings({
             <span className="text-gray-text">85%+ accuracy for 3 months</span>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
+}
+
+function calculatePercentage(numerator: number, denominator: number) {
+  const cal = (numerator / denominator) * 100;
+  if (cal) return cal;
+  else {
+    return 0;
+  }
 }

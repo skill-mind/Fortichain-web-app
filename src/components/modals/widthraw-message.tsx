@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { ClipLoader } from "react-spinners";
 
 type SetIsError = (isSubmitting: boolean) => void;
-export default function SuccessModal({
+export default function WidthrawMessageModal({
   handler,
   isSubmitting,
   setIsError,
@@ -19,14 +19,14 @@ export default function SuccessModal({
   return (
     <>
       <div
-        className="bg-main-bg/75 fixed top-0 h-screen w-full"
+        className="bg-main-bg/75 z-[555] fixed top-0 h-screen w-full"
         onClick={() => {
           handler();
           setIsError(false);
         }}
       ></div>
-      <div className="w-sm rounded-[8px] mx-auto fixed top-50 sm:top-1/4 left-1/2 -translate-x-[50%]">
-        {!isError && (
+      <div className="w-[500px] rounded-[8px] mx-auto fixed top-50 sm:top-1/4 left-1/2 -translate-x-[50%] z-[555]">
+        {isError && (
           <div className="bg-[url(../../public/Hero.svg)] bg-center bg-contain h-56 w-full">
             <div className="flex justify-center items-center h-full">
               {isSubmitting ? (
@@ -39,13 +39,29 @@ export default function SuccessModal({
         )}
         {!isSubmitting && (
           <div className="p-6 text-center space-y-4 bg-dark-gray border border-t-0 border-dark-border-gray rounded-b-[8px]">
-            <h3 className="text-base">{isError ? "Error" : "Success"}</h3>
-            <p className="text-gray-text text-sm">
-              {isError
-                ? "Error uplaoding project"
-                : "Your Project was uploaded successfully. You can view all project under view projects"}
-            </p>
-
+            <h2>Withdrawal Successful</h2>
+            <span className="text-gray-text">
+              Your withdrawal has been processed and is being sent to your
+              wallet.
+            </span>
+            <div className="grid gap-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-text">Amount</span>
+                <span className="text-white-text">$2,000</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-text">To Address</span>
+                <span className="text-white-text">0x6B8e6 . . . D7cF3</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-text">Transaction ID</span>
+                <span className="text-white-text">0x1a2b . . . 78890</span>
+              </div>
+            </div>
+            <div className="border border-dark-border-gray rounded-[8px] p-6 font-light">
+              Your withdrawal typically takes 5-15 minutes to appear in your
+              wallet. You can track the transaction using the ID above.
+            </div>
             <button
               className="w-full min-h-14 p-0.5 group      
           hover:from-sky-blue-border hover:to-sky-blue-border
@@ -54,7 +70,7 @@ export default function SuccessModal({
               type="button"
               onClick={() => {
                 handler();
-                redirect("/projects");
+                redirect("/researcher");
                 setIsError(false);
               }}
             >
@@ -64,7 +80,7 @@ export default function SuccessModal({
               group-hover:bg-gradient-to-r bg-[#1C1C1C]
           flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
               >
-                view projects
+                Return to dashboard
               </span>
             </button>
           </div>

@@ -20,21 +20,10 @@ import { CalendarDays } from "lucide-react";
 import { useState } from "react";
 
 const PROJECT_TYPES = [
-  "Web3 Application",
-  "Smart Contract / dApp",
-  "DeFi Protocol",
-  "NFT Marketplace / Project",
-  "DAO Platform",
-  "Wallet / Key Management",
-  "Cross-Chain Bridge",
-  "Oracle Protocol",
-  "Layer 1 Blockchain",
-  "Layer 2 Scaling Solution",
-  "RPC / API Provider",
-  "Smart Contract Library / SDK",
-  "zk / Privacy Protocol",
-  "Decentralized Storage",
-  "Decentralized Compute",
+  "L1 (Layer 1 Protocols)",
+  "L2 (Layer 2 Protocols)",
+  "dApps (Decentralized Applications)",
+  "Others",
 ];
 
 export default function SubmitReport({
@@ -51,6 +40,11 @@ export default function SubmitReport({
       <span>This field is required</span>
     );
   }
+  const disablePastDates = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+    return date < today;
+  };
   return (
     <div className="grid text-base gap-4">
       <div className="grid gap-2">
@@ -133,7 +127,7 @@ export default function SubmitReport({
                   id="date"
                   className={`w-full ${
                     !data.deadline ? "text-gray-text" : ""
-                  } border pl-7 h-14 rounded-full border-dark-border-gray justify-between font-normal`}
+                  } border pl-7 h-14 bg-main-bg rounded-full border-dark-border-gray justify-between font-normal`}
                 >
                   {data.deadline
                     ? typeof data.deadline === "string"
@@ -152,17 +146,19 @@ export default function SubmitReport({
                 <Calendar
                   mode="single"
                   selected={data.deadline ?? undefined}
-                  captionLayout="dropdown"
                   onSelect={(date) => {
+                    // setDate(selectedDate);
                     setFormData((userData: UploadProjectProps) => {
                       return {
                         ...userData,
                         deadline: date ?? userData.deadline,
                       };
                     });
-
                     setOpen(false);
                   }}
+                  disabled={disablePastDates}
+                  captionLayout="dropdown"
+                  initialFocus
                 />
               </PopoverContent>
             </Popover>
@@ -187,7 +183,7 @@ export default function SubmitReport({
             />
           </div>
           <div className="w-full grid gap-2 ">
-            <label htmlFor="">Contract Address</label>
+            <label htmlFor="">Contract Address (Optional)</label>
             <Input
               onChange={(data) => {
                 const value = data.target.value;

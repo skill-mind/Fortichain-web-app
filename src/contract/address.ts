@@ -1,6 +1,7 @@
 import { RpcProvider } from "starknet";
 
 export const FORTICHAINADDRESS =
+  // "0x04351b83499c4635a81ab633a6021ff4c8a9d4ca8dee4d6d3b206a1c1f582156"; // with role
   "0x05e3ab4a07dd45237cb6eef2b7cb572c22aaf9a1bac7d5845affc273156cd0a9"; // updated with upgrade capability
 // "0x04554dca71a6227d3933d01d42c96fa1e2e85281ff528a0d1a9dbcc686e4c34a"; // latest with validator creating currect flow
 // "0x04f8730d129390eb7c0c2f86a1949e0701f1fe930f8f54acd37d31a16661fcd7"; // latest ca woith project bounty

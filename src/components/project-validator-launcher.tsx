@@ -157,7 +157,7 @@ export default function ProjectValidatorLauncher() {
 
   return (
     <motion.div
-      className="flex h-4/5 justify-center items-center gap-10 flex-col"
+      className="flex h-fit justify-center items-center gap-10 flex-col"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}

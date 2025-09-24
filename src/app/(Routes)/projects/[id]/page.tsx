@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Project as Data } from "@/util/types";
 import { ArrowLeftIcon, FileCode, FileMinus, X } from "lucide-react";
 import Image from "next/image";
-import avatar from "../../../../../../public/Ellipse 1.svg";
+import avatar from "../../../../../public/Ellipse 1.svg";
 import { ArrowGray, GithubIcon } from "@/icons/github";
 import { useAccount } from "@starknet-react/core";
 import {
