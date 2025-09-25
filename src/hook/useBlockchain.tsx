@@ -53,6 +53,7 @@ export interface Project {
   updated_at: string;
   validator_paid: boolean; //
   amount: number;
+  validator_assigned: number;
 }
 
 export interface ProjectOwner {
@@ -77,11 +78,11 @@ export function useProjectOwner(address: string) {
 
     // console.log(projectData);
     setOwner({
-      total_allocated_bounty: +ownerData.id.toString(),
-      address: `0x0${ownerData.address.toString(16)}`,
-      in_progress_audits: +ownerData.amount?.toString(),
-      completed_audits: +ownerData.amount?.toString(),
-      active_researchers: +ownerData.amount?.toString(),
+      total_allocated_bounty: +ownerData?.id?.toString(),
+      address: `0x0${ownerData?.address?.toString(16)}`,
+      in_progress_audits: +ownerData?.amount?.toString(),
+      completed_audits: +ownerData?.amount?.toString(),
+      active_researchers: +ownerData?.amount?.toString(),
     });
   }, [ownerData, address]);
 
@@ -119,6 +120,7 @@ export function useUserProject(address: string) {
         updated_at: epocTime(data.deadline.toString()),
         project_owner: `0x0${data["project_owner"].toString(16)}`,
         amount: +data.amount?.toString(), //
+        validator_assigned: data.validator_assigned,
       });
     });
     // console.log(projectData);
@@ -133,6 +135,47 @@ export function useAllProjects() {
   const { readData: projectList } = useContractFetch(
     FORTICHAINABI,
     "get_all_projects",
+    []
+  );
+  console.log(projectList, 0);
+  useEffect(() => {
+    if (!projectList) return; //
+    const projectData: Project[] = [];
+    projectList.forEach((data: Project) => {
+      projectData.push({
+        validator_paid: data.validator_paid,
+        researchers_paid: data.researchers_paid,
+        repository_url: data.repository_url,
+        smart_contract_address: `0x0${data["smart_contract_address"].toString(
+          16
+        )}`,
+        name: data.name,
+        id: +data.id.toString(),
+        description: data.description,
+        is_active: data.is_active,
+        is_completed: data.is_completed,
+        created_at: epocTime(data.created_at.toString()),
+        deadline: epocTime(data.deadline.toString()),
+        priority: shortString.decodeShortString(data.priority),
+        project_type: data.project_type,
+        updated_at: epocTime(data.deadline.toString()),
+        project_owner: `0x0${data["project_owner"].toString(16)}`,
+        amount: +data.amount?.toString(), //
+        validator_assigned: data.validator_assigned,
+      });
+    });
+    // console.log(projectData);
+    setProjectsData(projectData);
+  }, [projectList]);
+
+  return projectsData;
+}
+
+export function UseGetAssignableProjects() {
+  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+  const { readData: projectList } = useContractFetch(
+    FORTICHAINABI,
+    "get_assignable_projects",
     []
   );
   console.log(projectList);
@@ -159,6 +202,7 @@ export function useAllProjects() {
         updated_at: epocTime(data.deadline.toString()),
         project_owner: `0x0${data["project_owner"].toString(16)}`,
         amount: +data.amount?.toString(), //
+        validator_assigned: data.validator_assigned,
       });
     });
     // console.log(projectData);
@@ -194,6 +238,47 @@ export function useValidators() {
   const { readData: validatorsData } = useContractFetch(
     FORTICHAINABI,
     "get_all_validators",
+    []
+  );
+  console.log(validatorsData);
+  useEffect(() => {
+    if (!validatorsData) return; //
+    const rawValidatorData: validatorType[] = [];
+    validatorsData.forEach((data: validatorType) => {
+      rawValidatorData.push({
+        validator_data_uri: data.validator_data_uri.toString(),
+        validator_address: `0x0${data.validator_address.toString(16)}`,
+        username: data.username,
+        id: +data.id.toString(),
+        is_open_for_work: data.is_open_for_work,
+        created_at: epocTime(data.created_at.toString()),
+        status: shortString.decodeShortString(data.status),
+        kyc_uri: data.kyc_uri.toString(),
+        updated_at: epocTime(data.updated_at.toString()),
+        kyc_approved: data.kyc_approved.toString(),
+        github_profile_url: data.github_profile_url,
+        total_bounty_won: +data.total_bounty_won.toString(),
+        approval_rate: +data.approval_rate.toString(),
+        total_amount_withdrawn: +data.total_amount_withdrawn.toString(),
+        reputation: data.reputation,
+        available_amount_to_widthdraw: data.available_amount_to_widthdraw,
+        number_project_validated: +data.number_project_validated.toString(),
+        passwork: [""],
+      });
+    });
+    // console.log();
+    setValidators(rawValidatorData);
+  }, [validatorsData]);
+
+  return validators;
+}
+
+export function UseGetUnassignedValidators() {
+  const [validators, setValidators] = useState<validatorType[]>();
+
+  const { readData: validatorsData } = useContractFetch(
+    FORTICHAINABI,
+    "get_unassigned_validators",
     []
   );
   console.log(validatorsData);
@@ -306,6 +391,46 @@ export function useResearcherByAddress(address: string) {
       available_amount_to_withdraw:
         +researchersData?.available_amount_to_withdraw?.toString(),
     });
+  }, [researchersData]);
+
+  return researchers;
+}
+
+export function useAllResearchers() {
+  const [researchers, setResearcher] = useState<SecurityResearcher[]>();
+
+  const { readData: researchersData } = useContractFetch(
+    FORTICHAINABI,
+    "get_all_researchers_detailed",
+    []
+  );
+  console.log(researchersData);
+  useEffect(() => {
+    if (!researchersData) return; //
+    console.log(researchersData.vulnerability);
+    const rawResercherData: SecurityResearcher[] = [];
+    researchersData.forEach((data: SecurityResearcher) => {
+      rawResercherData.push({
+        vulnerability: +data?.vulnerability?.toString(),
+        username: data?.username,
+        updated_at: epocTime(data?.updated_at?.toString()),
+        total_projects_worked_on: +data?.total_projects_worked_on?.toString(),
+        status: data?.status?.toString(),
+        researcher_address: `0x0${data?.researcher_address?.toString(16)}`,
+        reputation: +data?.reputation?.toString(),
+        is_active: data?.is_active,
+        id: +data?.id?.toString(),
+        created_at: epocTime(data?.created_at?.toString()),
+
+        reports_submitted_count: +data?.reports_submitted_count?.toString(),
+        reports_approved_count: +data?.reports_approved_count?.toString(),
+        total_bounty_won: +data?.total_bounty_won?.toString(),
+        total_amount_withdrawn: +data?.total_amount_withdrawn?.toString(),
+        available_amount_to_withdraw:
+          +data?.available_amount_to_withdraw?.toString(),
+      });
+    });
+    setResearcher(rawResercherData);
   }, [researchersData]);
 
   return researchers;

@@ -45,8 +45,8 @@ export default function Layou({
   }, [account, isConnected]);
   return (
     <>
-      {/* <DashboardNavBar routeType={description} routes={location} /> */}
-      <DashboardNavBar routeType="Admin Dashboard" routes={adminRoute} />
+      <DashboardNavBar routeType={description} routes={location} />
+      {/* <DashboardNavBar routeType="Admin Dashboard" routes={adminRoute} /> */}
       <main className="xl:px-20 px-10 max-w-sit-screen mx-auto py-7 mt-[120px] xl:mt-[180px]">
         {children}
       </main>

@@ -25,6 +25,7 @@ import EditProjectModal from "@/components/modals/edit-project";
 import { handler } from "next/dist/build/templates/app-page";
 
 export default function Page() {
+  const { address } = useAccount();
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -62,9 +63,11 @@ export default function Page() {
         updated_at: epocTime(project.deadline.toString()),
         project_owner: `0x0${project["project_owner"].toString(16)}`,
         amount: +project?.amount.toString(),
+        validator_assigned: project.validator_assigned,
       });
     }
   }, [project]);
+  console.log(project?.project_owner == address);
   if (project == undefined) {
     return <Loader />;
   }

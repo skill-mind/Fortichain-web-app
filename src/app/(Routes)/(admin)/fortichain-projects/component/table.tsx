@@ -5,10 +5,12 @@ export function ProjectTable({
   handler,
   projects,
   setId,
+  progressHandler,
 }: {
   handler: () => void;
   projects: Project[];
   setId: SetId;
+  progressHandler: () => void;
 }) {
   console.log(projects);
   return (
@@ -128,12 +130,12 @@ export function ProjectTable({
                 >
                   <span
                     className={`${
-                      project.is_completed
+                      !project.validator_assigned
                         ? "bg-good-bg text-good"
                         : "bg-pririty-low-bg text-blue-ball"
                     } px-3 py-1.5 text-12 rounded-full w-full block text-center`}
                   >
-                    {project.is_active ? "Available" : "Validated"}
+                    {!project.validator_assigned ? "Available" : "Assigned"}
                   </span>
                 </td>
                 <td
@@ -157,7 +159,12 @@ export function ProjectTable({
                     type="button"
                     onClick={() => {
                       setId(project.id);
-                      handler();
+                      if (project.validator_assigned) {
+                        progressHandler();
+                      }
+                      if (!project.validator_assigned) {
+                        handler();
+                      }
                     }}
                   >
                     <span

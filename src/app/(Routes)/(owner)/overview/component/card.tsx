@@ -20,7 +20,7 @@ export default function Card({
   const value =
     type === "total"
       ? ownerData
-        ? ownerData?.total_allocated_bounty
+        ? ` $${ownerData?.total_allocated_bounty}`
         : 0
       : type === "progress"
       ? ownerData

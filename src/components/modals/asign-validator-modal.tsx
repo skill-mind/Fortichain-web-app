@@ -7,7 +7,11 @@ import { FORTICHAINABI } from "@/contract/abi";
 import { useAccount } from "@starknet-react/core";
 import { assign_validator } from "@/hook/blockchainWriteFunction";
 import ValidatorModal from "./validator-details-modal";
-import { useContractFetch, useValidators } from "@/hook/useBlockchain";
+import {
+  useContractFetch,
+  UseGetUnassignedValidators,
+  useValidators,
+} from "@/hook/useBlockchain";
 import { formatAddress } from "@/util/helper";
 import Link from "next/link";
 
@@ -25,7 +29,7 @@ export default function AsignValidorModal({
   const [isOpen, setIsOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const { account } = useAccount();
-  const validators = useValidators();
+  const validators = UseGetUnassignedValidators();
   function validatorDetailhandler() {
     setIsShowDetail((prev) => !prev);
   }
@@ -35,7 +39,7 @@ export default function AsignValidorModal({
     "view_project",
     typeof id !== "undefined" ? [+id] : []
   );
-  console.log("iiiiiiii");
+  console.log(project);
   return (
     <>
       {validatorID &&
@@ -48,7 +52,7 @@ export default function AsignValidorModal({
           />
         )}
       <div
-        className=" bg-main-bg/75 z-50 fixed top-0 h-screen w-full"
+        className=" bg-main-bg/75 z-50 fixed top-0 h-screen w-full left-0"
         onClick={handler}
       ></div>
       <div className="p-6 max-w-[950px] w-full bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-20 z-50 left-1/2 -translate-x-[50%]">
@@ -89,7 +93,7 @@ export default function AsignValidorModal({
                 project?.is_completed
                   ? "bg-good-bg text-good"
                   : "bg-pririty-low-bg text-blue-ball"
-              } px-3 py-1.5 text-12 rounded-full w-full block text-center`}
+              } px-3 py-1.5 text-12 rounded-full w-fit block text-center`}
             >
               {project?.is_active ? "Available" : "Validated"}
             </span>
@@ -132,138 +136,145 @@ export default function AsignValidorModal({
         </div>
         {isExpand && (
           <div className="border h-[400px] bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[750px] font-walsheim">
-            <div className="overflow-x-auto scrollbar-hide">
-              <table
-                className="w-full min-w-[600px] sticky text-base"
-                role="table"
-                aria-label="list of Project"
-              >
-                <thead className="border-b border-dark-border-gray text-gray-text text-base">
-                  <tr>
-                    <th
-                      className="sticky left-0 z-20 px-4 py-3 text-left"
-                      scope="col"
-                      aria-label="date"
-                    >
-                      Validators
-                    </th>
-                    <th
-                      className="sticky left-[60px] z-20 px-4 py-3 text-left "
-                      scope="col"
-                      aria-label="project name"
-                    >
-                      Reputation
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left"
-                      scope="col"
-                      aria-label="Projects"
-                    >
-                      Assignment
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left"
-                      scope="col"
-                      aria-label="Wallet address transfer to"
-                    >
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {validators?.map((user, key) => {
-                    return (
-                      <tr
-                        key={key}
-                        className={`border-b text-sm border-dark-border-gray last:border-b-0 transition-colors `}
-                        role="row"
+            {validators?.length == 0 && (
+              <h2 className="text-gray-text text-2xl  text-center">
+                No validator available
+              </h2>
+            )}
+            {validators?.length != undefined && validators.length > 0 && (
+              <div className="overflow-x-auto scrollbar-hide">
+                <table
+                  className="w-full min-w-[600px] sticky text-base"
+                  role="table"
+                  aria-label="list of Project"
+                >
+                  <thead className="border-b border-dark-border-gray text-gray-text text-base">
+                    <tr>
+                      <th
+                        className="sticky left-0 z-20 px-4 py-3 text-left"
+                        scope="col"
+                        aria-label="date"
                       >
-                        <td
-                          className="sticky left-0 z-10 bg-inherit px-4 py-4"
-                          role="gridcell"
-                          aria-label={`${user?.username}`}
+                        Validators
+                      </th>
+                      <th
+                        className="sticky left-[60px] z-20 px-4 py-3 text-left "
+                        scope="col"
+                        aria-label="project name"
+                      >
+                        Reputation
+                      </th>
+                      <th
+                        className="px-4 py-3 text-left"
+                        scope="col"
+                        aria-label="Projects"
+                      >
+                        Assignment
+                      </th>
+                      <th
+                        className="px-4 py-3 text-left"
+                        scope="col"
+                        aria-label="Wallet address transfer to"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {validators?.map((user, key) => {
+                      return (
+                        <tr
+                          key={key}
+                          className={`border-b text-sm border-dark-border-gray last:border-b-0 transition-colors `}
+                          role="row"
                         >
-                          <span className="w-fit h-6 rounded-full flex items-center justify-start">
-                            {user.username}
-                          </span>
-                          <span className="text-gray-text">
-                            {formatAddress(
-                              user?.validator_address?.toString(16),
-                              15,
-                              12
-                            )}
-                          </span>
-                        </td>
-                        <td
-                          className="sticky left-[60px] z-10 px-4 py-4 font-medium"
-                          role="gridcell"
-                          aria-label=""
-                        >
-                          80
-                        </td>
-
-                        <td
-                          className="px-4 py-4 text-xs md:text-sm"
-                          role="gridcell"
-                          aria-label={`transfer to ${user.status}`}
-                        >
-                          <button
-                            disabled={isSubmitting}
-                            className={`relative disabled:cursor-not-allowed p-1 bg-gradient-to-r rounded-full from-[#2AA479] to-[#103E13]`}
-                            type="button"
-                            onClick={() => {
-                              setSelected(user.id);
-                              assign_validator(
-                                id,
-                                user?.validator_address.toString(16),
-                                account,
-                                setIsSubmitting,
-                                setIsOpen,
-                                setIsError
-                              );
-                            }}
+                          <td
+                            className="sticky left-0 z-10 bg-inherit px-4 py-4"
+                            role="gridcell"
+                            aria-label={`${user?.username}`}
                           >
-                            <span
-                              className={`bg-gradient-to-r px-6 py-2  to-[#2AA479] from-[#103E13] rounded-full w-full h-full grid place-content-center group-disabled:cursor-not-allowed`}
-                            >
-                              {isSubmitting && selected == user.id
-                                ? "submitting..."
-                                : "assign"}
+                            <span className="w-fit h-6 rounded-full flex items-center justify-start">
+                              {user.username}
                             </span>
-                          </button>
-                        </td>
-                        <td
-                          className="px-4 py-4 text-center"
-                          role="gridcell"
-                          aria-label={`button`}
-                        >
-                          <button
-                            className="w-fit min-h-11 p-0.5 group             
+                            <span className="text-gray-text">
+                              {formatAddress(
+                                user?.validator_address?.toString(16),
+                                15,
+                                12
+                              )}
+                            </span>
+                          </td>
+                          <td
+                            className="sticky left-[60px] z-10 px-4 py-4 font-medium"
+                            role="gridcell"
+                            aria-label=""
+                          >
+                            {user.reputation}
+                          </td>
+
+                          <td
+                            className="px-4 py-4 text-xs md:text-sm"
+                            role="gridcell"
+                            aria-label={`transfer to ${user.status}`}
+                          >
+                            <button
+                              disabled={isSubmitting}
+                              className={`relative disabled:cursor-not-allowed p-1 bg-gradient-to-r rounded-full from-[#2AA479] to-[#103E13]`}
+                              type="button"
+                              onClick={() => {
+                                setSelected(user.id);
+                                assign_validator(
+                                  id,
+                                  user?.validator_address.toString(16),
+                                  account,
+                                  setIsSubmitting,
+                                  setIsOpen,
+                                  setIsError
+                                );
+                              }}
+                            >
+                              <span
+                                className={`bg-gradient-to-r px-6 py-2  to-[#2AA479] from-[#103E13] rounded-full w-full h-full grid place-content-center group-disabled:cursor-not-allowed`}
+                              >
+                                {isSubmitting && selected == user.id
+                                  ? "submitting..."
+                                  : "assign"}
+                              </span>
+                            </button>
+                          </td>
+                          <td
+                            className="px-4 py-4 text-center"
+                            role="gridcell"
+                            aria-label={`button`}
+                          >
+                            <button
+                              className="w-fit min-h-11 p-0.5 group             
                         hover:from-sky-blue-border hover:to-sky-blue-border
                         bg-gradient-to-r group to-[#312F2F] from-[#212121]
                     rounded-full group my-auto"
-                            type="button"
-                            onClick={() => {
-                              setValidatorId(Number(user.id));
-                              validatorDetailhandler();
-                            }}
-                          >
-                            <span
-                              className="px-6 py-3 text-sm
+                              type="button"
+                              onClick={() => {
+                                setValidatorId(Number(user.id));
+                                validatorDetailhandler();
+                              }}
+                            >
+                              <span
+                                className="px-6 py-3 text-sm
                             group-hover:from-sky-from group-hover:to-sky-to
                             group-hover:bg-gradient-to-r bg-[#1C1C1C]
                         flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                            >
-                              View Profile
-                            </span>
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                              >
+                                View Profile
+                              </span>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

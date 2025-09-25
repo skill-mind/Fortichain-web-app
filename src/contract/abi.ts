@@ -1129,6 +1129,28 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
+        name: "get_unassigned_validators",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Validator>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_assignable_projects",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Project>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
         name: "get_researcher_reputation",
         inputs: [
           {

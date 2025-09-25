@@ -29,10 +29,10 @@ export default function Researcher() {
         validators={validators}
         setValidatorId={setValidatorId}
       />
-      {validatorID && isOpen && validators && validators[validatorID - 1] && (
+      {isOpen && validators && validatorID && validators[validatorID - 1] && (
         <ValidatorModal
           handler={handler}
-          selectedValidator={validators[validatorID - 1]} //Todos
+          selectedValidator={validators[validatorID - 1]}
         />
       )}
     </section>

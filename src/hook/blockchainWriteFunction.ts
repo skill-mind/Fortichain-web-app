@@ -104,10 +104,14 @@ export const uploadProjectHandle = async (
         contractAddress:
           "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address // api i licencing comment out
         entrypoint: "approve",
-        calldata: [
-          FORTICHAINADDRESS, // spender
-          cairo.uint256(+formData?.amount * ONE_STK),
-        ],
+        calldata: CallData.compile({
+          spender: FORTICHAINADDRESS,
+          amount: cairo.uint256(+formData?.amount * ONE_STK),
+        }),
+        // calldata: [
+        //   FORTICHAINADDRESS, // spender
+        //   cairo.uint256(+formData?.amount * ONE_STK),
+        // ],
       };
       const multicallData = [approveCall, Call];
       // const feeDetails: PaymasterDetails = {

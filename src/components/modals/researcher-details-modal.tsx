@@ -1,6 +1,17 @@
+import { SecurityResearcher } from "@/hook/useBlockchain";
 import { X } from "lucide-react";
 
-export default function ResearcherModal({ handler }: { handler: () => void }) {
+export default function ResearcherModal({
+  handler,
+  selectedResearcher,
+}: {
+  handler: () => void;
+  selectedResearcher: SecurityResearcher;
+}) {
+  const approval_rate =
+    (selectedResearcher?.reports_approved_count /
+      selectedResearcher?.reports_submitted_count) *
+    100;
   return (
     <>
       <div
@@ -21,20 +32,22 @@ export default function ResearcherModal({ handler }: { handler: () => void }) {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text">Ebube One</span>
+            <span className="capitalize">{selectedResearcher?.username}</span>
             <span className="bg-pririty-low-bg text-blue-ball rounded-full py-1 px-2 text-">
               Active
             </span>
           </div>
           <div>
             <span className="text-gray-text">Reputation: </span>
-            <span>91</span>
+            <span>{selectedResearcher?.reputation}</span>
           </div>
         </div>
 
         <div className="py-3 px-6 bg-dark-gray-pop rounded-[8px] grid gap-4">
           <span className="text-gray-text text-base">Total Money Earned</span>
-          <h2 className="text-18">$9,650</h2>
+          <h2 className="text-18">
+            ${selectedResearcher?.total_bounty_won.toFixed()}
+          </h2>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-col sm:flex-row">
@@ -42,19 +55,23 @@ export default function ResearcherModal({ handler }: { handler: () => void }) {
             <span className="text-base text-gray-text border-b border-dark-border-gray pb-4">
               Projects Reports
             </span>
-            <span className="text-xl ">5</span>
+            <span className="text-xl ">
+              {selectedResearcher.reports_submitted_count}
+            </span>
           </div>
           <div className="border border-dark-border-gray w-full rounded-[8px] py-6  px-7  flex-col gap-4 flex">
             <span className="text-base text-gray-text border-b border-dark-border-gray pb-4">
               Total Vulnerabilities
             </span>
-            <span className="text-xl ">13</span>
+            <span className="text-xl ">{selectedResearcher.vulnerability}</span>
           </div>
           <div className="border border-dark-border-gray w-full rounded-[8px] py-6  px-7  flex-col gap-4 flex">
             <span className="text-base text-gray-text border-b border-dark-border-gray pb-4">
               Approval Rate
             </span>
-            <span className="text-xl ">83%</span>
+            <span className="text-xl ">
+              {approval_rate ? approval_rate : 0}%
+            </span>
           </div>
         </div>
         <div className="grid gap-3 mt-3 text-base">
@@ -70,43 +87,6 @@ export default function ResearcherModal({ handler }: { handler: () => void }) {
           <span className="text-blue-ball break-all">
             https://github.com/fortichain/smartcontractaudit
           </span>
-        </div>
-        <div>
-          <div className="flex sm:flex-row flex-col justify-between items-center gap-6 my-2">
-            <button
-              className="w-full min-h-50 p-0.5 group             
-              hover:from-sky-blue-border hover:to-sky-blue-border
-              bg-gradient-to-r group to-[#312F2F] from-[#212121]
-          rounded-full group"
-              type="button"
-            >
-              <span
-                className="px-6 py-3
-                  group-hover:from-sky-from group-hover:to-sky-to
-                  group-hover:bg-gradient-to-r bg-[#1C1C1C]
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-              >
-                Back
-              </span>
-            </button>
-
-            <button
-              className="w-full min-h-50 p-0.5 group             
-              from-sky-blue-border to-sky-blue-border
-              bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
-          rounded-full group"
-              type="button"
-            >
-              <span
-                className="px-6 py-3
-                  from-sky-from to-sky-to
-                   bg-gradient-to-r group-hover:bg-[#1C1C1C]
-              flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-              >
-                View Profile
-              </span>
-            </button>
-          </div>
         </div>
       </div>
     </>
