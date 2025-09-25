@@ -43,7 +43,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           </span>
         </div>
         <Link
-          href={`/view-projects/${project.id}`}
+          href={`/projects/${project.id}`}
           className="w-full sm:w-fit min-h-11 p-0.5 group             
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]

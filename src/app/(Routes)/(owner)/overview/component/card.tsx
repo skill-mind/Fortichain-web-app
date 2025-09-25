@@ -1,7 +1,14 @@
+import { ProjectOwner } from "@/hook/useBlockchain";
 import { Group } from "@/icons/github";
 import { CircleDollarSign, FileText } from "lucide-react";
 
-export default function Card({ type }: { type: string }) {
+export default function Card({
+  type,
+  ownerData,
+}: {
+  type: string;
+  ownerData: ProjectOwner;
+}) {
   const text =
     type === "total"
       ? "Total Allocated Bounty"
@@ -12,12 +19,18 @@ export default function Card({ type }: { type: string }) {
       : "Active Researchers";
   const value =
     type === "total"
-      ? 12
+      ? ownerData
+        ? ownerData?.total_allocated_bounty
+        : 0
       : type === "progress"
-      ? 1
+      ? ownerData
+        ? ownerData?.in_progress_audits
+        : 0
       : type === "complete"
-      ? 2
-      : 2;
+      ? ownerData
+        ? ownerData.completed_audits
+        : 0
+      : ownerData?.active_researchers ?? 0;
   const bg =
     type === "total"
       ? "bg-good-bg text-good"

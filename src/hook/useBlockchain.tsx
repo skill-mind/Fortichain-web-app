@@ -55,6 +55,39 @@ export interface Project {
   amount: number;
 }
 
+export interface ProjectOwner {
+  address: { toString: (radix: number) => string };
+  total_allocated_bounty: number;
+  in_progress_audits: number;
+  completed_audits: number;
+  active_researchers: number;
+}
+
+export function useProjectOwner(address: string) {
+  const [owner, setOwner] = useState<ProjectOwner | undefined>();
+  console.log(owner);
+  const { readData: ownerData } = useContractFetch(
+    FORTICHAINABI,
+    "get_project_owner",
+    [address]
+  );
+  console.log(owner);
+  useEffect(() => {
+    if (!ownerData || !address) return; //
+
+    // console.log(projectData);
+    setOwner({
+      total_allocated_bounty: +ownerData.id.toString(),
+      address: `0x0${ownerData.address.toString(16)}`,
+      in_progress_audits: +ownerData.amount?.toString(),
+      completed_audits: +ownerData.amount?.toString(),
+      active_researchers: +ownerData.amount?.toString(),
+    });
+  }, [ownerData, address]);
+
+  return ownerData;
+}
+
 export function useUserProject(address: string) {
   const [projectsData, setProjectsData] = useState<Project[] | undefined>();
   const { readData: projectList } = useContractFetch(
@@ -146,6 +179,13 @@ export interface validatorType {
   github_profile_url: string;
   is_open_for_work: boolean;
   validator_address: { toString: (radix: number) => string };
+  approval_rate: number;
+  available_amount_to_widthdraw: number;
+  number_project_validated: number;
+  reputation: number;
+  total_amount_withdrawn: number;
+  total_bounty_won: number;
+  passwork: string[];
 }
 
 export function useValidators() {
@@ -173,6 +213,13 @@ export function useValidators() {
         updated_at: epocTime(data.updated_at.toString()),
         kyc_approved: data.kyc_approved.toString(),
         github_profile_url: data.github_profile_url,
+        total_bounty_won: +data.total_bounty_won.toString(),
+        approval_rate: +data.approval_rate.toString(),
+        total_amount_withdrawn: +data.total_amount_withdrawn.toString(),
+        reputation: data.reputation,
+        available_amount_to_widthdraw: data.available_amount_to_widthdraw,
+        number_project_validated: +data.number_project_validated.toString(),
+        passwork: [""],
       });
     });
     // console.log();
@@ -205,32 +252,106 @@ export function useResearchers() {
   return researchers;
 }
 
-export function useValidatorDetail() {
+export interface SecurityResearcher {
+  id: number;
+  researcher_address: { toString: (radix: number) => string };
+  username: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  is_active: boolean;
+  reputation: number;
+  total_projects_worked_on: number;
+  vulnerability: number;
+  reports_submitted_count: number;
+  reports_approved_count: number;
+  total_bounty_won: number;
+  total_amount_withdrawn: number;
+  available_amount_to_withdraw: number;
+}
+
+export function useResearcherByAddress(address: string) {
+  const [researchers, setResearcher] = useState<SecurityResearcher>();
+
+  const { readData: researchersData } = useContractFetch(
+    FORTICHAINABI,
+    "get_researcher_by_address",
+    [address]
+  );
+  console.log(researchersData);
+  useEffect(() => {
+    if (!researchersData) return; //
+    setResearcher({
+      vulnerability: +researchersData?.vulnerability.toString(),
+      username: researchersData?.username,
+      updated_at: epocTime(researchersData?.updated_at.toString()),
+      total_projects_worked_on:
+        +researchersData?.total_projects_worked_on.toString(),
+      status: researchersData?.status.toString(),
+      researcher_address: `0x0${researchersData?.researcher_address.toString(
+        16
+      )}`,
+      reputation: +researchersData?.reputation.toString(),
+      is_active: researchersData?.is_active,
+      id: +researchersData?.id?.toString(),
+      created_at: epocTime(researchersData?.created_at.toString()),
+
+      reports_submitted_count:
+        +researchersData?.reports_submitted_count?.toString(),
+      reports_approved_count:
+        +researchersData?.reports_approved_count?.toString(),
+      total_bounty_won: +researchersData?.total_bounty_won?.toString(),
+      total_amount_withdrawn:
+        +researchersData?.total_amount_withdrawn?.toString(),
+      available_amount_to_withdraw:
+        +researchersData?.available_amount_to_withdraw?.toString(),
+    });
+  }, [researchersData]);
+
+  return researchers;
+}
+
+export function useValidatorDetail(address: string) {
   const [validators, setValidators] = useState<validatorType>();
 
   const { readData: validatorsData } = useContractFetch(
     FORTICHAINABI,
-    "get_all_validators",
-    []
+    "get_validator",
+    [address]
   );
-  console.log(validatorsData);
+
   useEffect(() => {
     if (!validatorsData) return; //
+    console.log(validatorsData["0"]);
     const rawValidatorData: validatorType = {
-      validator_data_uri: validatorsData.validator_data_uri.toString(),
-      validator_address: `0x0${validatorsData.validator_address.toString(16)}`,
-      username: validatorsData.username,
-      id: +validatorsData.id.toString(),
-      is_open_for_work: validatorsData.is_open_for_work,
-      created_at: epocTime(validatorsData.created_at.toString()),
-      status: shortString.decodeShortString(validatorsData.status),
-      kyc_uri: validatorsData.kyc_uri.toString(),
-      updated_at: epocTime(validatorsData.updated_at.toString()),
-      kyc_approved: validatorsData.kyc_approved.toString(),
-      github_profile_url: validatorsData.github_profile_url,
+      validator_data_uri: validatorsData["0"]?.validator_data_uri?.toString(),
+      validator_address: `0x0${validatorsData["0"]?.validator_address?.toString(
+        16
+      )}`,
+      username: validatorsData["0"]?.username,
+      id: +validatorsData["0"]?.id?.toString(),
+      is_open_for_work: validatorsData["0"]?.is_open_for_work,
+      created_at: epocTime(validatorsData["0"]?.created_at?.toString()),
+      status: shortString?.decodeShortString(validatorsData["0"]?.status),
+      kyc_uri: validatorsData["0"]?.kyc_uri?.toString(),
+      updated_at: epocTime(validatorsData["0"]?.updated_at?.toString()),
+      kyc_approved: validatorsData["0"]?.kyc_approved?.toString(),
+      github_profile_url: validatorsData["0"]?.github_profile_url,
+      total_bounty_won: Number(validatorsData["0"]?.total_bounty_won),
+      approval_rate: Number(validatorsData["0"]?.approval_rate),
+      total_amount_withdrawn: Number(
+        validatorsData["0"]?.total_amount_withdrawn
+      ),
+      reputation: Number(validatorsData["0"]?.reputation),
+      available_amount_to_widthdraw: Number(
+        validatorsData["0"]?.available_amount_to_withdraw
+      ),
+      number_project_validated: Number(
+        validatorsData["0"]?.number_project_validated
+      ),
+      passwork: validatorsData["1"],
     };
 
-    // console.log();
     setValidators(rawValidatorData);
   }, [validatorsData]);
 
@@ -238,6 +359,7 @@ export function useValidatorDetail() {
 }
 
 export function getTimeFromEpoch(time: string) {
+  if (!time) return "";
   const epochSeconds = time.replace("n", "");
   const date = new Date(+epochSeconds * 1000);
   return `${date.getHours().toString().padStart(2, "0")}:${date
@@ -246,6 +368,7 @@ export function getTimeFromEpoch(time: string) {
     .padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
 }
 export function epocTime(time: string) {
+  if (!time) return "";
   const epochSeconds = time.replace("n", "");
 
   const date = new Date(+epochSeconds); // multiply by 1000 to convert to milliseconds

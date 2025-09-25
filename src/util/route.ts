@@ -90,7 +90,7 @@ export const ownerRoute = [
   },
   {
     label: "View Projects",
-    url: "/view-projects",
+    url: "/projects",
   },
   {
     label: "Ranking",

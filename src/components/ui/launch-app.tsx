@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 export default function LaunchAppUi() {
   const { route, setter } = useContext(Router);
   return (
-    <section className="bg-[url(../../public/Hero.svg)] h-screen px-4">
+    <section className="bg-[url(../../public/Hero.svg)] min-h-screen p-4">
       <div
         className="px-3 py-5 border-t w-full text-center h-fit border-dark-border-gray items-center border-b flex justify-center"
         onClick={() => {
@@ -23,9 +23,11 @@ export default function LaunchAppUi() {
       >
         <Image src={logo} alt="fortichain" />
       </div>
-      {route === "owner" && <ProjectOwnerLauncher />}
-      {route === "researcher" && <ProjectResearcherLauncher />}
-      {route === "validator" && <ProjectValidatorLauncher />}
+      <div className="pt-9 min-h-screen flex items-center flex-col justify-center">
+        {route === "owner" && <ProjectOwnerLauncher />}
+        {route === "researcher" && <ProjectResearcherLauncher />}
+        {route === "validator" && <ProjectValidatorLauncher />}
+      </div>
     </section>
   );
 }

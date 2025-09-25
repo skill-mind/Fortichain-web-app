@@ -47,7 +47,7 @@ export default function Summary({
       <div className="flex justify-between sm:flex-row flex-col items-start gap-2">
         <div className="grid gap-2 w-1/2">
           <h2>Repository URL</h2>
-          <p className="text-gray-text text-sm">{repoUrl}</p>
+          <p className="text-gray-text text-sm break-all">{repoUrl}</p>
         </div>
         <div className="grid gap-2 w-1/2">
           <h2>Contract Address</h2>

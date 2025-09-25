@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockProjects } from "@/util/mock-data";
-import ProjectCard from "../../../../components/project-card";
+import ProjectCard from "../../../components/project-card";
 import { useState } from "react";
 import { Project } from "@/util/types";
 import { useAccount } from "@starknet-react/core";
@@ -25,10 +25,9 @@ export default function Page() {
   }
   if (projects.length == 0) {
     return (
-      <div className="bg-main-bg p-1 md:p-2.5 w-full h-screen flex justify-center items-center text-center text-gray-text text-2xl md:text-[32px]">
-        <h2>
-          You currently do not have a project on fortichain, might want to
-          upload your project to get fortified
+      <div className=" w-full flex h-screen justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
+        <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">
+          Nothing to show. Created project will show here
         </h2>
       </div>
     );

@@ -9,11 +9,19 @@ import {
   useResearchers,
   useValidators,
 } from "@/hook/useBlockchain";
+import Loader from "@/app/loading";
 
 export default function Admin() {
   const totalProjects = useAllProjects()?.length;
   const totalReasearcher = useResearchers()?.length;
   const totalValidators = useValidators()?.length;
+  if (
+    totalProjects == undefined ||
+    totalReasearcher == undefined ||
+    totalValidators == undefined
+  ) {
+    return <Loader />;
+  }
   return (
     <section className="grid gap-4">
       <div className="flex flex-wrap justify-between items-center sm:grid sm:grid-cols-2 xl:grid-cols-3 gap-3">

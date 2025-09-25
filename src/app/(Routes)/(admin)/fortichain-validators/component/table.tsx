@@ -88,7 +88,7 @@ export function ProjectTable({
                     role="gridcell"
                     aria-label={``}
                   >
-                    90
+                    {user.reputation}
                   </td>
 
                   <td
@@ -96,7 +96,7 @@ export function ProjectTable({
                     role="gridcell"
                     aria-label={`transfer to `}
                   >
-                    54
+                    {user.number_project_validated}
                   </td>
                   <td
                     className="px-4 py-4 my-4 flex items-center justify-center gap-1 text-center"
@@ -106,10 +106,10 @@ export function ProjectTable({
                     <div className="bg-dark-gray-pop h-1.5 w-[100px] rounded-full">
                       <span
                         className="h-full bg-blue-ball  block rounded-full"
-                        style={{ width: `${30}%` }}
+                        style={{ width: `${user.approval_rate}%` }}
                       />
                     </div>
-                    30%
+                    {user.approval_rate}%
                   </td>
                   <td
                     className="px-4 py-4 text-center"

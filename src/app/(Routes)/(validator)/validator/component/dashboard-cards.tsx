@@ -1,20 +1,29 @@
+import { validatorType } from "@/hook/useBlockchain";
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
-import { ArrowRight, CircleDollarSign, FileText, FolderOpen, Timer } from "lucide-react";
+import {
+  ArrowRight,
+  CircleDollarSign,
+  FileText,
+  FolderOpen,
+  Timer,
+} from "lucide-react";
 import Link from "next/link";
 
 export function SubmitReport({
   isSubmitOpen,
   handdleClick,
+  validator,
 }: {
   isSubmitOpen: boolean;
-  handdleClick:()=>void;
+  handdleClick: () => void;
+  validator: validatorType;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 grid gap-3">
       <div className="bg-dark-gray rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
         <div className="flex justify-between items-center text-18">
-          <h3>Reports Submitted</h3>
+          <h3>Reports Available</h3>
           <FolderOpen className="text-gray-text" />
         </div>
         <h2 className="text-2xl">4</h2>
@@ -30,7 +39,10 @@ export function SubmitReport({
           <h2 className="text-sm mt-3 ">New Project Alerts</h2>
           {dashboardData.newProjectAlerts.map((data) => {
             return (
-              <div key={data.id}  className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
+              <div
+                key={data.id}
+                className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]"
+              >
                 <div className="flex justify-between items-center border-b border-[#343434] pb-6">
                   <h3>{data.title}</h3>
                   <span
@@ -73,7 +85,11 @@ export function SubmitReport({
       )}
       <div className="text-gray-text flex flex-col gap-1 items-center  justify-center mt-3 sm:hidden">
         Click to expand
-        <button type="button" onClick={handdleClick} className={`${isSubmitOpen ? "rotate-180" : "rotate-0"}`}>
+        <button
+          type="button"
+          onClick={handdleClick}
+          className={`${isSubmitOpen ? "rotate-180" : "rotate-0"}`}
+        >
           <WaveIcon />
         </button>
       </div>
@@ -81,7 +97,10 @@ export function SubmitReport({
       <h2 className="text-sm mt-3 hidden sm:block">New Project Alerts</h2>
       {dashboardData.newProjectAlerts.map((data) => {
         return (
-          <div key={data.id}  className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+          <div
+            key={data.id}
+            className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block"
+          >
             <div className="flex justify-between items-center border-b border-[#343434] pb-6 mb-4">
               <h3>{data.title}</h3>
               <span
@@ -124,19 +143,20 @@ export function SubmitReport({
   );
 }
 
-
 export function ApproveReport({
   isApproveOpen,
   handdleClick,
+  validator,
 }: {
   isApproveOpen: boolean;
   handdleClick: () => void;
+  validator: validatorType;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6  flex flex-col gap-3">
       <div className="bg-dark-gray rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
         <div className="flex justify-between items-center text-18">
-          <h3>Reports Approved</h3>
+          <h3>Audits Made</h3>
           <FileText className="text-gray-text" />
         </div>
         <h2 className="text-2xl">3</h2>
@@ -149,9 +169,9 @@ export function ApproveReport({
       {/* mobile */}
       {isApproveOpen && (
         <>
-          <h2 className="text-sm mt-3">Report Stats</h2>
+          <h2 className="text-sm mt-3">Audit Stats</h2>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
-            <h3>Report Score</h3>
+            <h3>Overall Accuracy</h3>
 
             <div>
               <h3 className="text-2xl">70%</h3>
@@ -161,7 +181,7 @@ export function ApproveReport({
             </div>
           </div>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
-            <h3>Report Score</h3>
+            <h3>Total Votes</h3>
 
             <div>
               <h3 className="text-2xl">4</h3>
@@ -171,11 +191,10 @@ export function ApproveReport({
             </div>
           </div>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
-            <h3>Report Score</h3>
+            <h3>Success Rate</h3>
 
             <div>
               <h3 className="text-2xl">3/4</h3>
-              <span className="text-gray-text text-sm">Correct Report</span>
             </div>
           </div>
         </>
@@ -192,8 +211,8 @@ export function ApproveReport({
       </div>
       {/* desktop */}
       <h2 className="text-sm mt-3 hidden sm:block">Report Stats</h2>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
-        <h3>Report Score</h3>
+      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] sm:block">
+        <h3>Overall Accuracy</h3>
 
         <div>
           <h3 className="text-2xl">70%</h3>
@@ -203,7 +222,7 @@ export function ApproveReport({
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
-        <h3>Report Score</h3>
+        <h3>Total Votes</h3>
 
         <div>
           <h3 className="text-2xl">4</h3>
@@ -211,11 +230,10 @@ export function ApproveReport({
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
-        <h3>Report Score</h3>
+        <h3>Success Rate</h3>
 
         <div>
           <h3 className="text-2xl">3/4</h3>
-          <span className="text-gray-text text-sm">Correct Report</span>
         </div>
       </div>
     </div>
@@ -225,9 +243,11 @@ export function ApproveReport({
 export function Earnings({
   isEarningOpen,
   handdleClick,
+  validator,
 }: {
   isEarningOpen: boolean;
-  handdleClick:()=>void;
+  handdleClick: () => void;
+  validator: validatorType;
 }) {
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 flex flex-col gap-3">
@@ -236,7 +256,7 @@ export function Earnings({
           <h3>Token Earnings</h3>
           <CircleDollarSign className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">$9,650</h2>
+        <h2 className="text-2xl">${validator.total_bounty_won.toFixed(2)}</h2>
         <span
           className={`bg-[#320D35] text-[#BB00C1] rounded-full px-3 py-1 w-fit text-12`}
         >
@@ -247,11 +267,13 @@ export function Earnings({
         <>
           <h2 className="text-sm mt-3">Performance Snapshot</h2>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
-            <h3>Ranke</h3>
+            <h3>Rank</h3>
 
             <div>
               <h3 className="text-2xl">#4</h3>
-              <span className="text-gray-text text-sm">Correct Report</span>
+              <span className="text-gray-text text-sm">
+                Out of 247 validators
+              </span>
             </div>
           </div>
           <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]">
@@ -298,11 +320,11 @@ export function Earnings({
       </div>
       <h2 className="text-sm mt-3 sm:block hidden">Performance Snapshot</h2>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
-        <h3>Ranke</h3>
+        <h3>Rank</h3>
 
         <div>
           <h3 className="text-2xl">#4</h3>
-          <span className="text-gray-text text-sm">Correct Report</span>
+          <span className="text-gray-text text-sm">Out of 247 validators</span>
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 hidden gap-3 rounded-[8px] sm:grid">

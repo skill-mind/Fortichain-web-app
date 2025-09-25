@@ -27,7 +27,7 @@ export function ResearcherFormNavigationButtons({
 
   return (
     <motion.div
-      className="flex justify-center mt-7 gap-4"
+      className="flex flex-col md:flex-row  justify-center mt-7 gap-4"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}

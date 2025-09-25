@@ -19,19 +19,35 @@ export default function FundProject({
   data: UploadProjectProps;
 }) {
   const { address } = useAccount();
+  const minimun_amount =
+    data.projectType === "L1 (Layer 1 Protocols)"
+      ? 50000
+      : data.projectType === "L2 (Layer 2 Protocols)"
+      ? 20000
+      : data.projectType === "dApps (Decentralized Applications)"
+      ? 2000
+      : 1000;
+  const minimun_placeholder =
+    data.projectType === "L1 (Layer 1 Protocols)"
+      ? "💰Mininum deposit: $50,000"
+      : data.projectType === "L2 (Layer 2 Protocols)"
+      ? "💰Minimum  $20,000"
+      : data.projectType === "dApps (Decentralized Applications)"
+      ? "💰Minimum  $2000"
+      : "💰Minimum  $1000";
   return (
     <section className="grid gap-5 text-base">
       <div className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-2.5">
         <h3>Connected Wallet</h3>
-        <h5 className="text-gray-text text-sm">{address}</h5>
+        <h5 className="text-gray-text text-sm break-all">{address}</h5>
       </div>
       <div className="grid gap-2">
         <label htmlFor="">Amount (USD)</label>
         <Input
           value={data.amount ?? ""}
-          min={100}
+          min={minimun_amount}
           type="number"
-          placeholder="1000"
+          placeholder={minimun_amount.toString()}
           className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
           onChange={(data) => {
             const value = Number(data.target.value);
@@ -43,7 +59,7 @@ export default function FundProject({
             });
           }}
         />
-        <span className="text-gray-text">Minimum deposit: $1000</span>
+        <span className="text-gray-text">{minimun_placeholder}</span>
       </div>
       <div className="w-full grid gap-2 ">
         <label htmlFor="">Priority</label>
