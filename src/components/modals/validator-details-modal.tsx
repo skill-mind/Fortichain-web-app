@@ -30,7 +30,7 @@ export default function ValidatorModal({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text">{selectedValidator?.username}</span>
+            <span className="capitalize">{selectedValidator?.username}</span>
             <span className="bg-pririty-low-bg text-blue-ball rounded-full py-1 px-2 text-">
               Active
             </span>

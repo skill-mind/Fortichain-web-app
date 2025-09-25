@@ -11,15 +11,22 @@ import { Search } from "lucide-react";
 import { ProjectTable } from "./component/table";
 import { useState } from "react";
 import AsignValidorModal from "@/components/modals/asign-validator-modal";
-import { useAllProjects } from "@/hook/useBlockchain";
+import { useAllProjects, UseGetAssignableProjects } from "@/hook/useBlockchain";
 import Loader from "@/app/loading";
+import ReviewModal from "@/components/modals/review-modal";
 
 export default function Projests() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenProjectProgress, setIsOpenProjectProgress] = useState(false);
   const [projectId, setProjectId] = useState<number>(0);
   const projects = useAllProjects();
+  const availableProject = UseGetAssignableProjects();
+  console.log(availableProject, "available project");
   function handler() {
     setIsOpen((prev) => !prev);
+  }
+  function progresshandler() {
+    setIsOpenProjectProgress((prev) => !prev);
   }
   if (projects == undefined) {
     return <Loader />;
@@ -66,10 +73,13 @@ export default function Projests() {
       </div>
       <ProjectTable
         handler={handler}
+        progressHandler={progresshandler}
         projects={projects}
         setId={setProjectId}
       />
-      {/* {isOpen && <ReviewModal handler={handler} />} */}
+      {isOpenProjectProgress && (
+        <ReviewModal handler={progresshandler} id={projectId} />
+      )}
       {isOpen && <AsignValidorModal handler={handler} id={projectId} />}
     </section>
   );
