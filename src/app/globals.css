@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "tailwind-scrollbar-hide/v4";
-
+@import "../styles/_variables.scss";
+@import "../styles/_keyframe-animations.scss";
+/* import '@tiptap/react/styles.css'; */
 @custom-variant dark (&:is(.dark *));
 
 @theme {

@@ -39,7 +39,7 @@ export default function AsignValidorModal({
     "view_project",
     typeof id !== "undefined" ? [+id] : []
   );
-  console.log(project);
+  console.log(validators);
   return (
     <>
       {validatorID &&

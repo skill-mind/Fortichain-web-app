@@ -9,6 +9,7 @@ import {
   AccountInterface,
   byteArray,
   cairo,
+  CairoCustomEnum,
   CallData,
   PaymasterDetails,
   shortString,
@@ -96,7 +97,7 @@ export const uploadProjectHandle = async (
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
           smart_contract_address: formData.contractAddress,
-          amount: cairo.uint256(formData.amount),
+          amount: cairo.uint256(10),
         }),
       };
       console.log(Call);
@@ -216,6 +217,81 @@ export const EditProjectHandle = async (
     toast.error("error editing project");
   } finally {
     setIsSubmitting(false);
+  }
+};
+
+export const writeReport = async (
+  account: AccountInterface | undefined
+  // setIsSubmitting: SetIsSubmitting,
+  // formData: EditProjectProps,
+  // setIsOpen: SetIsOpen,
+  // handler: () => void,
+  // setIsError: SetIsError
+): Promise<void> => {
+  // const { projectId, description, repoUrl } = formData;
+
+  // if (!description) {
+  //   toast.error("project description is required!");
+  //   return;
+  // }
+  // if (!repoUrl) {
+  //   toast.error("project  is required!");
+  //   return;
+  // }
+  // handler();
+  try {
+    // setIsOpen(true);
+    // setIsSubmitting(true);
+    console.log("hey");
+    if (account != undefined) {
+      console.log("hey");
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "write_report",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(1),
+          title: byteArray.byteArrayFromString("bug"),
+          category: byteArray.byteArrayFromString(""),
+          severity_level: byteArray.byteArrayFromString("severity"),
+          potential_risk: byteArray.byteArrayFromString("potential risk"),
+          recommendation: byteArray.byteArrayFromString("hi"),
+        }),
+      };
+
+      console.log(Call);
+      const multicallData = [Call];
+      const feeDetails: PaymasterDetails = {
+        feeMode: {
+          mode: "sponsored",
+        },
+      };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      // setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    // setIsSubmitting(false);
   }
 };
 

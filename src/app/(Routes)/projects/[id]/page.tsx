@@ -2,36 +2,35 @@
 import { mockProjects } from "@/util/mock-data";
 import { useEffect, useState } from "react";
 import { Project as Data } from "@/util/types";
-import { ArrowLeftIcon, FileCode, FileMinus, X } from "lucide-react";
-import Image from "next/image";
-import avatar from "../../../../../public/Ellipse 1.svg";
-import { ArrowGray, GithubIcon } from "@/icons/github";
+import { ArrowLeftIcon } from "lucide-react";
 import { useAccount } from "@starknet-react/core";
 import {
   epocTime,
-  getTimeFromEpoch,
   Project,
   useContractFetch,
-  useUserProject,
+  useResearchers,
 } from "@/hook/useBlockchain";
-import ProjectReviewCard from "../component/projectReviewCard";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { FORTICHAINABI } from "@/contract/abi";
 import { shortString } from "starknet";
-import Link from "next/link";
 import Loader from "@/app/loading";
 import EditProjectModal from "@/components/modals/edit-project";
-import { handler } from "next/dist/build/templates/app-page";
+import Description from "../component/project-description";
+import ResearcherReportEditor from "../component/resercher-report-editors";
+import ViewReport from "../component/view-report";
+import Chat from "../component/chat";
+import { compareAddresses } from "@/util/helper";
 
 export default function Page() {
   const { address } = useAccount();
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [selectedProject, setSelectedProject] = useState<Data | null>(
-    mockProjects[0]
-  );
+  const [viewSection, setViewSection] = useState("none"); // none resercher-report, validator-report , view-report
+  const [selectedProject] = useState<Data | null>(mockProjects[0]);
+  const [reporterChecker, setReporterChecker] = useState(false);
+  const researchers = useResearchers();
   const [projectDetail, setProjectDetail] = useState<Project | null>();
   const { readData: project } = useContractFetch(
     FORTICHAINABI,
@@ -67,19 +66,29 @@ export default function Page() {
       });
     }
   }, [project]);
-  console.log(project?.project_owner == address);
+
+  useEffect(() => {
+    if (!researchers) return;
+    const checker = researchers?.filter((data) =>
+      compareAddresses(String(data), String(address))
+    );
+    setReporterChecker(checker.length > 0);
+  }, [researchers, address]);
   if (project == undefined) {
     return <Loader />;
   }
   function handler() {
     setIsOpen((prev) => !prev);
   }
+  function viewHandler(section: string) {
+    setViewSection(section);
+  }
   return (
-    <section className="flex gap-2">
+    <>
       {isOpen && (
         <EditProjectModal handler={handler} projectDetail={projectDetail} />
       )}
-      <aside className="md:grid gap-3 flex flex-col w-full">
+      <div className="md:grid gap-3 flex flex-col w-full">
         <button
           className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1 items-center"
           onClick={handleBack}
@@ -89,101 +98,92 @@ export default function Page() {
           <span className="">Back to Groups</span>
         </button>
         {selectedProject && (
-          <>
-            <div className="md:grid flex flex-col gap-y-3 bg-dark-gray border border-dark-border-gray rounded-[8px] h-fit px-6 py-3 w-full">
-              <div className="flex justify-between items-center capitalize">
-                <div className="flex items-center gap-1 text-base">
-                  <span className="rounded-full bg-blue-ball w-1 h-1" />
-                  <h5>{projectDetail?.is_active ? "Available" : "audited"}</h5>
-                </div>
-              </div>
-              <div className="pb-6 flex flex-wrap gap-y-3 md:gap-y-0 items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Image src={avatar} alt="pririty type" />
-                  <h3 className="text-18">{projectDetail?.name}</h3>
-                </div>
-                <div className="bg-dark-gray-pop rounded-[8px] max-w-56 py-3 px-6 flex gap-1 items-center">
-                  <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
-                    Bounty amount
+          <Description
+            projectOwner={project?.project_owner}
+            projectDetail={projectDetail}
+            editHandler={handler}
+          />
+        )}
+        {reporterChecker && (
+          <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
+            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                <h3>Write Report</h3>
+                <button
+                  className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                  type="button"
+                  onClick={() => {
+                    viewHandler("resercher-report");
+                  }}
+                >
+                  <span
+                    className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                  >
+                    Start
                   </span>
-                  <span className="text-18">${projectDetail?.amount}</span>
-                </div>
+                </button>
               </div>
-              <div className=" border-b text-sm border-dark-border-gray flex items-center gap-1 pb-8 justify-between">
-                <div>
-                  <span className="text-gray-text">Deadline:</span>
-                  <span className="bg-dark-gray-pop rounded-full px-3 py-1">
-                    {projectDetail?.deadline}
+            </div>
+            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                <h3>Discussions</h3>
+                <button
+                  className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                  type="button"
+                  onClick={() => {
+                    viewHandler("chat-report");
+                  }}
+                >
+                  <span
+                    className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                  >
+                    Chat with validator
                   </span>
-                </div>
+                </button>
+              </div>
+            </div>
+            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                <h3>Edit Report</h3>
                 <button
                   className="w-fit min-h-11 p-0.5 group             
                   hover:from-sky-blue-border hover:to-sky-blue-border
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
                   onClick={() => {
-                    handler();
+                    viewHandler("view-report");
                   }}
                   type="button"
                 >
                   <span
-                    className="px-6 py-3
+                    className="px-12 py-6
                       group-hover:from-sky-from group-hover:to-sky-to text-sm
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                   >
-                    Edit Project
+                    Edit
                   </span>
                 </button>
               </div>
-              <div className="grid gap-3">
-                <h3 className="text-gray-text text-base">Details</h3>
-                <p className="text-sm">{projectDetail?.description}</p>
-              </div>
-              <div className="grid gap-3">
-                <h3 className="text-gray-text">Links</h3>
-                <div className="flex flex-wrap gap-3 items-center">
-                  <Link
-                    href={`${projectDetail?.repository_url}`}
-                    target="_blank"
-                    className="text-sm w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
-                  >
-                    <GithubIcon />
-                    <span>GitHub Repo</span>
-                    <ArrowGray />
-                  </Link>
-                  <Link
-                    href={`${projectDetail?.smart_contract_address}`}
-                    target="_blank"
-                    className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
-                  >
-                    <FileCode className="text-gray-text w-5" />
-                    <span>Contract Address</span>
-                    <ArrowGray />
-                  </Link>
-                  <Link
-                    href="#"
-                    // target="_blank"
-                    className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
-                  >
-                    <FileMinus className="text-gray-text w-5" />
-                    <span>View Certificate</span>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="grid gap-3">
-                <h3 className="text-gray-text text-base">Rewards</h3>
-                <p className="text-sm">
-                  Rewards would be paid on successful completion by validator
-                </p>
-              </div>
             </div>
-            {/* <ProjectReviewCard report={selectedProject} type="researcher" /> */}
-            {/* <ProjectReviewCard report={selectedProject} type="validator" /> */}
-          </>
+          </div>
         )}
-      </aside>
-    </section>
+        {viewSection === "resercher-report" && <ResearcherReportEditor />}
+        {viewSection === "view-report" && <ViewReport />}
+        {viewSection === "chat-report" && <Chat />}
+      </div>
+    </>
   );
 }
