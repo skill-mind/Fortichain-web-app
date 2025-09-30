@@ -66,13 +66,13 @@ export interface ProjectOwner {
 
 export function useProjectOwner(address: string) {
   const [owner, setOwner] = useState<ProjectOwner | undefined>();
-  console.log(owner);
+  // console.log(owner);
   const { readData: ownerData } = useContractFetch(
     FORTICHAINABI,
     "get_project_owner",
     [address]
   );
-  console.log(owner);
+  // console.log(ownerData);
   useEffect(() => {
     if (!ownerData || !address) return; //
 
@@ -96,7 +96,6 @@ export function useUserProject(address: string) {
     "get_user_projects",
     [address]
   );
-  console.log(projectList);
   useEffect(() => {
     if (!projectList || !address) return; //
     const projectData: Project[] = [];
@@ -137,7 +136,6 @@ export function useAllProjects() {
     "get_all_projects",
     []
   );
-  console.log(projectList, 0);
   useEffect(() => {
     if (!projectList) return; //
     const projectData: Project[] = [];

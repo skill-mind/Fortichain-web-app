@@ -1,3 +1,4 @@
+import { ONE_STK } from "@/contract/address";
 import { ProjectOwner } from "@/hook/useBlockchain";
 import { Group } from "@/icons/github";
 import { CircleDollarSign, FileText } from "lucide-react";
@@ -9,6 +10,9 @@ export default function Card({
   type: string;
   ownerData: ProjectOwner;
 }) {
+  const amount = +ownerData?.total_allocated_bounty.toString()
+    ? +ownerData?.total_allocated_bounty.toString() / ONE_STK
+    : 0;
   const text =
     type === "total"
       ? "Total Allocated Bounty"
@@ -20,7 +24,7 @@ export default function Card({
   const value =
     type === "total"
       ? ownerData
-        ? ` $${ownerData?.total_allocated_bounty}`
+        ? ` $${amount}`
         : 0
       : type === "progress"
       ? ownerData

@@ -80,7 +80,7 @@ export default function Footer() {
           {[
             { href: "https://x.com/Fortichain3", icon: <X />, delay: 0.5 },
             {
-              href: "https://t.me/+4xRZ99AALDQ3MjQ0",
+              href: "https://t.me/+G5oIk9_ogMxkNmE0",
               icon: <Telegram />,
               delay: 0.6,
             },
