@@ -16,6 +16,7 @@ import { useAccount } from "@starknet-react/core";
 
 export default function ResearcherReportEditor() {
   const { account } = useAccount();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
     title: "",
     severity_level: "",
@@ -26,14 +27,39 @@ export default function ResearcherReportEditor() {
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
   const potentialRiskRef = useRef<HTMLDivElement>(null);
   const recommendationRef = useRef<HTMLDivElement>(null);
+
   function handleSubmit() {
     // console.log({
-    //   recommendationRef: recommendationRef.current?.getHTML(),
-    //   potentialRiskRef: potentialRiskRef.current?.getHTML(),
-    //   issueDescriptionRef: issueDescriptionRef.current?.getHTML(),
+    //   // @ts-expect-error parmas can be undefined
+    //   recommendationRef: recommendationRef.current?.getText(),
+    //   potentialRiskRef: potentialRiskRef.current?.getText(),
+    //   issueDescriptionRef: issueDescriptionRef.current?.getText(),
     // });
     // console.log(reportDetails);
-    writeReport(account);
+    if (!id) return;
+    const data = {
+      id: id,
+      title: reportDetails.title,
+      severity_level: reportDetails.severity_level,
+      category: reportDetails.category,
+      //@ts-expect-error parmas can be undefined getText(),
+      potential_risk: potentialRiskRef.current?.getText(),
+      //@ts-expect-error parmas can be undefined
+      recommendation: recommendationRef.current?.getText(),
+      //@ts-expect-error parmas can be undefined
+      description: issueDescriptionRef.current?.getText(),
+    };
+    console.log(data);
+    if (!id) return;
+    writeReport(
+      account,
+      //@ts-expect-error parmas can be undefined
+      data,
+      setIsSubmitting
+      // recommendationRef.current?.getText(),
+      // potentialRiskRef.current?.getText(),
+      // issueDescriptionRef.current?.getHTML()
+    );
   }
   const handleFilesChange = (files: UploadedFile[]) => {
     setUploadedFiles(files);
@@ -160,7 +186,7 @@ export default function ResearcherReportEditor() {
           bg-gradient-to-r 
       flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
         >
-          Submit Report
+          {isSubmitting ? "sending report ...." : "Submit Report"}
         </span>
       </button>
     </section>

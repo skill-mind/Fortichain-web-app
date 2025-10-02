@@ -23,9 +23,13 @@ export default function Nav() {
           <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
             <Link href="/about">About</Link>
           </li>
-          <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
+          <Link
+            href="https://forti-chain.gitbook.io/fortichain-docs/"
+            target="_blank"
+            className="bg-dark-gray px-6 py-3 rounded-full md:block hidden"
+          >
             Documentation
-          </li>
+          </Link>
           {/* <li className="bg-dark-gray px-6 py-3 rounded-full md:block hidden">
             Blog
           </li> */}

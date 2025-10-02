@@ -21,7 +21,7 @@ export default function Page() {
     <>
       {isOpen && <WidthrawModal handler={handler} />}
       <section className="grid gap-3">
-        <UserFinance researcher={researcher} />
+        <UserFinance researcher={researcher} handler={handler} />
         <WidthrawTable />
       </section>
     </>

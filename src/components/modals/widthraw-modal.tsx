@@ -1,13 +1,25 @@
 "use client";
-import { validatorType } from "@/hook/useBlockchain";
+import { useValidatorDetail, validatorType } from "@/hook/useBlockchain";
 import { X } from "lucide-react";
 import { Input } from "../ui/input";
 import WidthrawMessageModal from "./widthraw-message";
 import { useState } from "react";
+import { useAccount } from "@starknet-react/core";
+import { validatorWithdrawal } from "@/hook/blockchainWriteFunction";
 
 export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [details, setDetails] = useState({
+    address: "",
+    amount: 0,
+  });
   const [isError, setIsError] = useState(false);
+  const { address, account } = useAccount();
+  const validatorDetail = useValidatorDetail(address ?? "");
+  function handleWithdral() {
+    console.log(details);
+    validatorWithdrawal(account, details);
+  }
   return (
     <>
       {isSubmitting && (
@@ -45,15 +57,19 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
           <span className="text-gray-text text-base">
             Available to withdraw
           </span>
-          <h2 className="text-2xl">$9,650</h2>
+          <h2 className="text-2xl">
+            ${validatorDetail?.available_amount_to_widthdraw.toFixed(2)}
+          </h2>
         </div>
         <div className="w-full grid gap-2 capitalize">
           <label htmlFor="">wallet Address</label>
           <Input
             required
             onChange={(data) => {
-              const value = Number(data.target.value);
-              console.log(value);
+              const value = data.target.value;
+              setDetails((prev) => {
+                return { ...prev, address: value };
+              });
             }}
             placeholder="0x0ece324ca23...."
             className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
@@ -69,7 +85,9 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
             className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
             onChange={(data) => {
               const value = Number(data.target.value);
-              console.log(value);
+              setDetails((prev) => {
+                return { ...prev, amount: value };
+              });
             }}
           />
           <span className="text-gray-text">Minimum withdrawal is $10</span>
@@ -79,6 +97,7 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
           be reversed.
         </div>
         <button
+          onClick={handleWithdral}
           className="w-full min-h-50 p-0.5 group             
               from-sky-blue-border to-sky-blue-border
               bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
