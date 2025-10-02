@@ -2,13 +2,14 @@
 import { mockProjects } from "@/util/mock-data";
 import { useEffect, useState } from "react";
 import { Project as Data } from "@/util/types";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, BadgeCheck } from "lucide-react";
 import { useAccount } from "@starknet-react/core";
 import {
   epocTime,
   Project,
   useContractFetch,
   useResearchers,
+  useValidators,
 } from "@/hook/useBlockchain";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ import ResearcherReportEditor from "../component/resercher-report-editors";
 import ViewReport from "../component/view-report";
 import Chat from "../component/chat";
 import { compareAddresses } from "@/util/helper";
+import ValidatorReportModal from "@/components/modals/validator-report";
 
 export default function Page() {
   const { address } = useAccount();
@@ -30,8 +32,11 @@ export default function Page() {
   const [viewSection, setViewSection] = useState("none"); // none resercher-report, validator-report , view-report
   const [selectedProject] = useState<Data | null>(mockProjects[0]);
   const [reporterChecker, setReporterChecker] = useState(false);
+  const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
   const researchers = useResearchers();
   const [projectDetail, setProjectDetail] = useState<Project | null>();
+  const platformValidators = useValidators();
+  const [isValidator, setIsValidator] = useState(false);
   const { readData: project } = useContractFetch(
     FORTICHAINABI,
     "view_project",
@@ -40,6 +45,16 @@ export default function Page() {
   const handleBack = () => {
     router.back();
   };
+
+  useEffect(() => {
+    if (!platformValidators) return;
+    const checker = platformValidators?.filter((data) =>
+      compareAddresses(String(data?.validator_address), String(address))
+    );
+    if (checker.length > 0) {
+      setIsValidator(true);
+    }
+  }, [platformValidators, address]);
 
   useEffect(() => {
     if (project) {
@@ -74,6 +89,14 @@ export default function Page() {
     );
     setReporterChecker(checker.length > 0);
   }, [researchers, address]);
+
+  useEffect(() => {
+    if (!researchers) return;
+    const checker = researchers?.filter((data) =>
+      compareAddresses(String(data), String(address))
+    );
+    setReporterChecker(checker.length > 0);
+  }, [researchers, address]);
   if (project == undefined) {
     return <Loader />;
   }
@@ -83,8 +106,14 @@ export default function Page() {
   function viewHandler(section: string) {
     setViewSection(section);
   }
+  function validatorHandler() {
+    setOpenValidatorRepor((prev) => !prev);
+  }
   return (
-    <>
+    <div className="grid gap-3">
+      {openValidatorRepor && (
+        <ValidatorReportModal handler={validatorHandler} />
+      )}
       {isOpen && (
         <EditProjectModal handler={handler} projectDetail={projectDetail} />
       )}
@@ -104,86 +133,140 @@ export default function Page() {
             editHandler={handler}
           />
         )}
-        {reporterChecker && (
-          <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
-            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                <h3>Write Report</h3>
-                <button
-                  className="w-fit min-h-11 p-0.5 group             
+      </div>
+      {reporterChecker && (
+        <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
+          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+              <h3>Write Report</h3>
+              <button
+                className="w-fit min-h-11 p-0.5 group             
                   hover:from-sky-blue-border hover:to-sky-blue-border
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
-                  type="button"
-                  onClick={() => {
-                    viewHandler("resercher-report");
-                  }}
-                >
-                  <span
-                    className="px-12 py-6
+                type="button"
+                onClick={() => {
+                  viewHandler("resercher-report");
+                }}
+              >
+                <span
+                  className="px-12 py-6
                       group-hover:from-sky-from group-hover:to-sky-to text-sm
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                  >
-                    Start
-                  </span>
-                </button>
-              </div>
-            </div>
-            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                <h3>Discussions</h3>
-                <button
-                  className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                  type="button"
-                  onClick={() => {
-                    viewHandler("chat-report");
-                  }}
                 >
-                  <span
-                    className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                  >
-                    Chat with validator
-                  </span>
-                </button>
-              </div>
-            </div>
-            <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-              <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                <h3>Edit Report</h3>
-                <button
-                  className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                  onClick={() => {
-                    viewHandler("view-report");
-                  }}
-                  type="button"
-                >
-                  <span
-                    className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                  >
-                    Edit
-                  </span>
-                </button>
-              </div>
+                  Start
+                </span>
+              </button>
             </div>
           </div>
-        )}
-        {viewSection === "resercher-report" && <ResearcherReportEditor />}
-        {viewSection === "view-report" && <ViewReport />}
-        {viewSection === "chat-report" && <Chat />}
-      </div>
-    </>
+        </div>
+      )}
+      {reporterChecker && (
+        <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
+          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+              <h3>Write Report</h3>
+              <button
+                className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                type="button"
+                onClick={() => {
+                  viewHandler("resercher-report");
+                }}
+              >
+                <span
+                  className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                >
+                  Start
+                </span>
+              </button>
+            </div>
+          </div>
+          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+              <h3>Discussions</h3>
+              <button
+                className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                type="button"
+                onClick={() => {
+                  viewHandler("chat-report");
+                }}
+              >
+                <span
+                  className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                >
+                  Chat with validator
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+              <h3>Edit Report</h3>
+              <button
+                className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                onClick={() => {
+                  viewHandler("view-report");
+                }}
+                type="button"
+              >
+                <span
+                  className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                >
+                  Edit
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {!isValidator && (
+        <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+          <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+            <div>
+              <h3>Validators Vote</h3>
+              <h5 className="text-gray-text">
+                Click valid or invalid to vote on vulnerability
+              </h5>
+            </div>
+            <div className="flex gap-2">
+              <button className="px-10 py-3 bg-good-bg text-good rounded-full flex gap-2 items-center">
+                <BadgeCheck />
+                Valid Report
+              </button>
+              <button
+                onClick={validatorHandler}
+                className="px-10 py-3 bg-pririty-high-bg text-pririty-high-text rounded-full flex gap-2 items-center"
+              >
+                <BadgeCheck />
+                Invalid Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {viewSection === "resercher-report" && <ResearcherReportEditor />}
+      {viewSection === "view-report" && <ViewReport />}
+      {viewSection === "chat-report" && <Chat />}
+    </div>
   );
 }

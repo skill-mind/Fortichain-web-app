@@ -41,6 +41,7 @@ export default function Page() {
       </div>
     );
   }
+  console.log(viewProjects);
   return (
     <div className=" font-walsheim">
       <div className="h-11 border-dark-border-gray border rounded-full py-1 md:max-w-[450px] mb-3">

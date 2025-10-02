@@ -9,7 +9,6 @@ import {
   AccountInterface,
   byteArray,
   cairo,
-  CairoCustomEnum,
   CallData,
   PaymasterDetails,
   shortString,
@@ -221,8 +220,110 @@ export const EditProjectHandle = async (
 };
 
 export const writeReport = async (
-  account: AccountInterface | undefined
-  // setIsSubmitting: SetIsSubmitting,
+  account: AccountInterface | undefined,
+  data: {
+    id: number;
+    title: string;
+    severity_level: string;
+    category: string;
+    potential_risk: string | null | undefined;
+    recommendation: string | null | undefined;
+    description: string | null | undefined;
+  },
+  setIsSubmitting: SetIsSubmitting
+  // formData: EditProjectProps,
+  // setIsOpen: SetIsOpen,
+  // handler: () => void,
+  // setIsError: SetIsError
+): Promise<void> => {
+  // const { projectId, description, repoUrl } = formData;
+
+  // if (!description) {
+  //   toast.error("project description is required!");
+  //   return;
+  // }
+  // if (!repoUrl) {
+  //   toast.error("project  is required!");
+  //   return;
+  // }
+  // handler();
+  try {
+    // setIsOpen(true);
+    setIsSubmitting(true);
+    console.log("hey", data);
+    if (
+      account != undefined &&
+      data.potential_risk &&
+      data.recommendation &&
+      data.description
+    ) {
+      console.log("hey");
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "write_report",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(data.id),
+          // title: byteArray.byteArrayFromString(data.title),
+          // description: byteArray.byteArrayFromString(data.description),
+          // category: byteArray.byteArrayFromString(data.category),
+          // severity_level: byteArray.byteArrayFromString(data.severity_level),
+          // potential_risk: byteArray.byteArrayFromString(data.potential_risk),
+          // recommendation: byteArray.byteArrayFromString(data.recommendation),
+          title: byteArray.byteArrayFromString("hello world"),
+          description: byteArray.byteArrayFromString("sam"),
+          category: byteArray.byteArrayFromString(data.category),
+          severity_level: byteArray.byteArrayFromString("High"),
+          potential_risk: byteArray.byteArrayFromString("user lose some"),
+          recommendation: byteArray.byteArrayFromString(
+            "no recommendation yet"
+          ),
+        }),
+      };
+
+      console.log(Call);
+      const multicallData = [Call];
+      const feeDetails: PaymasterDetails = {
+        feeMode: {
+          mode: "sponsored",
+        },
+      };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      // setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const validatorWithdrawal = async (
+  account: AccountInterface | undefined,
+  data: {
+    amount: number;
+    address: string;
+  }
+  // setIsSubmitting: SetIsSubmitting
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
   // handler: () => void,
@@ -242,19 +343,14 @@ export const writeReport = async (
   try {
     // setIsOpen(true);
     // setIsSubmitting(true);
-    console.log("hey");
     if (account != undefined) {
       console.log("hey");
       const Call = {
         contractAddress: FORTICHAINADDRESS,
-        entrypoint: "write_report",
+        entrypoint: "withdraw_validator_bounty",
         calldata: CallData.compile({
-          project_id: cairo.uint256(1),
-          title: byteArray.byteArrayFromString("bug"),
-          category: byteArray.byteArrayFromString(""),
-          severity_level: byteArray.byteArrayFromString("severity"),
-          potential_risk: byteArray.byteArrayFromString("potential risk"),
-          recommendation: byteArray.byteArrayFromString("hi"),
+          address: data.address,
+          amount: cairo.uint256(data.amount),
         }),
       };
 
@@ -478,8 +574,16 @@ export const assign_validator = async (
           validator_address: address,
         }),
       };
+      const approve_validator_call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "approve_validator",
+        calldata: CallData.compile({
+          validator_address: address,
+        }),
+      };
+
       console.log(Call);
-      const multicallData = [Call];
+      const multicallData = [approve_validator_call, Call];
       // const feeDetails: PaymasterDetails = {
       //   feeMode: {
       //     mode: "sponsored",

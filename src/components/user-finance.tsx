@@ -4,8 +4,11 @@ import { useAccount, useDisconnect } from "@starknet-react/core";
 
 export function UserFinance({
   researcher,
+
+  handler,
 }: {
   researcher: SecurityResearcher;
+  handler: () => void;
 }) {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
@@ -78,6 +81,7 @@ export function UserFinance({
             </div>
           </div>
           <button
+            onClick={handler}
             className={`min-w-157 min-h-50 p-0.5 group 
          
             bg-sky-blue-border

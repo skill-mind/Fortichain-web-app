@@ -41,7 +41,11 @@ export default function Footer() {
         >
           {[
             { href: "/about", text: "About" },
-            { href: "/documentation", text: "Documentation" },
+            {
+              href: "https://forti-chain.gitbook.io/fortichain-docs/",
+              text: "Documentation",
+              target: "_blank",
+            },
             // { href: "/blog", text: "Blog" },
             { href: "/privacy", text: "Privacy" },
             { href: "/help-center", text: "Help Center" },
@@ -60,7 +64,9 @@ export default function Footer() {
               }}
               whileHover={{ scale: 1.05, y: -2 }}
             >
-              <Link href={item.href}>{item.text}</Link>
+              <Link target={item?.target} href={item.href}>
+                {item.text}
+              </Link>
             </motion.li>
           ))}
         </motion.ul>
