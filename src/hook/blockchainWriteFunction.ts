@@ -10,6 +10,7 @@ import {
   byteArray,
   cairo,
   CairoCustomEnum,
+  CairoCustomEnum,
   CallData,
   PaymasterDetails,
   shortString,
@@ -97,6 +98,7 @@ export const uploadProjectHandle = async (
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
           smart_contract_address: formData.contractAddress,
+          amount: cairo.uint256(10),
           amount: cairo.uint256(10),
         }),
       };

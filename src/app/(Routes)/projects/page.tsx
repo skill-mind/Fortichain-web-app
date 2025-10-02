@@ -71,6 +71,7 @@ export default function Page() {
           return <ProjectCard project={data} key={data.id} />;
         })}
       </section>
+  
     </div>
   );
 }
