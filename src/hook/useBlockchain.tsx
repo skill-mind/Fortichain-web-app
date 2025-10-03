@@ -56,6 +56,23 @@ export interface Project {
   validator_assigned: number;
 }
 
+export interface Report {
+  title: string; //
+  description: string; //
+  category: string; //
+  id: number; //
+  status: boolean; //
+  validation_status: string; //w
+  severity_level: string; //
+  potential_risk: string; //
+  researcher_address: { toString: (radix: number) => string }; //
+  recommendationt: string; //
+  project_id: number; //
+  validator_report_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ProjectOwner {
   address: { toString: (radix: number) => string };
   total_allocated_bounty: number;
@@ -66,17 +83,14 @@ export interface ProjectOwner {
 
 export function useProjectOwner(address: string) {
   const [owner, setOwner] = useState<ProjectOwner | undefined>();
-  // console.log(owner);
   const { readData: ownerData } = useContractFetch(
     FORTICHAINABI,
     "get_project_owner",
     [address]
   );
-  // console.log(ownerData);
   useEffect(() => {
     if (!ownerData || !address) return; //
 
-    // console.log(projectData);
     setOwner({
       total_allocated_bounty: +ownerData?.id?.toString(),
       address: `0x0${ownerData?.address?.toString(16)}`,
@@ -122,7 +136,6 @@ export function useUserProject(address: string) {
         validator_assigned: data.validator_assigned,
       });
     });
-    // console.log(projectData);
     setProjectsData(projectData);
   }, [projectList, address]);
 
@@ -162,7 +175,6 @@ export function useAllProjects() {
         validator_assigned: data.validator_assigned,
       });
     });
-    // console.log(projectData);
     setProjectsData(projectData);
   }, [projectList]);
 
@@ -176,7 +188,6 @@ export function UseGetAssignableProjects() {
     "get_assignable_projects",
     []
   );
-  console.log(projectList);
   useEffect(() => {
     if (!projectList) return; //
     const projectData: Project[] = [];
@@ -203,7 +214,6 @@ export function UseGetAssignableProjects() {
         validator_assigned: data.validator_assigned,
       });
     });
-    // console.log(projectData);
     setProjectsData(projectData);
   }, [projectList]);
 
@@ -238,7 +248,6 @@ export function useValidators() {
     "get_all_validators",
     []
   );
-  console.log(validatorsData);
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType[] = [];
@@ -264,13 +273,123 @@ export function useValidators() {
         passwork: [""],
       });
     });
-    // console.log();
     setValidators(rawValidatorData);
   }, [validatorsData]);
 
   return validators;
 }
 
+export function useResearcherProjectsWorkedOn(address: string) {
+  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+  const { readData: projectList } = useContractFetch(
+    FORTICHAINABI,
+    "get_researcher_projects_worked_on",
+    [address]
+  );
+  useEffect(() => {
+    if (!projectList) return; //
+    const projectData: Project[] = [];
+    projectList.forEach((data: Project) => {
+      projectData.push({
+        validator_paid: data.validator_paid,
+        researchers_paid: data.researchers_paid,
+        repository_url: data.repository_url,
+        smart_contract_address: `0x0${data["smart_contract_address"].toString(
+          16
+        )}`,
+        name: data.name,
+        id: +data.id.toString(),
+        description: data.description,
+        is_active: data.is_active,
+        is_completed: data.is_completed,
+        created_at: epocTime(data.created_at.toString()),
+        deadline: epocTime(data.deadline.toString()),
+        priority: shortString.decodeShortString(data.priority),
+        project_type: data.project_type,
+        updated_at: epocTime(data.deadline.toString()),
+        project_owner: `0x0${data["project_owner"].toString(16)}`,
+        amount: +data.amount?.toString(), //
+        validator_assigned: data.validator_assigned,
+      });
+    });
+    setProjectsData(projectData);
+  }, [projectList]);
+
+  return projectsData;
+}
+
+export function useValidatorProjectsWorkedOn(address: string) {
+  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+  const { readData: projectList } = useContractFetch(
+    FORTICHAINABI,
+    "get_validator_projects_worked_on",
+    [address]
+  );
+  useEffect(() => {
+    if (!projectList) return; //
+    const projectData: Project[] = [];
+    projectList.forEach((data: Project) => {
+      projectData.push({
+        validator_paid: data.validator_paid,
+        researchers_paid: data.researchers_paid,
+        repository_url: data.repository_url,
+        smart_contract_address: `0x0${data["smart_contract_address"].toString(
+          16
+        )}`,
+        name: data.name,
+        id: +data.id.toString(),
+        description: data.description,
+        is_active: data.is_active,
+        is_completed: data.is_completed,
+        created_at: epocTime(data.created_at.toString()),
+        deadline: epocTime(data.deadline.toString()),
+        priority: shortString.decodeShortString(data.priority),
+        project_type: data.project_type,
+        updated_at: epocTime(data.deadline.toString()),
+        project_owner: `0x0${data["project_owner"].toString(16)}`,
+        amount: +data.amount?.toString(), //
+        validator_assigned: data.validator_assigned,
+      });
+    });
+    setProjectsData(projectData);
+  }, [projectList]);
+
+  return projectsData;
+}
+
+export function useReportsOnProject(id: string) {
+  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+  const { readData: reportList } = useContractFetch(
+    FORTICHAINABI,
+    "get_all_reports_on_project",
+    [id]
+  );
+  useEffect(() => {
+    if (!reportList) return; //
+    const projectData: Report[] = [];
+    reportList.forEach((data: Report) => {
+      projectData.push({
+        title: data.title,
+        category: data.category,
+        validation_status: data.validation_status,
+        researcher_address: `0x0${data["researcher_address"].toString(16)}`,
+        severity_level: data.severity_level,
+        id: +data.id.toString(),
+        project_id: +data.project_id.toString(),
+        description: data.description,
+        potential_risk: data.potential_risk,
+        created_at: epocTime(data.created_at.toString()),
+        validator_report_id: +data.validator_report_id.toString(),
+        status: data.status,
+        recommendationt: data.recommendationt,
+        updated_at: epocTime(data.updated_at.toString()),
+      });
+    });
+    setProjectsData(reportList);
+  }, [reportList]);
+
+  return projectsData;
+}
 export function UseGetUnassignedValidators() {
   const [validators, setValidators] = useState<validatorType[]>();
 
@@ -279,7 +398,6 @@ export function UseGetUnassignedValidators() {
     "get_unassigned_validators",
     []
   );
-  console.log(validatorsData);
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType[] = [];
@@ -305,7 +423,6 @@ export function UseGetUnassignedValidators() {
         passwork: [""],
       });
     });
-    // console.log();
     setValidators(rawValidatorData);
   }, [validatorsData]);
 
@@ -320,7 +437,6 @@ export function useResearchers() {
     "get_security_researchers",
     []
   );
-  console.log(researchersData);
   useEffect(() => {
     if (!researchersData) return; //
     const rawResearchers: string[] = [];
@@ -328,7 +444,6 @@ export function useResearchers() {
       // @ts-expect-error parmas can be undefined
       rawResearchers.push(`0x0${data.toString(16)}`);
     });
-    console.log(rawResearchers);
     setResearchers(rawResearchers);
   }, [researchersData]);
 
@@ -361,7 +476,6 @@ export function useResearcherByAddress(address: string) {
     "get_researcher_by_address",
     [address]
   );
-  console.log(researchersData);
   useEffect(() => {
     if (!researchersData) return; //
     setResearcher({
@@ -402,10 +516,8 @@ export function useAllResearchers() {
     "get_all_researchers_detailed",
     []
   );
-  console.log(researchersData);
   useEffect(() => {
     if (!researchersData) return; //
-    console.log(researchersData.vulnerability);
     const rawResercherData: SecurityResearcher[] = [];
     researchersData.forEach((data: SecurityResearcher) => {
       rawResercherData.push({
@@ -445,7 +557,6 @@ export function useValidatorDetail(address: string) {
 
   useEffect(() => {
     if (!validatorsData) return; //
-    console.log(validatorsData["0"]);
     const rawValidatorData: validatorType = {
       validator_data_uri: validatorsData["0"]?.validator_data_uri?.toString(),
       validator_address: `0x0${validatorsData["0"]?.validator_address?.toString(

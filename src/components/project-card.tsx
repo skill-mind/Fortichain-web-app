@@ -29,7 +29,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div className="border-b border-dark-border-gray pb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Image src={avatar} alt="pririty type" />
-          <h3 className="text-base ">{project.name}</h3>
+          <h3 className="text-base capitalize">{project.name}</h3>
         </div>
         <span className={` ${bg} rounded-full py-1.5 px-3 text-sm`}>
           Priority: {project.priority.toLocaleUpperCase()}

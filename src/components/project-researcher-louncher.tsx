@@ -9,13 +9,12 @@ import {
   useStarknetkitConnectModal,
 } from "starknetkit";
 import { create_resercher_profile } from "@/hook/blockchainWriteFunction";
-import { useResearchers } from "@/hook/useBlockchain";
-import { compareAddresses } from "@/util/helper";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResearcherFormNavigationButtons } from "./researcher-form";
 import { UsernameInputSection } from "./user-name-input";
 import { ProgressNavigation } from "./launcher-progress-navigation";
 import { WalletConnectionCard } from "./wallet-connection-card";
+import { UseUser } from "@/hook/useUser";
 
 export default function ProjectResearcherLauncher() {
   const { setter } = useContext(Router);
@@ -28,8 +27,7 @@ export default function ProjectResearcherLauncher() {
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     connectors: connectors as StarknetkitConnector[],
   });
-  const [connector, setConnector] = useState<StarknetkitConnector | string>("");
-  const researchers = useResearchers();
+  const [_, setConnector] = useState<StarknetkitConnector | string>("");
   const [formData, setFormData] = useState({
     address: "",
     userName: "",
@@ -48,18 +46,7 @@ export default function ProjectResearcherLauncher() {
     },
   ];
 
-  useEffect(() => {
-    if (!researchers) return;
-    const checker = researchers?.filter((data) =>
-      compareAddresses(String(data), String(address))
-    );
-    if (checker.length > 0) {
-      setter((prev) => {
-        return { ...prev, isComplete: true };
-      });
-      redirect("/researcher");
-    }
-  }, [researchers, address]);
+  UseUser();
 
   useEffect(() => {
     if (address) {

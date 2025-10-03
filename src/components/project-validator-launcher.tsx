@@ -10,14 +10,13 @@ import {
   useStarknetkitConnectModal,
 } from "starknetkit";
 import { create_validator_profile } from "@/hook/blockchainWriteFunction";
-import { useValidators } from "@/hook/useBlockchain";
-import { compareAddresses } from "@/util/helper";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressNavigation } from "./launcher-progress-navigation";
 import { WalletConnectionCard } from "./wallet-connection-card";
 import { UsernameInputSection } from "./user-name-input";
 import { ResearcherFormNavigationButtons } from "./researcher-form";
 import { GitHubIntegrationSection } from "./validator-github-inputs";
+import { UseUser } from "@/hook/useUser";
 
 export interface validatorType {
   address: string;
@@ -37,7 +36,7 @@ export default function ProjectValidatorLauncher() {
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     connectors: connectors as StarknetkitConnector[],
   });
-  const [connector, setConnector] = useState<StarknetkitConnector | string>("");
+  const [_, setConnector] = useState<StarknetkitConnector | string>("");
 
   const [formData, setFormData] = useState({
     address: "",
@@ -45,8 +44,6 @@ export default function ProjectValidatorLauncher() {
     githubLink: "",
     passworks: [""],
   });
-
-  const platformValidators = useValidators();
 
   const progressSteps = [
     {
@@ -66,19 +63,7 @@ export default function ProjectValidatorLauncher() {
     },
   ];
 
-  useEffect(() => {
-    if (!platformValidators) return;
-    const checker = platformValidators?.filter((data) =>
-      compareAddresses(String(data?.validator_address), String(address))
-    );
-    if (checker.length > 0) {
-      setter((prev) => {
-        return { ...prev, isComplete: true };
-      });
-      redirect("/validator");
-    }
-  }, [platformValidators, address]);
-
+  UseUser();
   useEffect(() => {
     if (address) {
       setFormData((prev) => {

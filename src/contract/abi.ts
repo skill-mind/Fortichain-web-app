@@ -218,7 +218,27 @@ export const FORTICHAINABI: Abi = [
         type: "core::integer::u256",
       },
       {
-        name: "report_uri",
+        name: "title",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "description",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "category",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "severity_level",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "potential_risk",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "recommendation",
         type: "core::byte_array::ByteArray",
       },
       {
@@ -234,12 +254,108 @@ export const FORTICHAINABI: Abi = [
         type: "core::felt252",
       },
       {
+        name: "validation_status",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "validator_report_id",
+        type: "core::integer::u256",
+      },
+      {
         name: "created_at",
         type: "core::integer::u64",
       },
       {
         name: "updated_at",
         type: "core::integer::u64",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "fortichain_contracts::base::types::ValidatorReport",
+    members: [
+      {
+        name: "id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "researcher_report_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "validator_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "project_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "title",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "category",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "severity_level",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "description",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "potential_risk",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "recommendation",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "is_valid",
+        type: "core::bool",
+      },
+      {
+        name: "validation_reason",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "created_at",
+        type: "core::integer::u64",
+      },
+      {
+        name: "updated_at",
+        type: "core::integer::u64",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "fortichain_contracts::base::types::ProjectDetails",
+    members: [
+      {
+        name: "project",
+        type: "fortichain_contracts::base::types::Project",
+      },
+      {
+        name: "researcher_reports",
+        type: "core::array::Array::<fortichain_contracts::base::types::Report>",
+      },
+      {
+        name: "validator_reports",
+        type: "core::array::Array::<fortichain_contracts::base::types::ValidatorReport>",
+      },
+      {
+        name: "assigned_validator",
+        type: "fortichain_contracts::base::types::Validator",
+      },
+      {
+        name: "approved_researchers",
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
       },
     ],
   },
@@ -447,31 +563,79 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "pay_validator",
+        name: "write_report",
         inputs: [
           {
             name: "project_id",
             type: "core::integer::u256",
           },
+          {
+            name: "title",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "description",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "category",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "severity_level",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "potential_risk",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "recommendation",
+            type: "core::byte_array::ByteArray",
+          },
         ],
-        outputs: [],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
         state_mutability: "external",
       },
       {
         type: "function",
-        name: "process_payment",
+        name: "edit_report",
         inputs: [
           {
-            name: "payer",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "amount",
+            name: "report_id",
             type: "core::integer::u256",
           },
           {
-            name: "recipient",
-            type: "core::starknet::contract_address::ContractAddress",
+            name: "title",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "description",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "category",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "severity_level",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "potential_risk",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "recommendation",
+            type: "core::byte_array::ByteArray",
+          },
+          {
+            name: "report_uri",
+            type: "core::byte_array::ByteArray",
           },
         ],
         outputs: [
@@ -496,18 +660,6 @@ export const FORTICHAINABI: Abi = [
           {
             name: "accept",
             type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "pay_approved_researchers_reports",
-        inputs: [
-          {
-            name: "project_id",
-            type: "core::integer::u256",
           },
         ],
         outputs: [],
@@ -557,6 +709,22 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "approve_validator",
+        inputs: [
+          {
+            name: "validator_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::bool",
           },
         ],
         state_mutability: "external",
@@ -615,35 +783,55 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "get_researcher_address_by_username",
+        name: "vote_on_report",
         inputs: [
           {
-            name: "username",
-            type: "core::felt252",
+            name: "report_id",
+            type: "core::integer::u256",
           },
-        ],
-        outputs: [
           {
-            type: "core::starknet::contract_address::ContractAddress",
+            name: "is_valid",
+            type: "core::bool",
+          },
+          {
+            name: "reason",
+            type: "core::byte_array::ByteArray",
           },
         ],
-        state_mutability: "view",
+        outputs: [],
+        state_mutability: "external",
       },
       {
         type: "function",
-        name: "get_validator_address_by_username",
+        name: "withdraw_validator_bounty",
         inputs: [
           {
-            name: "username",
-            type: "core::felt252",
+            name: "amount",
+            type: "core::integer::u256",
           },
-        ],
-        outputs: [
           {
+            name: "recipient",
             type: "core::starknet::contract_address::ContractAddress",
           },
         ],
-        state_mutability: "view",
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "withdraw_researcher_bounty",
+        inputs: [
+          {
+            name: "amount",
+            type: "core::integer::u256",
+          },
+          {
+            name: "recipient",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
       },
       {
         type: "function",
@@ -679,17 +867,6 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "total_projects",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
         name: "all_completed_projects",
         inputs: [],
         outputs: [
@@ -709,22 +886,6 @@ export const FORTICHAINABI: Abi = [
           },
         ],
         state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "project_is_completed",
-        inputs: [
-          {
-            name: "project_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "external",
       },
       {
         type: "function",
@@ -756,7 +917,7 @@ export const FORTICHAINABI: Abi = [
             type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
           },
         ],
-        state_mutability: "external",
+        state_mutability: "view",
       },
       {
         type: "function",
@@ -796,17 +957,6 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "get_total_validators",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
         name: "get_validator",
         inputs: [
           {
@@ -839,64 +989,16 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "get_user_projects_by_id",
+        name: "get_complete_project_details",
         inputs: [
           {
-            name: "id",
+            name: "project_id",
             type: "core::integer::u256",
           },
         ],
         outputs: [
           {
-            type: "fortichain_contracts::base::types::Project",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_validator_reputation",
-        inputs: [
-          {
-            name: "validator",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_validator_approval_rate",
-        inputs: [
-          {
-            name: "validator",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_validator_total_bounty_won",
-        inputs: [
-          {
-            name: "validator",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
+            type: "fortichain_contracts::base::types::ProjectDetails",
           },
         ],
         state_mutability: "view",
@@ -962,38 +1064,6 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "get_all_reports_for_project",
-        inputs: [
-          {
-            name: "project_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<fortichain_contracts::base::types::Report>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_researchers_on_project",
-        inputs: [
-          {
-            name: "project_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
         name: "get_all_validators",
         inputs: [],
         outputs: [
@@ -1042,17 +1112,6 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "(core::integer::u256, fortichain_contracts::base::types::SecurityResearcher)",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_total_security_researchers",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::integer::u256",
           },
         ],
         state_mutability: "view",
@@ -1113,22 +1172,6 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
-        name: "get_assigned_projects_for_researcher",
-        inputs: [
-          {
-            name: "researcher",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<fortichain_contracts::base::types::Project>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
         name: "get_unassigned_validators",
         inputs: [],
         outputs: [
@@ -1145,54 +1188,6 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::array::Array::<fortichain_contracts::base::types::Project>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_researcher_reputation",
-        inputs: [
-          {
-            name: "researcher",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_researcher_total_projects_worked_on",
-        inputs: [
-          {
-            name: "researcher",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_researcher_vulnerability",
-        inputs: [
-          {
-            name: "researcher",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
           },
         ],
         state_mutability: "view",
@@ -1225,6 +1220,106 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "fortichain_contracts::base::types::UserRoles",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_researchers_on_project",
+        inputs: [
+          {
+            name: "project_id",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::SecurityResearcher>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "has_researcher_submitted_report",
+        inputs: [
+          {
+            name: "project_id",
+            type: "core::integer::u256",
+          },
+          {
+            name: "researcher_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::bool",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_all_reports_on_project",
+        inputs: [
+          {
+            name: "project_id",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Report>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_researcher_projects_worked_on",
+        inputs: [
+          {
+            name: "researcher_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Project>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_pending_reports_for_validation",
+        inputs: [
+          {
+            name: "project_id",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Report>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_validator_projects_worked_on",
+        inputs: [
+          {
+            name: "validator_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Project>",
           },
         ],
         state_mutability: "view",
@@ -1687,6 +1782,60 @@ export const FORTICHAINABI: Abi = [
   },
   {
     type: "event",
+    name: "fortichain_contracts::fortichain::Fortichain::ValidatorBountyWithdrawn",
+    kind: "struct",
+    members: [
+      {
+        name: "validator",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "recipient",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "amount",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "timestamp",
+        type: "core::integer::u64",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "fortichain_contracts::fortichain::Fortichain::ResearcherBountyWithdrawn",
+    kind: "struct",
+    members: [
+      {
+        name: "researcher",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "recipient",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "amount",
+        type: "core::integer::u256",
+        kind: "data",
+      },
+      {
+        name: "timestamp",
+        type: "core::integer::u64",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "fortichain_contracts::fortichain::Fortichain::MoreDetailsRequested",
     kind: "struct",
     members: [
@@ -2030,6 +2179,16 @@ export const FORTICHAINABI: Abi = [
       {
         name: "BountyWithdrawn",
         type: "fortichain_contracts::fortichain::Fortichain::BountyWithdrawn",
+        kind: "nested",
+      },
+      {
+        name: "ValidatorBountyWithdrawn",
+        type: "fortichain_contracts::fortichain::Fortichain::ValidatorBountyWithdrawn",
+        kind: "nested",
+      },
+      {
+        name: "ResearcherBountyWithdrawn",
+        type: "fortichain_contracts::fortichain::Fortichain::ResearcherBountyWithdrawn",
         kind: "nested",
       },
       {

@@ -1,10 +1,28 @@
 "use client";
+import { UseUser } from "@/hook/useUser";
 import { Router } from "@/provider/route-provider";
-import { useContext } from "react";
+import { Connector, useConnect } from "@starknet-react/core";
+import { useContext, useState } from "react";
+import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
 
 export default function LauchAppNav() {
-  const { setter, route } = useContext(Router);
-  console.log(route);
+  const { setter } = useContext(Router);
+  const { connect, connectors } = useConnect();
+  const [_, setConnector] = useState<StarknetkitConnector | string>("");
+  const { starknetkitConnectModal } = useStarknetkitConnectModal({
+    connectors: connectors as StarknetkitConnector[],
+  });
+
+  async function connectWallet() {
+    const { connector } = await starknetkitConnectModal();
+    if (!connector) {
+      return;
+    }
+    setConnector(connector);
+    await connect({ connector: connector as Connector });
+  }
+  UseUser();
+
   return (
     <>
       <nav className="bg-dark-gray mx-auto min-w-[850px] hidden xl:block  p-1 rounded-full mt-7 ">
@@ -72,7 +90,10 @@ export default function LauchAppNav() {
             </span>
           </li>
           <span className="w-0.5 min-h-10 bg-dark-border-gray " />
-          <li
+          <button
+            onClick={() => {
+              connectWallet();
+            }}
             className={`min-w-157 min-h-50 p-0.5 group ${
               true ? "bg-sky-blue-border" : "hover:bg-sky-blue-border"
             } rounded-full group mx-1`}
@@ -86,7 +107,7 @@ export default function LauchAppNav() {
             >
               Launch App
             </span>
-          </li>
+          </button>
         </ul>
       </nav>
       <nav className="w-full grid gap-3 xl:hidden">
@@ -155,7 +176,10 @@ export default function LauchAppNav() {
             </span>
           </li>
           <span className="w-0.5 min-h-10 bg-dark-border-gray hidden sm:block" />
-          <li
+          <button
+            onClick={() => {
+              connectWallet();
+            }}
             className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border
               bg-gradient-to-r group text-base
@@ -169,7 +193,7 @@ export default function LauchAppNav() {
             >
               Lauch App
             </span>
-          </li>
+          </button>
         </ul>
       </nav>
     </>
