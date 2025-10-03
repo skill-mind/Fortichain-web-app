@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { detailedProjectsData } from "@/util/mock-data";
 import ReportCard from "../../../../components/report-card";
 import { useValidatorProjectsWorkedOn } from "@/hook/useBlockchain";
 import { useAccount } from "@starknet-react/core";

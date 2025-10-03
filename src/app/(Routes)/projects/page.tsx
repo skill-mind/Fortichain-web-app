@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockProjects } from "@/util/mock-data";
 import ProjectCard from "../../../components/project-card";
 import { useContext, useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
