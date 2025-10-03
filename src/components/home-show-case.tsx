@@ -4,6 +4,7 @@ import { ArrowUp } from "@/icons/arrowUp";
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import img from "../../public/Image1.svg";
+import Link from "next/link";
 
 export default function ShowCase() {
   const containerVariants = {
@@ -50,9 +51,10 @@ export default function ShowCase() {
               Built on Starknet for maximum security, transparency, and
               community collaboration
             </p>
-            <button
+            <Link
+              target="_blank"
+              href="https://forti-chain.gitbook.io/fortichain-docs/ "
               className="w-fit p-[2px] min-h-[50px] text-white-text bg-sky-blue-border rounded-full font-walsheim font-extralight"
-              type="button"
             >
               <div className="bg-gradient-to-r pl-4 from-[#1D74F9] flex items-center gap-2.5 p-2 justify-between to-[#092650] rounded-full h-full w-full">
                 <span>Open Docs</span>
@@ -60,7 +62,7 @@ export default function ShowCase() {
                   <ArrowUp />
                 </span>
               </div>
-            </button>
+            </Link>
           </div>
 
           <div className="text-base flex flex-col justify-between gap-2 xl:gap-8">

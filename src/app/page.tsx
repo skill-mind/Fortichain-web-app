@@ -13,7 +13,7 @@ import Footer from "@/components/footer";
 import LaunchAppUi from "@/components/ui/launch-app";
 
 export default function Page() {
-  const { route, setter } = useContext(Router);
+  const { route } = useContext(Router);
   if (route !== "none") {
     return <LaunchAppUi />;
   }

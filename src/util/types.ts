@@ -68,3 +68,10 @@ export interface Project {
   validatorReport?: Report;
   createdAt: string;
 }
+
+export function truncateString(str: string, maxLength = 50) {
+  if (str.length > maxLength) {
+    return str.substring(0, maxLength) + "...";
+  }
+  return str;
+}

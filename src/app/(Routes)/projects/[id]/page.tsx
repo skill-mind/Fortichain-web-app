@@ -23,6 +23,7 @@ import ViewReport from "../component/view-report";
 import Chat from "../component/chat";
 import { compareAddresses } from "@/util/helper";
 import ValidatorReportModal from "@/components/modals/validator-report";
+import ResearcherReportDetails from "../component/resercher-report-details";
 
 export default function Page() {
   const { address } = useAccount();
@@ -42,6 +43,20 @@ export default function Page() {
     "view_project",
     typeof id !== "undefined" ? [+id] : []
   );
+
+  const { readData: hasReport } = useContractFetch(
+    FORTICHAINABI,
+    "has_researcher_submitted_report",
+    // @ts-expect-error parmas can be undefined
+    typeof id !== "undefined" ? [+id, address] : []
+  );
+
+  const { readData: pendingReport } = useContractFetch(
+    FORTICHAINABI,
+    "get_pending_reports_for_validation",
+    typeof id !== "undefined" ? [+id] : []
+  );
+  console.log(pendingReport);
   const handleBack = () => {
     router.back();
   };
@@ -109,6 +124,7 @@ export default function Page() {
   function validatorHandler() {
     setOpenValidatorRepor((prev) => !prev);
   }
+
   return (
     <div className="grid gap-3">
       {openValidatorRepor && (
@@ -134,7 +150,7 @@ export default function Page() {
           />
         )}
       </div>
-      {reporterChecker && (
+      {!hasReport && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
           <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
             <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
@@ -146,34 +162,9 @@ export default function Page() {
               rounded-full group"
                 type="button"
                 onClick={() => {
-                  viewHandler("resercher-report");
-                }}
-              >
-                <span
-                  className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                >
-                  Start
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {reporterChecker && (
-        <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
-          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-              <h3>Write Report</h3>
-              <button
-                className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                type="button"
-                onClick={() => {
+                  if (viewSection == "resercher-report") {
+                    return viewHandler("none");
+                  }
                   viewHandler("resercher-report");
                 }}
               >
@@ -239,7 +230,7 @@ export default function Page() {
           </div>
         </div>
       )}
-      {!isValidator && (
+      {isValidator && (
         <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
           <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
             <div>
@@ -267,6 +258,7 @@ export default function Page() {
       {viewSection === "resercher-report" && <ResearcherReportEditor />}
       {viewSection === "view-report" && <ViewReport />}
       {viewSection === "chat-report" && <Chat />}
+      {hasReport && <ResearcherReportDetails />}
     </div>
   );
 }

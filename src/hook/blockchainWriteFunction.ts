@@ -99,7 +99,6 @@ export const uploadProjectHandle = async (
           amount: cairo.uint256(10),
         }),
       };
-      console.log(Call);
       const approveCall = {
         contractAddress:
           "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address // api i licencing comment out
@@ -182,7 +181,7 @@ export const EditProjectHandle = async (
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
         }),
       };
-      console.log(Call);
+
       const multicallData = [Call];
       const feeDetails: PaymasterDetails = {
         feeMode: {
@@ -250,7 +249,7 @@ export const writeReport = async (
   try {
     // setIsOpen(true);
     setIsSubmitting(true);
-    console.log("hey", data);
+    console.log("hey", data.description);
     if (
       account != undefined &&
       data.potential_risk &&
@@ -263,20 +262,22 @@ export const writeReport = async (
         entrypoint: "write_report",
         calldata: CallData.compile({
           project_id: cairo.uint256(data.id),
-          // title: byteArray.byteArrayFromString(data.title),
-          // description: byteArray.byteArrayFromString(data.description),
-          // category: byteArray.byteArrayFromString(data.category),
-          // severity_level: byteArray.byteArrayFromString(data.severity_level),
-          // potential_risk: byteArray.byteArrayFromString(data.potential_risk),
-          // recommendation: byteArray.byteArrayFromString(data.recommendation),
-          title: byteArray.byteArrayFromString("hello world"),
-          description: byteArray.byteArrayFromString("sam"),
-          category: byteArray.byteArrayFromString(data.category),
-          severity_level: byteArray.byteArrayFromString("High"),
-          potential_risk: byteArray.byteArrayFromString("user lose some"),
-          recommendation: byteArray.byteArrayFromString(
-            "no recommendation yet"
+          title: byteArray.byteArrayFromString(data.title),
+          description: byteArray.byteArrayFromString(
+            "smart contracts can interact with user private keys in various ways to facilitate secure transactions, authentication, or asset management. However"
           ),
+          category: byteArray.byteArrayFromString(data.category),
+          severity_level: byteArray.byteArrayFromString(data.severity_level),
+          potential_risk: byteArray.byteArrayFromString(data.potential_risk),
+          recommendation: byteArray.byteArrayFromString(data.recommendation),
+          // title: byteArray.byteArrayFromString("hello world"),
+          // description: byteArray.byteArrayFromString("sam"),
+          // category: byteArray.byteArrayFromString("kelv"),
+          // severity_level: byteArray.byteArrayFromString("High"),
+          // potential_risk: byteArray.byteArrayFromString("user lose some"),
+          // recommendation: byteArray.byteArrayFromString(
+          //   "no recommendation yet"
+          // ),
         }),
       };
 

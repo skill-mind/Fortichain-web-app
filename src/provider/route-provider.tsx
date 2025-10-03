@@ -9,7 +9,7 @@ import {
 
 // Define the state type
 export type RouteState = {
-  route: "validator" | "researcher" | "owner" | "none";
+  route: "validator" | "researcher" | "owner" | "none" | "admin";
   connect_wallet: boolean;
   validator_github: {
     profile: string;
