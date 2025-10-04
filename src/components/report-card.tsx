@@ -3,6 +3,7 @@ import avatar from "../../public/Ellipse 1.svg";
 import { Message } from "@/icons/github";
 import { Project } from "@/hook/useBlockchain";
 import { truncateString } from "@/util/types";
+import Link from "next/link";
 
 export default function ReportCard({ project }: { project: Project }) {
   const bg =
@@ -63,12 +64,12 @@ export default function ReportCard({ project }: { project: Project }) {
             </span>
           </div>
         </div>
-        <button
+        <Link
+          href={`/projects/${project.id}`}
           className="w-full sm:w-fit min-h-11 p-0.5 group             
           hover:from-sky-blue-border hover:to-sky-blue-border
           bg-gradient-to-r group to-[#312F2F] from-[#212121]
       rounded-full group"
-          type="button"
         >
           <span
             className="px-6 py-3 text-sm
@@ -78,7 +79,7 @@ export default function ReportCard({ project }: { project: Project }) {
           >
             {project.is_completed ? "Go to Project" : "Edit Report"}
           </span>
-        </button>
+        </Link>
       </div>
     </div>
   );

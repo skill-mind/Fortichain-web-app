@@ -4,7 +4,7 @@ import Logo from "../../public/Logo.svg";
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
 import { useAccount } from "@starknet-react/core";
 import { formatAddress } from "@/util/helper";
@@ -25,13 +25,31 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const [subMenu, setSubMenu] = useState(false);
   const { address, isConnected, connector } = useAccount();
   const { setter } = useContext(Router);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   function connectorHandler() {
     setIsConnectorOpen((isConnect) => !isConnect);
     setSubMenu(false);
   }
   return (
-    <div className="fixed w-full top-0 z-50">
+    <div
+      className={`${
+        isScrolled ? "py-2 backdrop-blur-md bg-main-bg/60" : ""
+      } fixed w-full top-0 z-50`}
+    >
       <nav className="capitalize xl:px-20 px-10 font-normal py-5 mx-auto max-w-sit-screen text-md flex justify-between items-center">
         <ul className="flex justify-between items-center gap-4">
           <div

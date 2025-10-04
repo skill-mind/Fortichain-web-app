@@ -61,12 +61,12 @@ export interface Report {
   description: string; //
   category: string; //
   id: number; //
-  status: boolean; //
+  status: string; //
   validation_status: string; //w
   severity_level: string; //
   potential_risk: string; //
   researcher_address: { toString: (radix: number) => string }; //
-  recommendationt: string; //
+  recommendation: string; //
   project_id: number; //
   validator_report_id: number;
   created_at: string;
@@ -322,7 +322,8 @@ export function useValidatorProjectsWorkedOn(address: string) {
   const [projectsData, setProjectsData] = useState<Project[] | undefined>();
   const { readData: projectList } = useContractFetch(
     FORTICHAINABI,
-    "get_validator_projects_worked_on",
+    // "get_validator_projects_worked_on",
+    "get_assigned_projects_for_validator",
     [address]
   );
   useEffect(() => {
@@ -357,13 +358,15 @@ export function useValidatorProjectsWorkedOn(address: string) {
   return projectsData;
 }
 
-export function useReportsOnProject(id: string) {
-  const [projectsData, setProjectsData] = useState<Project[] | undefined>();
+export function useReportsOnProject(id: number) {
+  const [projectsData, setProjectsData] = useState<Report[] | undefined>();
   const { readData: reportList } = useContractFetch(
     FORTICHAINABI,
-    "get_all_reports_on_project",
+    // "get_all_reports_on_project",
+    "get_pending_reports_for_validation",
     [id]
   );
+  // console.log(reportList);
   useEffect(() => {
     if (!reportList) return; //
     const projectData: Report[] = [];
@@ -380,14 +383,14 @@ export function useReportsOnProject(id: string) {
         potential_risk: data.potential_risk,
         created_at: epocTime(data.created_at.toString()),
         validator_report_id: +data.validator_report_id.toString(),
-        status: data.status,
-        recommendationt: data.recommendationt,
+        status: shortString.decodeShortString(data.status),
+        recommendation: data.recommendation,
         updated_at: epocTime(data.updated_at.toString()),
       });
     });
-    setProjectsData(reportList);
+    setProjectsData(projectData);
   }, [reportList]);
-
+  console.log(",,,,", projectsData);
   return projectsData;
 }
 export function UseGetUnassignedValidators() {
@@ -554,7 +557,6 @@ export function useValidatorDetail(address: string) {
     "get_validator",
     [address]
   );
-
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType = {
@@ -582,6 +584,50 @@ export function useValidatorDetail(address: string) {
       ),
       number_project_validated: Number(
         validatorsData["0"]?.number_project_validated
+      ),
+      passwork: validatorsData["1"],
+    };
+
+    setValidators(rawValidatorData);
+  }, [validatorsData]);
+
+  return validators;
+}
+
+export function useProjectValidator(id: number) {
+  const [validators, setValidators] = useState<validatorType>();
+
+  const { readData: validatorsData } = useContractFetch(
+    FORTICHAINABI,
+    "get_assigned_project_validator",
+    [id]
+  );
+  console.log(validatorsData);
+  useEffect(() => {
+    if (!validatorsData) return; //
+    const rawValidatorData: validatorType = {
+      validator_data_uri: validatorsData?.validator_data_uri?.toString(),
+      validator_address: `0x0${validatorsData?.validator_address?.toString(
+        16
+      )}`,
+      username: validatorsData?.username,
+      id: +validatorsData?.id?.toString(),
+      is_open_for_work: validatorsData?.is_open_for_work,
+      created_at: epocTime(validatorsData?.created_at?.toString()),
+      status: shortString?.decodeShortString(validatorsData?.status),
+      kyc_uri: validatorsData?.kyc_uri?.toString(),
+      updated_at: epocTime(validatorsData?.updated_at?.toString()),
+      kyc_approved: validatorsData?.kyc_approved?.toString(),
+      github_profile_url: validatorsData?.github_profile_url,
+      total_bounty_won: Number(validatorsData?.total_bounty_won),
+      approval_rate: Number(validatorsData?.approval_rate),
+      total_amount_withdrawn: Number(validatorsData?.total_amount_withdrawn),
+      reputation: Number(validatorsData?.reputation),
+      available_amount_to_widthdraw: Number(
+        validatorsData?.available_amount_to_withdraw
+      ),
+      number_project_validated: Number(
+        validatorsData?.number_project_validated
       ),
       passwork: validatorsData["1"],
     };
