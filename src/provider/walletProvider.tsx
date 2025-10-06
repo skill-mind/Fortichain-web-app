@@ -63,17 +63,3 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
     </StarknetConfig>
   );
 }
-// export function StarknetProvider({ children }: { children: React.ReactNode }) {
-
-//   return (
-//     <StarknetConfig
-//       chains={[sepolia]}
-//       provider={publicProvider()}
-//       connectors={connectors as Connector[]}
-//       explorer={voyager}
-//       autoConnect={true}
-//     >
-//       {children}
-//     </StarknetConfig>
-//   );
-// }
