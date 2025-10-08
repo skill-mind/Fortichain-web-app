@@ -5,6 +5,7 @@ import { useAccount } from "@starknet-react/core";
 import {
   epocTime,
   Project,
+  useCompleteProjectDetails,
   useContractFetch,
   useProjectValidator,
   useReportsOnProject,
@@ -23,6 +24,7 @@ import ViewReport from "../component/view-report";
 import Chat from "../component/chat";
 import { compareAddresses } from "@/util/helper";
 import ResearcherReportDetails from "../component/resercher-report-details";
+import ValidatorReportEditor from "../component/validator-report-editor";
 
 export default function Page() {
   const { address } = useAccount();
@@ -54,6 +56,8 @@ export default function Page() {
     router.back();
   };
 
+  const projectDetails = useCompleteProjectDetails(1);
+  console.log(projectDetails);
   // useEffect(() => {
   //   if (!platformValidators) return;
   //   const checker = platformValidators?.filter((data) =>
@@ -114,9 +118,11 @@ export default function Page() {
   function viewHandler(section: string) {
     setViewSection(section);
   }
+
   function validatorHandler() {
     setOpenValidatorRepor((prev) => !prev);
   }
+  console.log(reports, "report");
   const viewer = asignedValidator?.validator_address == address || hasReport;
   return (
     <div className="grid gap-3">
@@ -221,12 +227,7 @@ export default function Page() {
       {viewSection === "resercher-report" && <ResearcherReportEditor />}
       {viewSection === "view-report" && <ViewReport />}
       {viewSection === "chat-report" && <Chat />}
-      {viewer && reports && (
-        <ResearcherReportDetails
-          reports={reports}
-          isValidator={asignedValidator?.validator_address == address}
-        />
-      )}
+      {reports && <ResearcherReportDetails reports={reports} />}
     </div>
   );
 }

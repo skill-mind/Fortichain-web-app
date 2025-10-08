@@ -318,6 +318,102 @@ export const writeReport = async (
   }
 };
 
+export const validateReport = async (
+  account: AccountInterface | undefined,
+  data: {
+    id: number;
+    status: string;
+    severity_level: string;
+    audit_report: string;
+    description: string | null | undefined;
+  },
+  setIsSubmitting: SetIsSubmitting
+  // formData: EditProjectProps,
+  // setIsOpen: SetIsOpen,
+  // handler: () => void,
+  // setIsError: SetIsError
+): Promise<void> => {
+  // const { projectId, description, repoUrl } = formData;
+
+  // if (!description) {
+  //   toast.error("project description is required!");
+  //   return;
+  // }
+  // if (!repoUrl) {
+  //   toast.error("project  is required!");
+  //   return;
+  // }
+  // handler();
+  try {
+    // setIsOpen(true);
+    setIsSubmitting(true);
+    console.log("hey", data.description);
+    if (account != undefined && data.description) {
+      console.log("hey");
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "validate_report",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(data.id),
+          status: byteArray.byteArrayFromString(data.status),
+          severity_level_confirmation: byteArray.byteArrayFromString(
+            data.severity_level
+          ),
+          category_confirmation: byteArray.byteArrayFromString(
+            data.audit_report
+          ),
+          reason: byteArray.byteArrayFromString(data.description),
+          // reason: byteArray.byteArrayFromString(
+          //   "smart contracts can interact with user private keys in various ways to facilitate secure transactions, authentication, or asset management. However"
+          // ),
+          // title: byteArray.byteArrayFromString("hello world"),
+          // description: byteArray.byteArrayFromString("sam"),
+          // category: byteArray.byteArrayFromString("kelv"),
+          // severity_level: byteArray.byteArrayFromString("High"),
+          // potential_risk: byteArray.byteArrayFromString("user lose some"),
+          // recommendation: byteArray.byteArrayFromString(
+          //   "no recommendation yet"
+          // ),
+        }),
+      };
+
+      console.log(Call);
+      const multicallData = [Call];
+      const feeDetails: PaymasterDetails = {
+        feeMode: {
+          mode: "sponsored",
+        },
+      };
+
+      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      //   [...multicallData],
+      //   feeDetails
+      // );
+
+      // const result = await account?.executePaymasterTransaction(
+      //   [...multicallData],
+      //   feeDetails,
+      //   feeEstimation?.suggested_max_fee_in_gas_token
+      // );
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      // setIsOpen(true);
+      console.log(result);
+
+      console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 export const validatorWithdrawal = async (
   account: AccountInterface | undefined,
   data: {

@@ -135,7 +135,7 @@ export default function ResearcherReportEditor() {
           </Select>
         </div>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
         <Editor ref={issueDescriptionRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -144,7 +144,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Potential Risk</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
         <Editor ref={potentialRiskRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -153,7 +153,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Recommendation</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
         <Editor ref={recommendationRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
