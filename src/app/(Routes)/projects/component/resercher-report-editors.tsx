@@ -15,7 +15,7 @@ import { writeReport } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
 
 export default function ResearcherReportEditor() {
-  const { account } = useAccount();
+  const { account, address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
     title: "",
@@ -43,11 +43,11 @@ export default function ResearcherReportEditor() {
       severity_level: reportDetails.severity_level,
       category: reportDetails.category,
       //@ts-expect-error parmas can be undefined getText(),
-      potential_risk: potentialRiskRef.current?.getText(),
+      potential_risk: potentialRiskRef.current?.getJSON(),
       //@ts-expect-error parmas can be undefined
-      recommendation: recommendationRef.current?.getText(),
+      recommendation: recommendationRef.current?.getJSON(),
       //@ts-expect-error parmas can be undefined
-      description: issueDescriptionRef.current?.getText(),
+      description: issueDescriptionRef.current?.getJSON(),
     };
     console.log(data);
     if (!id) return;
@@ -55,6 +55,7 @@ export default function ResearcherReportEditor() {
       account,
       //@ts-expect-error parmas can be undefined
       data,
+      address,
       setIsSubmitting
       // recommendationRef.current?.getText(),
       // potentialRiskRef.current?.getText(),
@@ -135,7 +136,7 @@ export default function ResearcherReportEditor() {
           </Select>
         </div>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={issueDescriptionRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -144,7 +145,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Potential Risk</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={potentialRiskRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -153,7 +154,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Recommendation</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px] h-[400px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={recommendationRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">

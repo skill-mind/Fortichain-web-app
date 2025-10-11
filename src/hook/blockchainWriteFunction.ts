@@ -229,6 +229,7 @@ export const writeReport = async (
     recommendation: string | null | undefined;
     description: string | null | undefined;
   },
+  address: string,
   setIsSubmitting: SetIsSubmitting
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
@@ -249,7 +250,7 @@ export const writeReport = async (
   try {
     // setIsOpen(true);
     setIsSubmitting(true);
-    console.log("hey", data.description);
+    // console.log("hey", data.description);
     if (
       account != undefined &&
       data.potential_risk &&
@@ -257,19 +258,26 @@ export const writeReport = async (
       data.description
     ) {
       console.log("hey");
+      let description = JSON.stringify(data.description);
+      let risk = JSON.stringify(data.potential_risk);
+      let recommendation = JSON.stringify(data.recommendation);
+
+      console.log({
+        description,
+        risk,
+        recommendation,
+      });
       const Call = {
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "write_report",
         calldata: CallData.compile({
           project_id: cairo.uint256(data.id),
           title: byteArray.byteArrayFromString(data.title),
-          description: byteArray.byteArrayFromString(
-            "smart contracts can interact with user private keys in various ways to facilitate secure transactions, authentication, or asset management. However"
-          ),
+          description: description,
           category: byteArray.byteArrayFromString(data.category),
           severity_level: byteArray.byteArrayFromString(data.severity_level),
-          potential_risk: byteArray.byteArrayFromString(data.potential_risk),
-          recommendation: byteArray.byteArrayFromString(data.recommendation),
+          potential_risk: risk,
+          recommendation: recommendation,
           // title: byteArray.byteArrayFromString("hello world"),
           // description: byteArray.byteArrayFromString("sam"),
           // category: byteArray.byteArrayFromString("kelv"),
@@ -306,7 +314,17 @@ export const writeReport = async (
       );
       // setIsOpen(true);
       console.log(result);
-
+      await resercherReports(
+        data.category,
+        description,
+        risk,
+        data.id,
+        recommendation,
+        data.severity_level,
+        data.title,
+        address
+      );
+      console.log("completed---");
       console.log(status);
     }
   } catch (error) {
