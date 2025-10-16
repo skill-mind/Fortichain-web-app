@@ -29,13 +29,6 @@ export default function ResearcherReportEditor() {
   const recommendationRef = useRef<HTMLDivElement>(null);
 
   function handleSubmit() {
-    // console.log({
-    //   // @ts-expect-error parmas can be undefined
-    //   recommendationRef: recommendationRef.current?.getText(),
-    //   potentialRiskRef: potentialRiskRef.current?.getText(),
-    //   issueDescriptionRef: issueDescriptionRef.current?.getText(),
-    // });
-    // console.log(reportDetails);
     if (!id) return;
     const data = {
       id: id,
@@ -49,7 +42,7 @@ export default function ResearcherReportEditor() {
       //@ts-expect-error parmas can be undefined
       description: issueDescriptionRef.current?.getJSON(),
     };
-    console.log(data);
+    console.log(data, "");
     if (!id) return;
     writeReport(
       account,
@@ -64,7 +57,6 @@ export default function ResearcherReportEditor() {
   }
   const handleFilesChange = (files: UploadedFile[]) => {
     setUploadedFiles(files);
-    console.log("Files updated:", files);
   };
 
   return (
@@ -95,11 +87,11 @@ export default function ResearcherReportEditor() {
             placeholder="Enter title"
           />
         </div>
-        <div className="border-dark-border-gray border rounded-full py-2 w-full">
+        {/* <div className="border-dark-border-gray border rounded-full py-2 w-full">
           <Select
             onValueChange={(data) => {
               setReportDetails((prev) => {
-                return { ...prev, severity_level: data };
+                return { ...prev, category: data };
               });
             }}
           >
@@ -116,22 +108,22 @@ export default function ResearcherReportEditor() {
               <SelectItem value="Others">Others</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
         <div className="border-dark-border-gray border rounded-full py-2 w-full">
           <Select
             onValueChange={(data) => {
               setReportDetails((prev) => {
-                return { ...prev, category: data };
+                return { ...prev, severity_level: data };
               });
             }}
           >
             <SelectTrigger className="rounded-full w-full border-none pl-7">
-              <SelectValue placeholder="Select category" />
+              <SelectValue placeholder="Select severity level" />
             </SelectTrigger>
             <SelectContent className="bg-main-bg text-white-text">
-              <SelectItem value="ALL">ALL</SelectItem>
-              <SelectItem value="High">High</SelectItem>
-              <SelectItem value="Low">Low</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
             </SelectContent>
           </Select>
         </div>

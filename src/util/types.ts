@@ -4,7 +4,6 @@ export type UploadProjectProps = {
   projectType: string;
   deadline: Date | null;
   repoUrl: string;
-  contractAddress: string;
   amount: number | null;
   priority: string;
 };

@@ -1,4 +1,4 @@
-import { Project } from "@/hook/useBlockchain";
+import { epocTime, Project } from "@/hook/useBlockchain";
 import { ArrowGray, GithubIcon } from "@/icons/github";
 import { useAccount } from "@starknet-react/core";
 import { FileCode, FileMinus } from "lucide-react";
@@ -42,7 +42,7 @@ export default function Description({
           <div>
             <span className="text-gray-text">Deadline:</span>
             <span className="bg-dark-gray-pop rounded-full px-3 py-1">
-              {projectDetail?.deadline}
+              {epocTime(projectDetail?.deadline?.toString() ?? "")}
             </span>
           </div>
           {projectOwner == address && (
@@ -83,7 +83,7 @@ export default function Description({
               <span>GitHub Repo</span>
               <ArrowGray />
             </Link>
-            <Link
+            {/* <Link
               href={`${projectDetail?.smart_contract_address}`}
               target="_blank"
               className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
@@ -91,7 +91,7 @@ export default function Description({
               <FileCode className="text-gray-text w-5" />
               <span>Contract Address</span>
               <ArrowGray />
-            </Link>
+            </Link> */}
             <Link
               href="#"
               // target="_blank"

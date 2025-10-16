@@ -14,7 +14,6 @@ import Loader from "@/app/loading";
 export default function Page() {
   const { address } = useAccount();
   const projectData = useValidatorProjectsWorkedOn(address ?? "");
-  console.log(projectData);
   if (projectData == undefined) {
     return <Loader />;
   }

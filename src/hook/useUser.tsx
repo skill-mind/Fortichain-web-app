@@ -27,7 +27,6 @@ export function UseUser() {
       compareAddresses(String(data?.validator_address), String(address))
     );
 
-    console.log(researcherChecker, validatorChecker);
     if (
       owner &&
       address != `0x0${owner?.toString(16)}` &&

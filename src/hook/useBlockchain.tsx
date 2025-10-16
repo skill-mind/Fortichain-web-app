@@ -49,7 +49,6 @@ export interface Project {
   project_type: string;
   repository_url: string;
   researchers_paid: boolean; //
-  smart_contract_address: { toString: (radix: number) => string };
   updated_at: string;
   validator_paid: boolean; //
   amount: number;
@@ -161,9 +160,6 @@ export function useCompleteProjectDetails(id: number) {
         validator_paid: data.project.validator_paid,
         researchers_paid: data.project.researchers_paid,
         repository_url: data.project.repository_url,
-        smart_contract_address: `0x0${data.project[
-          "smart_contract_address"
-        ].toString(16)}`,
         name: data.project.name,
         id: +data.project.id?.toString(),
         description: data.project.description,
@@ -316,9 +312,6 @@ export function useUserProject(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -355,9 +348,6 @@ export function useAllProjects() {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -394,9 +384,6 @@ export function UseGetAssignableProjects() {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -472,9 +459,6 @@ export function useResearcherProjectsWorkedOn(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -512,9 +496,6 @@ export function useValidatorProjectsWorkedOn(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,

@@ -15,7 +15,6 @@ export default function Page() {
   const [isEarningOpen, setIsEarningOpen] = useState(false);
   const { address } = useAccount();
   const researcher = useResearcherByAddress(address ?? "");
-  console.log(researcher);
   if (researcher === undefined) {
     return <Loader />;
   }

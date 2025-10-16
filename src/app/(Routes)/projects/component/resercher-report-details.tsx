@@ -9,35 +9,57 @@ import { FORTICHAINABI } from "@/contract/abi";
 import ProjectReviewCard from "./projectReviewCard";
 import img from "../../../../../public/Ellipse 1.svg";
 import Image from "next/image";
+import { renderToHTML } from "next/dist/server/render";
+import { renderToString } from "react-dom/server";
+import TiptapRenderer from "@/components/editor/editor-render";
+import { useCheckWalletInValidators } from "@/hook/fetch-requests";
+import { useParams } from "next/navigation";
 export default function ResearcherReportDetails({
   reports,
+  researchers,
 }: {
   reports: Report[];
+  researchers: any[];
 }) {
+  const { id } = useParams();
   const { address } = useAccount();
   const [validatorView, setValidatorView] = useState("none"); // audit , edit chat
   const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
   const [showReport, setShowReport] = useState(0);
+  const [voteType, setVoteType] = useState<null | string>(null);
   const { readData: isValidator } = useContractFetch(
     FORTICHAINABI,
     "is_validator",
     [address ?? ""]
   );
-  function validatorHandler() {
+
+  function validatorHandler(type: string | null) {
     setOpenValidatorRepor((prev) => !prev);
+    setVoteType(type);
   }
   function valdatorViewHandler(section: string) {
     setValidatorView(section);
   }
-  console.log(isValidator);
+  const { isIncluded, isAssignedValidator } = useCheckWalletInValidators(
+    address ?? "",
+    id ? +id : 0
+  );
+  const has_report = researchers?.filter((data) => {
+    return (
+      data.researcher_wallet_address?.toLocaleLowerCase() ===
+      address?.toLocaleLowerCase()
+    );
+  });
+  const reportToValidate =
+    isIncluded || isAssignedValidator ? researchers : has_report;
   return (
     <>
-      {reports?.map((data, id) => {
+      {reportToValidate?.map((data, id) => {
         const bg =
-          data.category.toLocaleUpperCase() === "Low".toLocaleUpperCase() ||
-          data.category.toLocaleUpperCase() == "low".toLocaleUpperCase()
+          data.severity.toLocaleUpperCase() === "Low".toLocaleUpperCase() ||
+          data.severity.toLocaleUpperCase() == "low".toLocaleUpperCase()
             ? "bg-pririty-low-bg text-blue-ball"
-            : data.category.toLocaleUpperCase() === "Medium".toLocaleUpperCase()
+            : data.severity.toLocaleUpperCase() === "Medium".toLocaleUpperCase()
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
         return (
@@ -107,9 +129,13 @@ export default function ResearcherReportDetails({
             {showReport === data.id && (
               <>
                 {openValidatorRepor && (
-                  <ValidatorReportModal handler={validatorHandler} />
+                  <ValidatorReportModal
+                    handler={validatorHandler}
+                    voteType={voteType}
+                    researcherId={data.id}
+                  />
                 )}
-                {isValidator && (
+                {!isAssignedValidator && isIncluded && (
                   <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
                     <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
                       <div>
@@ -119,12 +145,19 @@ export default function ResearcherReportDetails({
                         </h5>
                       </div>
                       <div className="flex gap-2">
-                        <button className="px-10 py-3 bg-good-bg text-good rounded-full flex gap-2 items-center">
+                        <button
+                          onClick={() => {
+                            validatorHandler("Valid");
+                          }}
+                          className="px-10 py-3 bg-good-bg text-good rounded-full flex gap-2 items-center"
+                        >
                           <BadgeCheck />
                           Valid Report
                         </button>
                         <button
-                          onClick={validatorHandler}
+                          onClick={() => {
+                            validatorHandler("Invalid");
+                          }}
                           className="px-10 py-3 bg-pririty-high-bg text-pririty-high-text rounded-full flex gap-2 items-center"
                         >
                           <BadgeCheck />
@@ -145,20 +178,21 @@ export default function ResearcherReportDetails({
                       <h3 className="text-gray-text">{data.created_at}</h3>
                     </div>
                     <button className={`rounded-full ${bg} py-2 px-4`}>
-                      Priority: {data.category}
+                      Priority: {data.severity}
                     </button>
                   </div>
                   <div>
-                    <h1>Description</h1>
-                    <p>{data.description}</p>
+                    <h1 className="text-2xl">Description</h1>
+                    <TiptapRenderer content={data.description} />
                   </div>
                   <div>
-                    <h1>Potential Risk</h1>
-                    <p>{data.potential_risk}</p>
+                    <h1 className="text-2xl">Potential Risk</h1>
+                    <TiptapRenderer content={data.potential_risk} />
                   </div>
                   <div>
-                    <h1>Recommendations</h1>
-                    <p>{data.recommendation}</p>
+                    <h1 className="text-2xl">Recommendations</h1>
+
+                    <TiptapRenderer content={data.recommendation} />
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex gap-1 items-center ">
@@ -181,86 +215,88 @@ export default function ResearcherReportDetails({
                     </div>
                   </div>
                 </section>
-                <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
-                  <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-                    <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                      <h3>Audit Report</h3>
-                      <button
-                        className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                        type="button"
-                        onClick={() => {
-                          if (validatorView == `audit-${id}`) {
-                            return valdatorViewHandler("none");
-                          }
-                          valdatorViewHandler(`audit-${id}`);
-                        }}
-                      >
-                        <span
-                          className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                        >
-                          Start
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-                    <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                      <h3>Discussions</h3>
-                      <button
-                        className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                        type="button"
-                        onClick={() => {
-                          valdatorViewHandler("chat");
-                        }}
-                      >
-                        <span
-                          className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                        >
-                          Chat with validator
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-                    <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                      <h3>Edit Audit</h3>
-                      <button
-                        className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                        onClick={() => {
-                          valdatorViewHandler("edit");
-                        }}
-                        type="button"
-                      >
-                        <span
-                          className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                        >
-                          Edit
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
                 {validatorView == `audit-${id}` && (
                   <ValidatorReportEditor researcherId={data.id} />
+                )}
+                {isAssignedValidator && (
+                  <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
+                    <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+                      <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                        <h3>Audit Report</h3>
+                        <button
+                          className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                          type="button"
+                          onClick={() => {
+                            if (validatorView == `audit-${id}`) {
+                              return valdatorViewHandler("none");
+                            }
+                            valdatorViewHandler(`audit-${id}`);
+                          }}
+                        >
+                          <span
+                            className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                          >
+                            Start
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+                      <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                        <h3>Discussions</h3>
+                        <button
+                          className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                          type="button"
+                          onClick={() => {
+                            valdatorViewHandler("chat");
+                          }}
+                        >
+                          <span
+                            className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                          >
+                            Chat with validator
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+                      <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                        <h3>Edit Audit</h3>
+                        <button
+                          className="w-fit min-h-11 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                          onClick={() => {
+                            valdatorViewHandler("edit");
+                          }}
+                          type="button"
+                        >
+                          <span
+                            className="px-12 py-6
+                      group-hover:from-sky-from group-hover:to-sky-to text-sm
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+                          >
+                            Edit
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </>
             )}

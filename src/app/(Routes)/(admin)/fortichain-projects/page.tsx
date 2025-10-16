@@ -21,7 +21,6 @@ export default function Projests() {
   const [projectId, setProjectId] = useState<number>(0);
   const projects = useAllProjects();
   const availableProject = UseGetAssignableProjects();
-  console.log(availableProject, "available project");
   function handler() {
     setIsOpen((prev) => !prev);
   }

@@ -18,7 +18,8 @@ export default function ValidatorReportEditor({
 }: {
   researcherId: number;
 }) {
-  const { account } = useAccount();
+  console.log(researcherId);
+  const { account, address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
     severity_level: "",
@@ -39,8 +40,8 @@ export default function ValidatorReportEditor({
       description: issueDescriptionRef.current?.getText(),
     };
     console.log(data);
-    if (!id) return;
-    validateReport(account, data, setIsSubmitting);
+    if (!id || !address) return;
+    validateReport(account, data, setIsSubmitting, +id, address);
   }
 
   return (
@@ -140,8 +141,8 @@ export default function ValidatorReportEditor({
             <SelectValue placeholder="Audit Report" />
           </SelectTrigger>
           <SelectContent className="bg-main-bg text-white-text">
-            <SelectItem value="Valid Badge">Valid Badge</SelectItem>
-            <SelectItem value="Invalid Badge">Invalid Badge</SelectItem>
+            <SelectItem value="Valid">Valid Badge</SelectItem>
+            <SelectItem value="Invalid">Invalid Badge</SelectItem>
           </SelectContent>
         </Select>
       </div>

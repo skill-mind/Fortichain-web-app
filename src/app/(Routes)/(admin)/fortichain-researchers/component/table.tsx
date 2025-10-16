@@ -11,7 +11,6 @@ export function ProjectTable({
   researchers: SecurityResearcher[];
   setResearcherId: SetResearcherId;
 }) {
-  console.log(researchers);
   return (
     <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[750px] font-walsheim">
       <div className="overflow-x-auto scrollbar-hide">

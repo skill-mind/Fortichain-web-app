@@ -3,7 +3,6 @@ import { UploadProjectProps } from "@/util/types";
 export default function Summary({
   deadline,
   amount,
-  contractAddress,
   description,
   projectName,
   projectType,
@@ -40,7 +39,7 @@ export default function Summary({
           <p className="text-gray-text text-sm">{projectType}</p>
         </div>
         <div className="grid gap-2 w-1/2">
-          <h2>Smart contract</h2>
+          <h2>Project deadline</h2>
           <p className="text-gray-text text-sm">{date}</p>
         </div>
       </div>
@@ -48,10 +47,6 @@ export default function Summary({
         <div className="grid gap-2 w-1/2">
           <h2>Repository URL</h2>
           <p className="text-gray-text text-sm break-all">{repoUrl}</p>
-        </div>
-        <div className="grid gap-2 w-1/2">
-          <h2>Contract Address</h2>
-          <p className="text-gray-text break-all text-sm">{contractAddress}</p>
         </div>
       </div>
       <div className="flex justify-between sm:flex-row flex-col items-start gap-2">

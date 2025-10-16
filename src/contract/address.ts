@@ -1,7 +1,8 @@
 import { RpcProvider } from "starknet";
 
 export const FORTICHAINADDRESS =
-  "0x046fc883bf2c2b3a0eaa22b6a94e63c435031653dcb32f099d5f9aa763658729";
+  "0x061f6c77582ee3343467a4cf5a60dbf772dfb0334124fde3b1dd979287e57554";
+// "0x046fc883bf2c2b3a0eaa22b6a94e63c435031653dcb32f099d5f9aa763658729"; -- before smart contract remove from upload
 // "0x03f7d8ac843c559e2916c0377a8b884d6d31b1931a5d06b1d9a94617e7214103"; -- before indexer
 // "0x01f1f1aff4ce8999569c1d3d2b444167bd26cb3693888b3fed8c139b73976baf";  // most work is here
 // "0x04351b83499c4635a81ab633a6021ff4c8a9d4ca8dee4d6d3b206a1c1f582156"; // with role

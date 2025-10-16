@@ -78,10 +78,6 @@ export const FORTICHAINABI: Abi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
       {
-        name: "smart_contract_address",
-        type: "core::starknet::contract_address::ContractAddress",
-      },
-      {
         name: "repository_url",
         type: "core::byte_array::ByteArray",
       },
@@ -460,10 +456,6 @@ export const FORTICHAINABI: Abi = [
           {
             name: "priority",
             type: "core::felt252",
-          },
-          {
-            name: "smart_contract_address",
-            type: "core::starknet::contract_address::ContractAddress",
           },
           {
             name: "amount",
@@ -876,6 +868,17 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::array::Array::<fortichain_contracts::base::types::Project>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_unassigned_validators",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Validator>",
           },
         ],
         state_mutability: "view",
@@ -1312,11 +1315,6 @@ export const FORTICHAINABI: Abi = [
         kind: "data",
       },
       {
-        name: "smart_contract_address",
-        type: "core::starknet::contract_address::ContractAddress",
-        kind: "data",
-      },
-      {
         name: "repository_url",
         type: "core::byte_array::ByteArray",
         kind: "data",
@@ -1422,11 +1420,6 @@ export const FORTICHAINABI: Abi = [
       },
       {
         name: "project_owner",
-        type: "core::starknet::contract_address::ContractAddress",
-        kind: "data",
-      },
-      {
-        name: "smart_contract_address",
         type: "core::starknet::contract_address::ContractAddress",
         kind: "data",
       },
@@ -1998,6 +1991,11 @@ export const FORTICHAINABI: Abi = [
       {
         name: "github_profile_url",
         type: "core::byte_array::ByteArray",
+        kind: "data",
+      },
+      {
+        name: "pass_work",
+        type: "core::array::Array::<core::byte_array::ByteArray>",
         kind: "data",
       },
       {

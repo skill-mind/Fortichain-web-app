@@ -25,6 +25,7 @@ import Chat from "../component/chat";
 import { compareAddresses } from "@/util/helper";
 import ResearcherReportDetails from "../component/resercher-report-details";
 import ValidatorReportEditor from "../component/validator-report-editor";
+import { useFetchProjectDetails } from "@/hook/fetch-requests";
 
 export default function Page() {
   const { address } = useAccount();
@@ -57,7 +58,7 @@ export default function Page() {
   };
 
   const projectDetails = useCompleteProjectDetails(1);
-  console.log(projectDetails);
+  let data = useFetchProjectDetails(id ? +id : 0);
   // useEffect(() => {
   //   if (!platformValidators) return;
   //   const checker = platformValidators?.filter((data) =>
@@ -74,9 +75,6 @@ export default function Page() {
         validator_paid: project.validator_paid,
         researchers_paid: project.researchers_paid,
         repository_url: project.repository_url,
-        smart_contract_address: `https://sepolia.voyager.online/contract/0x0${project[
-          "smart_contract_address"
-        ].toString(16)}`,
         name: project.name,
         id: +project.id.toString(),
         description: project.description,
@@ -122,7 +120,6 @@ export default function Page() {
   function validatorHandler() {
     setOpenValidatorRepor((prev) => !prev);
   }
-  console.log(reports, "report");
   const viewer = asignedValidator?.validator_address == address || hasReport;
   return (
     <div className="grid gap-3">
@@ -140,10 +137,19 @@ export default function Page() {
         </button>
         <Description
           projectOwner={project?.project_owner}
-          projectDetail={projectDetail}
+          projectDetail={data?.data?.project}
           editHandler={handler}
         />
       </div>
+      {viewSection === "resercher-report" && <ResearcherReportEditor />}
+      {viewSection === "view-report" && <ViewReport />}
+      {viewSection === "chat-report" && <Chat />}
+      {reports && (
+        <ResearcherReportDetails
+          reports={reports}
+          researchers={data?.data?.researcher_reports}
+        />
+      )}
       {!hasReport && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
           <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
@@ -224,10 +230,6 @@ export default function Page() {
           </div>
         </div>
       )}
-      {viewSection === "resercher-report" && <ResearcherReportEditor />}
-      {viewSection === "view-report" && <ViewReport />}
-      {viewSection === "chat-report" && <Chat />}
-      {reports && <ResearcherReportDetails reports={reports} />}
     </div>
   );
 }
