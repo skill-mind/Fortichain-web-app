@@ -1,9 +1,9 @@
+import { AssignedValidator, ProjectData } from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
 
-type ProjectDetailsResponse = { data: any } | null;
-
+const server = "http://127.0.0.1:3001/api";
 export function useFetchProjectDetails(id: number) {
-  const [data, setData] = useState<ProjectDetailsResponse>(null);
+  const [data, setData] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -14,9 +14,7 @@ export function useFetchProjectDetails(id: number) {
 
     async function fetchData() {
       try {
-        const response = await fetch(
-          `http://127.0.0.1:3001/api/projects/${id}/complete`
-        );
+        const response = await fetch(`${server}/projects/${id}/complete`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch project details");
@@ -48,7 +46,7 @@ export const resercherReports = async (
   wallet_address: string
 ) => {
   try {
-    const response = await fetch(`http://127.0.0.1:3001/api/reports`, {
+    const response = await fetch(`${server}/reports`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,24 +76,24 @@ export const resercherReports = async (
     console.error("Error uploading project:", error);
   }
 };
-interface AssignedValidator {
-  wallet_address: string;
-  username: string;
-  status: string;
-  reputation: number;
-  // ... other fields
-}
+// interface AssignedValidator {
+//   wallet_address: string;
+//   username: string;
+//   status: string;
+//   reputation: number;
+//   // ... other fields
+// }
 
-interface ProjectData {
-  approved_researchers: any[];
-  assigned_validator: AssignedValidator | null;
-}
+// interface ProjectData {
+//   approved_researchers: any[];
+//   assigned_validator: AssignedValidator | null;
+// }
 
-interface ProjectResponse {
-  status: string;
-  message: string;
-  data: ProjectData;
-}
+// interface ProjectResponse {
+//   status: string;
+//   message: string;
+//   data: ProjectData;
+// }
 export const validatorValidation = async (
   category_confirmation: string,
   reason: string,
@@ -105,23 +103,20 @@ export const validatorValidation = async (
   validator_wallet_address: string
 ) => {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:3001/api/reports/${report_id}/validate`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await fetch(`${server}/reports/${report_id}/validate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-        body: JSON.stringify({
-          category_confirmation: category_confirmation,
-          reason: reason,
-          severity_level_confirmation: severity_level_confirmation,
-          status: status,
-          validator_wallet_address: validator_wallet_address,
-        }),
-      }
-    );
+      body: JSON.stringify({
+        category_confirmation: category_confirmation,
+        reason: reason,
+        severity_level_confirmation: severity_level_confirmation,
+        status: status,
+        validator_wallet_address: validator_wallet_address,
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text(); // Capture response body
@@ -156,9 +151,7 @@ export function useCheckWalletInValidators(
       setError(null);
 
       // Fetch validators list
-      const validatorsResponse = await fetch(
-        "http://127.0.0.1:3001/api/validators"
-      );
+      const validatorsResponse = await fetch(`${server}/validators`);
       if (!validatorsResponse.ok) {
         throw new Error("Failed to fetch validators");
       }
@@ -166,19 +159,19 @@ export function useCheckWalletInValidators(
 
       // Check if wallet is in validators list
       const isFound = validatorsData.data.some(
-        (validator: any) =>
+        (validator: AssignedValidator) =>
           validator.wallet_address.toLowerCase() === walletAddress.toLowerCase()
       );
       setIsIncluded(isFound);
 
       // Fetch project details
       const projectResponse = await fetch(
-        `http://127.0.0.1:3001/api/projects/${projectId}/complete`
+        `${server}/projects/${projectId}/complete`
       );
       if (!projectResponse.ok) {
         throw new Error("Failed to fetch project details");
       }
-      const projectData: ProjectResponse = await projectResponse.json();
+      const projectData: ProjectData = await projectResponse.json();
 
       // Check if wallet is the assigned validator for this project
       const assigned = projectData.data.assigned_validator;
@@ -191,9 +184,9 @@ export function useCheckWalletInValidators(
       } else {
         setIsAssignedValidator(false);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error checking wallet:", err);
-      setError(err.message || "Failed to check wallet");
+      // setError(err.message || "Failed to check wallet");
       setIsIncluded(false);
       setIsAssignedValidator(false);
       setAssignedValidator(null);
@@ -220,26 +213,23 @@ export function useCheckWalletInValidators(
 
 export const voteReport = async (
   report_id: string,
-  agrees_with_validation: boolean,
+  is_valid: boolean,
   reason: string,
   voter_wallet_address: string
 ) => {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:3001/api/reports/${report_id}/vote`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await fetch(`${server}/reports/${report_id}/vote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-        body: JSON.stringify({
-          agrees_with_validation: agrees_with_validation,
-          reason: reason,
-          voter_wallet_address: voter_wallet_address,
-        }),
-      }
-    );
+      body: JSON.stringify({
+        is_valid: is_valid,
+        reason: reason,
+        voter_wallet_address: voter_wallet_address,
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text(); // Capture response body

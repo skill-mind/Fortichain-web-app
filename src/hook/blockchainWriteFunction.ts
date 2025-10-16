@@ -70,10 +70,8 @@ export const uploadProjectHandle = async (
     return;
   }
 
-  if (amount == null || amount < minimun_amount) {
-    toast.error(
-      `minimum baounty amount for ${projectType} is ${minimun_amount}`
-    );
+  if (amount == null || amount <= 0) {
+    toast.error(`minimum baounty amount for ${projectType} is 1 STRK`);
     return;
   }
   if (!priority) {
@@ -95,7 +93,7 @@ export const uploadProjectHandle = async (
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
-          amount: cairo.uint256(10),
+          amount: cairo.uint256(formData.amount),
         }),
       };
       const approveCall = {
@@ -252,9 +250,9 @@ export const writeReport = async (
       data.recommendation &&
       data.description
     ) {
-      let description = JSON.stringify(data.description);
-      let risk = JSON.stringify(data.potential_risk);
-      let recommendation = JSON.stringify(data.recommendation);
+      const description = JSON.stringify(data.description);
+      const risk = JSON.stringify(data.potential_risk);
+      const recommendation = JSON.stringify(data.recommendation);
 
       const Call = {
         contractAddress: FORTICHAINADDRESS,
@@ -329,7 +327,7 @@ export const voteOnValidation = async (
     setIsSubmitting(true);
     if (account != undefined) {
       //@ts-expect-error parmas can be undefined
-      let voteReason = JSON.stringify(reason?.getJSON());
+      const voteReason = JSON.stringify(reason?.getJSON());
 
       // const Call = {
       //   contractAddress: FORTICHAINADDRESS,

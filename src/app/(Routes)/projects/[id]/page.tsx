@@ -26,6 +26,7 @@ import { compareAddresses } from "@/util/helper";
 import ResearcherReportDetails from "../component/resercher-report-details";
 import ValidatorReportEditor from "../component/validator-report-editor";
 import { useFetchProjectDetails } from "@/hook/fetch-requests";
+import ComingSoon from "@/components/coming-soon";
 
 export default function Page() {
   const { address } = useAccount();
@@ -58,7 +59,9 @@ export default function Page() {
   };
 
   const projectDetails = useCompleteProjectDetails(1);
-  let data = useFetchProjectDetails(id ? +id : 0);
+  const data = useFetchProjectDetails(id ? +id : 0);
+  const hasVotes = (data?.data?.validation_votes?.length ?? 0) > 0;
+
   // useEffect(() => {
   //   if (!platformValidators) return;
   //   const checker = platformValidators?.filter((data) =>
@@ -135,19 +138,25 @@ export default function Page() {
           <ArrowLeftIcon className="w-5 h-5" />
           <span className="">Back to Groups</span>
         </button>
-        <Description
-          projectOwner={project?.project_owner}
-          projectDetail={data?.data?.project}
-          editHandler={handler}
-        />
+        {data?.data?.project && (
+          <Description
+            projectOwner={project?.project_owner}
+            projectDetail={data?.data?.project}
+            editHandler={handler}
+            hasVote={hasVotes}
+          />
+        )}
       </div>
       {viewSection === "resercher-report" && <ResearcherReportEditor />}
-      {viewSection === "view-report" && <ViewReport />}
-      {viewSection === "chat-report" && <Chat />}
-      {reports && (
+      {viewSection === "view-report" && <ComingSoon />}
+      {viewSection === "chat-report" && <ComingSoon />}
+      {reports && data?.data?.project && (
         <ResearcherReportDetails
           reports={reports}
           researchers={data?.data?.researcher_reports}
+          validatedReport={data?.data?.validator_validations}
+          votes={data?.data?.validation_votes}
+          project={data?.data?.project}
         />
       )}
       {!hasReport && reporterChecker && (

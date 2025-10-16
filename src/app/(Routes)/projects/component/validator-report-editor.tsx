@@ -107,8 +107,8 @@ export default function ValidatorReportEditor({
               <SelectValue placeholder="Severity level confirmation" />
             </SelectTrigger>
             <SelectContent className="bg-main-bg text-white-text">
-              <SelectItem value="ALL">ALL</SelectItem>
               <SelectItem value="High">High</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
               <SelectItem value="Low">Low</SelectItem>
             </SelectContent>
           </Select>

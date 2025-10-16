@@ -73,7 +73,7 @@ export default function ValidatorReportModal({
                    bg-gradient-to-r group-hover:bg-[#1C1C1C]
               flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
             >
-              Submit
+              {isSubmitting ? "Submitting...." : "Submit"}
             </span>
           </button>
         </div>

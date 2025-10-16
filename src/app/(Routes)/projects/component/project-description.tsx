@@ -1,4 +1,5 @@
-import { epocTime, Project } from "@/hook/useBlockchain";
+"use client";
+import { epocTime } from "@/hook/useBlockchain";
 import { ArrowGray, GithubIcon } from "@/icons/github";
 import { useAccount } from "@starknet-react/core";
 import { FileCode, FileMinus } from "lucide-react";
@@ -6,17 +7,26 @@ import Image from "next/image";
 import Link from "next/link";
 import avatar from "../../../../../public/Ellipse 1.svg";
 import { ONE_STK } from "@/contract/address";
+import { useState } from "react";
+import VoteTableModal from "@/components/modals/vote-table-modal";
+import { Project } from "@/util/types";
 export default function Description({
   projectDetail,
   projectOwner,
   editHandler,
+  hasVote,
 }: {
   projectOwner: string;
-  projectDetail: Project | null | undefined;
+  projectDetail: Project;
   editHandler: () => void;
+  hasVote: boolean;
 }) {
   const { address } = useAccount();
-  const amount = projectDetail?.amount ? projectDetail?.amount / ONE_STK : 0;
+  const amount = +projectDetail?.total_amount
+    ? +projectDetail?.total_amount / ONE_STK
+    : 0;
+  const [viewVote, setVieVote] = useState(false);
+
   return (
     <>
       <div className="md:grid flex flex-col gap-y-3 bg-dark-gray border border-dark-border-gray rounded-[8px] h-fit px-6 py-3 w-full">
@@ -83,15 +93,6 @@ export default function Description({
               <span>GitHub Repo</span>
               <ArrowGray />
             </Link>
-            {/* <Link
-              href={`${projectDetail?.smart_contract_address}`}
-              target="_blank"
-              className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
-            >
-              <FileCode className="text-gray-text w-5" />
-              <span>Contract Address</span>
-              <ArrowGray />
-            </Link> */}
             <Link
               href="#"
               // target="_blank"
@@ -109,7 +110,24 @@ export default function Description({
             Rewards would be paid on successful completion by validator
           </p>
         </div>
+
+        {hasVote && (
+          <div className="mt-8 grid gap-2">
+            <h3 className="text-gray-text">View Validators Voting</h3>
+            <button
+              className="w-[200px] text-center bg-dark-border-gray py-3 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
+              onClick={() => {
+                setVieVote((prev) => !prev);
+              }}
+            >
+              <span className="mx-auto">View</span>
+            </button>
+          </div>
+        )}
       </div>
+      {viewVote && (
+        <VoteTableModal handler={() => setVieVote((prev) => !prev)} />
+      )}
       {/* <ProjectReviewCard report={selectedProject} type="researcher" /> */}
       {/* <ProjectReviewCard report={selectedProject} type="validator" /> */}
     </>
