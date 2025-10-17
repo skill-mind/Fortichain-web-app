@@ -1,10 +1,16 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Table from "./component/table";
 
 export default function Page() {
-  const [type, setType] = useState("researcher")
- 
+  const [type, setType] = useState("researcher");
+  if (true) {
+    return (
+      <div className=" w-full flex h-screen justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
+        <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">Coming Soon</h2>
+      </div>
+    );
+  }
   return (
     <section>
       <div className="bg-dark-gray rounded-full p-1 w-fit mb-8 text-base">

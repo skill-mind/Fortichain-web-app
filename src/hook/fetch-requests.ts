@@ -1,9 +1,10 @@
 import { AssignedValidator, ProjectData } from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
+import { compareAddresses } from "./blockchainWriteFunction";
 
 // const server = "http://127.0.0.1:3001/api";
 const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
-export function useFetchProjectDetails(id: number) {
+export function useFetchProjectDetails(id: number, viewSection: string) {
   const [data, setData] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -31,7 +32,7 @@ export function useFetchProjectDetails(id: number) {
     }
 
     fetchData();
-  }, [id]); // Only re-run when id changes
+  }, [id, viewSection]);
 
   return { data: data?.data, loading, error };
 }
@@ -159,9 +160,11 @@ export function useCheckWalletInValidators(
       const validatorsData = await validatorsResponse.json();
 
       // Check if wallet is in validators list
-      const isFound = validatorsData.data.some(
-        (validator: AssignedValidator) =>
-          validator.wallet_address.toLowerCase() === walletAddress.toLowerCase()
+      const isFound = validatorsData.data.some((validator: AssignedValidator) =>
+        compareAddresses(
+          validator.wallet_address.toLowerCase(),
+          walletAddress.toLowerCase()
+        )
       );
       setIsIncluded(isFound);
 
@@ -177,10 +180,13 @@ export function useCheckWalletInValidators(
       // Check if wallet is the assigned validator for this project
       const assigned = projectData.data.assigned_validator;
       setAssignedValidator(assigned);
-
+      console.log("isAss", assigned && assigned.wallet_address);
       if (assigned && assigned.wallet_address) {
-        const isAssigned =
-          assigned.wallet_address.toLowerCase() === walletAddress.toLowerCase();
+        const isAssigned = compareAddresses(
+          assigned.wallet_address.toLowerCase(),
+          walletAddress.toLowerCase()
+        );
+        console.log("is_list", isAssigned);
         setIsAssignedValidator(isAssigned);
       } else {
         setIsAssignedValidator(false);

@@ -20,8 +20,7 @@ export default function ProjectResearcherLauncher() {
   const { setter } = useContext(Router);
   const { address, isConnected, account } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formsection, setFormSection] = useState(1);
   const { connect, connectors } = useConnect();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
@@ -59,7 +58,13 @@ export default function ProjectResearcherLauncher() {
         return { ...prev, isComplete: true };
       });
     }
-  }, [formsection]);
+    if (isSuccess) {
+      setter((prev) => {
+        return { ...prev, isComplete: true };
+      });
+      redirect("/researcher");
+    }
+  }, [formsection, isSuccess]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -68,8 +73,7 @@ export default function ProjectResearcherLauncher() {
       account,
       setIsSubmitting,
       formData,
-      setIsOpen,
-      setIsError,
+      setIsSuccess,
       setter,
       redirect
     );

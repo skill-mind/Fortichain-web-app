@@ -44,7 +44,7 @@ export default function ResearcherReportDetails({
     [address ?? ""]
   );
   const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
-
+  console.log(showReport, "show report");
   function validatorHandler(type: string | null) {
     setOpenValidatorRepor((prev) => !prev);
     setVoteType(type);
@@ -75,7 +75,7 @@ export default function ResearcherReportDetails({
         const reportValidationInfo = validatedReport.find((report) => {
           return report.report_id === data.id;
         });
-
+        // console.log(data.researcher_id);
         const reportValidated = validatedReport.some(
           (report) => report.report_id == data.id
         );
@@ -107,7 +107,6 @@ export default function ResearcherReportDetails({
               "Medium".toLocaleUpperCase()
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
-        console.log(data);
         return (
           <div key={id} className="grid gap-2">
             <div className="bg-dark-gray p-6 rounded-[8px] border border-dark-border-gray gap-3 grid">
@@ -179,6 +178,7 @@ export default function ResearcherReportDetails({
                     handler={validatorHandler}
                     voteType={voteType}
                     researcherId={data.id}
+                    setShowReport={setShowReport}
                   />
                 )}
                 {!voteReport && !isAssignedValidator && isIncluded && (
@@ -310,7 +310,7 @@ export default function ResearcherReportDetails({
                           {reportValidationInfo?.validation_status} Report
                         </span>
                       </div>
-                      <div className="flex justify-between items-center">
+                      {/* <div className="flex justify-between items-center">
                         <div className="flex gap-1 items-center ">
                           <span className="text-gray-text ">Audited:</span>
                           <span className="py-1 px-3 bg-dark-gray-pop rounded-full">
@@ -329,12 +329,16 @@ export default function ResearcherReportDetails({
                             Yunus
                           </span>
                         </div>
-                      </div>
+                      </div> */}
                     </section>
                   )}
                 </>
                 {validatorView == `audit-${id}` && (
-                  <ValidatorReportEditor researcherId={+data.id} />
+                  <ValidatorReportEditor
+                    researcherId={data.id}
+                    valdatorViewHandler={valdatorViewHandler}
+                    setShowReport={setShowReport}
+                  />
                 )}
                 {validatorView == `edit-${id}` && <ComingSoon />}
                 {validatorView == `chat-${id}` && <ComingSoon />}

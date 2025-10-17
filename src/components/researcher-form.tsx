@@ -92,10 +92,13 @@ export function ResearcherFormNavigationButtons({
         <motion.button
           className={`min-w-72 min-h-11 p-0.5 group
             hover:from-sky-blue-border hover:to-sky-blue-border
-            bg-gradient-to-r group text-base
-            rounded-full group to-sky-blue-border from-sky-blue-border`}
+            bg-gradient-to-r group text-base disabled:cursor-not-allowed
+            rounded-full group to-sky-blue-border from-sky-blue-border ${
+              isSubmitting ? "cursor-not-allowed" : ""
+            } `}
           type="submit"
           onClick={onSubmit}
+          disabled={isSubmitting}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           animate={{
@@ -104,12 +107,12 @@ export function ResearcherFormNavigationButtons({
         >
           <span
             className={`px-6 py-3 h-60
-              group-hover:from-sky-from group-hover:to-sky-to
+              group-hover:from-sky-from group-disabled:cursor-not-allowed  group-hover:to-sky-to
               group-hover:bg-gradient-to-r
               flex items-center gap-2.5 p-2 justify-center cursor-pointer rounded-full w-full
               from-sky-from to-sky-to bg-gradient-to-r`}
           >
-            {isSubmitting ? "submitting...." : "Proceed to dashboard"}
+            {isSubmitting ? "Creating...." : "Proceed to dashboard"}
           </span>
         </motion.button>
       )}

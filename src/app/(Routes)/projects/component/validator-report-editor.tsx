@@ -13,12 +13,18 @@ import { useParams } from "next/navigation";
 import { useAccount } from "@starknet-react/core";
 import { validateReport } from "@/hook/blockchainWriteFunction";
 
+export type ValdatorViewHandler = (isSubmitting: string) => void;
+export type SetShowReport = (setShowReport: string) => void;
+
 export default function ValidatorReportEditor({
   researcherId,
+  valdatorViewHandler,
+  setShowReport,
 }: {
-  researcherId: number;
+  researcherId: string;
+  valdatorViewHandler: ValdatorViewHandler;
+  setShowReport: SetShowReport;
 }) {
-  console.log(researcherId);
   const { account, address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
@@ -30,6 +36,7 @@ export default function ValidatorReportEditor({
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
 
   function handleSubmit() {
+    console.log("submit", researcherId);
     if (!researcherId) return;
     const data = {
       id: researcherId,
@@ -41,7 +48,15 @@ export default function ValidatorReportEditor({
     };
     console.log(data);
     if (!id || !address) return;
-    validateReport(account, data, setIsSubmitting, +id, address);
+    validateReport(
+      account,
+      data,
+      setIsSubmitting,
+      +id,
+      address,
+      valdatorViewHandler,
+      setShowReport
+    );
   }
 
   return (

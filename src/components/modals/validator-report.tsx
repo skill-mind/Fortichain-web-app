@@ -4,15 +4,18 @@ import { Editor } from "../editor/editor";
 import { useRef, useState } from "react";
 import { voteOnValidation } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
+import { SetShowReport } from "@/app/(Routes)/projects/component/validator-report-editor";
 
 export default function ValidatorReportModal({
   handler,
   voteType,
   researcherId,
+  setShowReport,
 }: {
   handler: (x: string | null) => void;
   voteType: string | null;
   researcherId: string;
+  setShowReport: SetShowReport;
 }) {
   console.log(researcherId);
   const { address } = useAccount();
@@ -58,7 +61,8 @@ export default function ValidatorReportModal({
                 voteType ?? "",
                 reportRef.current,
                 setIsSubmitting,
-                address
+                address,
+                setShowReport
               );
             }}
             className="min-h-50 p-0.5 group   w-fit          

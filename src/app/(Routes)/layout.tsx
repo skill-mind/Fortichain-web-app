@@ -47,6 +47,7 @@ export default function Layou({
       redirect("/");
     }
   }, [account, isConnected]);
+
   return (
     <>
       <DashboardNavBar routeType={description} routes={location} />

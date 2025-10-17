@@ -29,8 +29,7 @@ export default function ProjectValidatorLauncher() {
   const { setter } = useContext(Router);
   const { address, isConnected, account } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formsection, setFormSection] = useState(1);
   const { connect, connectors } = useConnect();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
@@ -80,7 +79,14 @@ export default function ProjectValidatorLauncher() {
         return { ...prev, isComplete: true };
       });
     }
-  }, [formsection]);
+    if (isSuccess) {
+      setter((prev) => {
+        return { ...prev, isComplete: true };
+      });
+      console.log("redirect");
+      redirect("/validator");
+    }
+  }, [formsection, isSuccess]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,8 +95,7 @@ export default function ProjectValidatorLauncher() {
       account,
       setIsSubmitting,
       formData,
-      setIsOpen,
-      setIsError,
+      setIsSuccess,
       setter,
       redirect
     );

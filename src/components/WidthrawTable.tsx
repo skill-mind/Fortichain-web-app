@@ -1,13 +1,16 @@
 import { withdrawalData } from "@/util/mock-data";
 
 export function WidthrawTable() {
-    return (
-      <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[650px]">
-        <div className="mb-6">
-          <h3>Withdrawal History</h3>
-          <h5 className="text-gray-text">view Total amount withdrawn</h5>
-        </div>
-        <div className="overflow-x-auto scrollbar-hide">
+  return (
+    <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[650px]">
+      <div className="mb-6">
+        <h3>Withdrawal History</h3>
+        <h5 className="text-gray-text">view Total amount withdrawn</h5>
+      </div>
+      <div className=" w-full flex h-1/2 justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
+        <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">Coming Soon</h2>
+      </div>
+      {/* <div className="overflow-x-auto scrollbar-hide">
           <table
             className="w-full min-w-[600px] sticky text-base"
             role="table"
@@ -80,9 +83,7 @@ export function WidthrawTable() {
                     role="gridcell"
                     aria-label={`transfer to ${user.to}`}
                   >
-                    <span className="md:hidden">
-                      {user.to.slice(0, 8)}...
-                    </span>
+                    <span className="md:hidden">{user.to.slice(0, 8)}...</span>
                     <span className="hidden md:inline">{user.to}</span>
                   </td>
                   <td
@@ -111,7 +112,7 @@ export function WidthrawTable() {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-    );
+        </div> */}
+    </div>
+  );
 }
