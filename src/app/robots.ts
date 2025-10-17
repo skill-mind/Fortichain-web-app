@@ -11,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         "/admin/",
         "/fortichain-metrics/",
         "/researcher/",
-        "/projects'",
+        "/projects",
         "/my-reports/",
         "/ranking/",
         "/researcher-profile/",
