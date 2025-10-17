@@ -2,7 +2,7 @@ import { AssignedValidator, ProjectData } from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
 
 // const server = "http://127.0.0.1:3001/api";
-const server = "https://fortichain-api.onrender.com/api";
+const server = process.env.NEXT_PUBLIC_FORTICHAIN_API;
 export function useFetchProjectDetails(id: number) {
   const [data, setData] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
