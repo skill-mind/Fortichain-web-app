@@ -23,9 +23,9 @@ export default function ProjectReviewCard({
         <div className="flex items-center gap-3">
           <Image src={avatar} alt="pririty type" />
           <div>
-            <h3>{report.researcher?.name}</h3>
+            {/* <h3>{report.researcher?.name}</h3> */}
             <h5 className="text-gray-text text-[12px] break-all">
-              {report.researcher?.address}
+              {/* {report.researcher?.address} */}
             </h5>
           </div>
         </div>
@@ -35,7 +35,7 @@ export default function ProjectReviewCard({
               Rank
             </span>
             <span className="text-[12px]">
-              {report.researcher?.validationsMade}
+              {/* {report.researcher?.validationsMade} */}
             </span>
           </div>
           <div className="bg-dark-gray-pop rounded-full w-fit py-2 px-3 flex gap-1 items-center">
@@ -43,7 +43,7 @@ export default function ProjectReviewCard({
               {type === "researcher" ? "Audits Made" : "Validations Made"}
             </span>
             <span className="text-[12px]">
-              {report.researcher?.totalAudits}
+              {/* {report.researcher?.totalAudits} */}
             </span>
           </div>
           <div className="bg-dark-gray-pop rounded-full w-fit py-2 px-3 flex gap-1 items-center">
@@ -51,7 +51,7 @@ export default function ProjectReviewCard({
               Reputation
             </span>
             <span className="text-[12px]">
-              {report.researcher?.reputation}%
+              {/* {report.researcher?.reputation}% */}
             </span>
           </div>
         </div>

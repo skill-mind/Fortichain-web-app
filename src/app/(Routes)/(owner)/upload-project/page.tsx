@@ -22,7 +22,6 @@ export default function Page() {
     projectType: "",
     deadline: null,
     repoUrl: "",
-    contractAddress: "",
     amount: null,
     priority: "",
   });
@@ -103,7 +102,6 @@ export default function Page() {
                 if (formsection > 1) {
                   setFormSection((prev) => prev - 1);
                 }
-                console.log(formData);
               }}
             >
               <span
@@ -131,7 +129,6 @@ export default function Page() {
                 setFormSection((prev) => prev + 1);
               }
               if (formsection === 3) {
-                console.log("kk");
                 handleSubmit();
               }
             }}

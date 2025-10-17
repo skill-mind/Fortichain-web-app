@@ -14,7 +14,6 @@ export default function Researcher() {
   function handler() {
     setIsOpen((prev) => !prev);
   }
-  console.log(validators);
   if (validators == undefined) {
     return <Loader />;
   }

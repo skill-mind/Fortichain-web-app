@@ -1,30 +1,45 @@
+"use client";
 import { X } from "lucide-react";
 import { Editor } from "../editor/editor";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { voteOnValidation } from "@/hook/blockchainWriteFunction";
+import { useAccount } from "@starknet-react/core";
 
 export default function ValidatorReportModal({
   handler,
+  voteType,
+  researcherId,
 }: {
-  handler: () => void;
+  handler: (x: string | null) => void;
+  voteType: string | null;
+  researcherId: string;
 }) {
+  console.log(researcherId);
+  const { address } = useAccount();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { account } = useAccount();
   const reportRef = useRef<HTMLDivElement>(null);
   return (
     <>
       <div
         className="bg-main-bg/75 fixed top-0 h-screen w-full z-[300]"
-        onClick={handler}
+        onClick={() => {
+          handler(null);
+        }}
       ></div>
       <div className="p-6  w-fit bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-40 left-1/2 -translate-x-[50%] z-[400]">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-18">Invalid Report</h3>
+            <h3 className="text-18">{voteType} Report</h3>
             <h5 className="text-gray-text text-base">
               State why the report is invalid
             </h5>
           </div>
           <button
             type="button"
-            onClick={handler}
+            onClick={() => {
+              handler(null);
+            }}
             className="bg-dark-gray-pop p-1.5 rounded-full"
           >
             <X />
@@ -35,6 +50,17 @@ export default function ValidatorReportModal({
         </div>
         <div>
           <button
+            onClick={() => {
+              if (!address) return;
+              voteOnValidation(
+                account,
+                researcherId,
+                voteType ?? "",
+                reportRef.current,
+                setIsSubmitting,
+                address
+              );
+            }}
             className="min-h-50 p-0.5 group   w-fit          
               from-sky-blue-border to-sky-blue-border
               bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
@@ -47,7 +73,7 @@ export default function ValidatorReportModal({
                    bg-gradient-to-r group-hover:bg-[#1C1C1C]
               flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
             >
-              Submit
+              {isSubmitting ? "Submitting...." : "Submit"}
             </span>
           </button>
         </div>

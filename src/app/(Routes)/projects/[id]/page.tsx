@@ -5,6 +5,7 @@ import { useAccount } from "@starknet-react/core";
 import {
   epocTime,
   Project,
+  useCompleteProjectDetails,
   useContractFetch,
   useProjectValidator,
   useReportsOnProject,
@@ -23,6 +24,9 @@ import ViewReport from "../component/view-report";
 import Chat from "../component/chat";
 import { compareAddresses } from "@/util/helper";
 import ResearcherReportDetails from "../component/resercher-report-details";
+import ValidatorReportEditor from "../component/validator-report-editor";
+import { useFetchProjectDetails } from "@/hook/fetch-requests";
+import ComingSoon from "@/components/coming-soon";
 
 export default function Page() {
   const { address } = useAccount();
@@ -54,6 +58,10 @@ export default function Page() {
     router.back();
   };
 
+  const projectDetails = useCompleteProjectDetails(1);
+  const data = useFetchProjectDetails(id ? +id : 0);
+  const hasVotes = (data?.data?.validation_votes?.length ?? 0) > 0;
+
   // useEffect(() => {
   //   if (!platformValidators) return;
   //   const checker = platformValidators?.filter((data) =>
@@ -70,9 +78,6 @@ export default function Page() {
         validator_paid: project.validator_paid,
         researchers_paid: project.researchers_paid,
         repository_url: project.repository_url,
-        smart_contract_address: `https://sepolia.voyager.online/contract/0x0${project[
-          "smart_contract_address"
-        ].toString(16)}`,
         name: project.name,
         id: +project.id.toString(),
         description: project.description,
@@ -114,6 +119,7 @@ export default function Page() {
   function viewHandler(section: string) {
     setViewSection(section);
   }
+
   function validatorHandler() {
     setOpenValidatorRepor((prev) => !prev);
   }
@@ -132,12 +138,27 @@ export default function Page() {
           <ArrowLeftIcon className="w-5 h-5" />
           <span className="">Back to Groups</span>
         </button>
-        <Description
-          projectOwner={project?.project_owner}
-          projectDetail={projectDetail}
-          editHandler={handler}
-        />
+        {data?.data?.project && (
+          <Description
+            projectOwner={project?.project_owner}
+            projectDetail={data?.data?.project}
+            editHandler={handler}
+            hasVote={hasVotes}
+          />
+        )}
       </div>
+      {viewSection === "resercher-report" && <ResearcherReportEditor />}
+      {viewSection === "view-report" && <ComingSoon />}
+      {viewSection === "chat-report" && <ComingSoon />}
+      {reports && data?.data?.project && (
+        <ResearcherReportDetails
+          reports={reports}
+          researchers={data?.data?.researcher_reports}
+          validatedReport={data?.data?.validator_validations}
+          votes={data?.data?.validation_votes}
+          project={data?.data?.project}
+        />
+      )}
       {!hasReport && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm xl:grid xl:grid-cols-3">
           <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
@@ -217,15 +238,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-      )}
-      {viewSection === "resercher-report" && <ResearcherReportEditor />}
-      {viewSection === "view-report" && <ViewReport />}
-      {viewSection === "chat-report" && <Chat />}
-      {viewer && reports && (
-        <ResearcherReportDetails
-          reports={reports}
-          isValidator={asignedValidator?.validator_address == address}
-        />
       )}
     </div>
   );

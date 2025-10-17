@@ -49,7 +49,6 @@ export interface Project {
   project_type: string;
   repository_url: string;
   researchers_paid: boolean; //
-  smart_contract_address: { toString: (radix: number) => string };
   updated_at: string;
   validator_paid: boolean; //
   amount: number;
@@ -72,6 +71,26 @@ export interface Report {
   created_at: string;
   updated_at: string;
 }
+export interface validatorType {
+  id: number;
+  validator_data_uri: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  kyc_uri: string;
+  kyc_approved: string;
+  username: string;
+  github_profile_url: string;
+  is_open_for_work: boolean;
+  validator_address: { toString: (radix: number) => string };
+  approval_rate: number;
+  available_amount_to_widthdraw: number;
+  number_project_validated: number;
+  reputation: number;
+  total_amount_withdrawn: number;
+  total_bounty_won: number;
+  passwork: string[];
+}
 
 export interface ProjectOwner {
   address: { toString: (radix: number) => string };
@@ -81,6 +100,181 @@ export interface ProjectOwner {
   active_researchers: number;
 }
 
+export interface ValidatorValidation {
+  report_id: number;
+  validator: { toString: (radix: number) => string };
+  is_valid: boolean;
+  reason: string;
+  validated_at: number;
+}
+export interface ValidatorReport {
+  id: number;
+  researcher_report_id: number;
+  validator_address: { toString: (radix: number) => string };
+  project_id: number;
+  title: string;
+  category: string;
+  severity_level: string;
+  description: string;
+  potential_risk: string;
+  recommendation: string;
+  is_valid: boolean;
+  validation_reason: string;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface ValidatorVoteOnValidation {
+  report_id: number;
+  voter: { toString: (radix: number) => string };
+  agrees_with_validation: boolean;
+  reason: string;
+  voted_at: number;
+}
+
+export interface ProjectDetails {
+  project: Project;
+  researcher: Report[];
+  validator_reports: ValidatorReport[];
+  assigned_validator: validatorType;
+  validator_validations: ValidatorValidation[];
+  validation_votes: ValidatorVoteOnValidation[];
+}
+
+export function useCompleteProjectDetails(id: number) {
+  const [projectsData, setProjectsData] = useState<
+    ProjectDetails | undefined
+  >();
+
+  const { readData: data } = useContractFetch(
+    FORTICHAINABI,
+    "get_complete_project_details",
+    [id]
+  );
+
+  useEffect(() => {
+    if (!data || !id) return;
+
+    const projectDetails: ProjectDetails = {
+      project: {
+        validator_paid: data.project.validator_paid,
+        researchers_paid: data.project.researchers_paid,
+        repository_url: data.project.repository_url,
+        name: data.project.name,
+        id: +data.project.id?.toString(),
+        description: data.project.description,
+        is_active: data.project.is_active,
+        is_completed: data.project.is_completed,
+        created_at: epocTime(data.project.created_at?.toString()),
+        deadline: epocTime(data.project.deadline?.toString()),
+        priority: shortString.decodeShortString(data.project.priority),
+        project_type: data.project.project_type,
+        updated_at: epocTime(data.project.deadline?.toString()),
+        project_owner: `0x0${data.project["project_owner"].toString(16)}`,
+        amount: +data.project.amount?.toString(),
+        validator_assigned: data.project.validator_assigned,
+      },
+
+      researcher:
+        data?.researcher_reports?.map((report: Report) => {
+          return {
+            title: report.title,
+            category: report.category,
+            validation_status: report.validation_status,
+            researcher_address: `0x0${report["researcher_address"].toString(
+              16
+            )}`,
+            severity_level: report.severity_level,
+            id: +report.id?.toString(),
+            project_id: +report.project_id?.toString(),
+            description: report.description,
+            potential_risk: report.potential_risk,
+            created_at: epocTime(report.created_at?.toString()),
+            validator_report_id: +report.validator_report_id?.toString(),
+            status: shortString.decodeShortString(report.status),
+            recommendation: report.recommendation,
+            updated_at: epocTime(report.updated_at?.toString()),
+          };
+        }) || [],
+
+      assigned_validator: {
+        id: +data.assigned_validator.id?.toString(),
+        validator_data_uri:
+          data.assigned_validator.validator_data_uri?.toString(),
+        created_at: epocTime(data.assigned_validator.created_at?.toString()),
+        updated_at: epocTime(data.assigned_validator.updated_at?.toString()),
+        status: data.assigned_validator.status?.toString(),
+        kyc_uri: data.assigned_validator.kyc_uri?.toString(),
+        kyc_approved: data.assigned_validator.kyc_approved?.toString(),
+        username: data.assigned_validator.username?.toString(),
+        github_profile_url:
+          data.assigned_validator.github_profile_url?.toString(),
+        is_open_for_work: data.assigned_validator.is_open_for_work,
+        validator_address:
+          data.assigned_validator.validator_address?.toString(16),
+        approval_rate: +data.assigned_validator.approval_rate?.toString(),
+        available_amount_to_widthdraw:
+          +data.assigned_validator.available_amount_to_widthdraw?.toString(),
+        number_project_validated:
+          +data.assigned_validator.number_project_validated?.toString(),
+        reputation: +data.assigned_validator.reputation?.toString(),
+        total_amount_withdrawn:
+          +data.assigned_validator.total_amount_withdrawn?.toString(),
+        total_bounty_won: +data.assigned_validator.total_bounty_won?.toString(),
+        passwork: data.assigned_validator.passwork,
+      },
+
+      validation_votes:
+        data.validation_votes?.map((vote: ValidatorVoteOnValidation) => {
+          return {
+            report_id: +vote.report_id?.toString(),
+            voter: `0x0${vote["voter"]?.toString(16)}`,
+            agrees_with_validation: vote.agrees_with_validation,
+            reason: vote.reason,
+            voted_at: epocTime(vote.voted_at.toString()),
+          };
+        }) || [],
+
+      validator_validations:
+        data.validator_validations?.map((validation: ValidatorValidation) => {
+          return {
+            report_id: +validation.report_id?.toString(),
+            validator_address: `0x0${validation["validator"]?.toString(16)}`,
+            is_valid: validation.is_valid,
+            reason: validation.reason,
+            validated_at: epocTime(validation.validated_at?.toString()),
+          };
+        }) || [],
+
+      validator_reports:
+        data?.validator_reports?.map((validatorReport: ValidatorReport) => {
+          return {
+            id: +validatorReport.id.toString(),
+            researcher_report_id:
+              +validatorReport.researcher_report_id.toString(),
+            validator_address: `0x0${validatorReport[
+              "validator_address"
+            ]?.toString(16)}`,
+            project_id: +validatorReport.project_id.toString(),
+            title: validatorReport.title,
+            category: validatorReport.category,
+            severity_level: validatorReport.severity_level,
+            description: validatorReport.description,
+            potential_risk: validatorReport.potential_risk,
+            recommendation: validatorReport.recommendation,
+            is_valid: validatorReport.is_valid,
+            validation_reason: validatorReport.validation_reason,
+            created_at: epocTime(validatorReport.created_at.toString()),
+            updated_at: epocTime(validatorReport.updated_at.toString()),
+          };
+        }) || [],
+    };
+
+    setProjectsData(projectDetails);
+  }, [data, id]);
+
+  return projectsData;
+}
 export function useProjectOwner(address: string) {
   const [owner, setOwner] = useState<ProjectOwner | undefined>();
   const { readData: ownerData } = useContractFetch(
@@ -118,9 +312,6 @@ export function useUserProject(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -157,9 +348,6 @@ export function useAllProjects() {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -196,9 +384,6 @@ export function UseGetAssignableProjects() {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -218,26 +403,6 @@ export function UseGetAssignableProjects() {
   }, [projectList]);
 
   return projectsData;
-}
-export interface validatorType {
-  id: number;
-  validator_data_uri: string;
-  created_at: string;
-  updated_at: string;
-  status: string;
-  kyc_uri: string;
-  kyc_approved: string;
-  username: string;
-  github_profile_url: string;
-  is_open_for_work: boolean;
-  validator_address: { toString: (radix: number) => string };
-  approval_rate: number;
-  available_amount_to_widthdraw: number;
-  number_project_validated: number;
-  reputation: number;
-  total_amount_withdrawn: number;
-  total_bounty_won: number;
-  passwork: string[];
 }
 
 export function useValidators() {
@@ -294,9 +459,6 @@ export function useResearcherProjectsWorkedOn(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -322,7 +484,7 @@ export function useValidatorProjectsWorkedOn(address: string) {
   const [projectsData, setProjectsData] = useState<Project[] | undefined>();
   const { readData: projectList } = useContractFetch(
     FORTICHAINABI,
-    // "get_validator_projects_worked_on",
+    // "",
     "get_assigned_projects_for_validator",
     [address]
   );
@@ -334,9 +496,6 @@ export function useValidatorProjectsWorkedOn(address: string) {
         validator_paid: data.validator_paid,
         researchers_paid: data.researchers_paid,
         repository_url: data.repository_url,
-        smart_contract_address: `0x0${data["smart_contract_address"].toString(
-          16
-        )}`,
         name: data.name,
         id: +data.id.toString(),
         description: data.description,
@@ -366,7 +525,6 @@ export function useReportsOnProject(id: number) {
     "get_pending_reports_for_validation",
     [id]
   );
-  // console.log(reportList);
   useEffect(() => {
     if (!reportList) return; //
     const projectData: Report[] = [];
@@ -390,7 +548,6 @@ export function useReportsOnProject(id: number) {
     });
     setProjectsData(projectData);
   }, [reportList]);
-  console.log(",,,,", projectsData);
   return projectsData;
 }
 export function UseGetUnassignedValidators() {
@@ -602,7 +759,6 @@ export function useProjectValidator(id: number) {
     "get_assigned_project_validator",
     [id]
   );
-  console.log(validatorsData);
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType = {

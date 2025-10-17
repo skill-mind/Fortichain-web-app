@@ -234,7 +234,7 @@ export const Editor = forwardRef((props, ref) => {
       <EditorContent
         editor={editor}
         role="presentation"
-        className="p-6 min-h-48"
+        className="p-6 h-full"
       />
     </EditorContext.Provider>
   );

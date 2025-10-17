@@ -1,5 +1,3 @@
-import type { Project, User, Report, Finding } from "./types";
-
 export interface ProjectCard {
   id: string;
   title: string;

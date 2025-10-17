@@ -182,26 +182,6 @@ export default function SubmitReport({
               }}
             />
           </div>
-          <div className="w-full grid gap-2 ">
-            <label htmlFor="">Contract Address (Optional)</label>
-            <Input
-              onChange={(data) => {
-                const value = data.target.value;
-                setFormData((userData: UploadProjectProps) => {
-                  return {
-                    ...userData,
-                    contractAddress: value,
-                  };
-                });
-              }}
-              value={data.contractAddress}
-              placeholder="0x0ece324ca23...."
-              className="border border-dark-border-gray rounded-full h-14 pl-7 outline:border-blue-ball"
-            />
-            {isSubmitting && data.contractAddress.length <= 66 && (
-              <span>This field is required</span>
-            )}
-          </div>
         </div>
       </div>
     </div>

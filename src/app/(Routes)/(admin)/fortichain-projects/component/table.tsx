@@ -13,8 +13,6 @@ export function ProjectTable({
   setId: SetId;
   progressHandler: () => void;
 }) {
-  console.log(projects);
-
   return (
     <div className="border bg-dark-gray p-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[750px] font-walsheim">
       <div className="overflow-x-auto scrollbar-hide">

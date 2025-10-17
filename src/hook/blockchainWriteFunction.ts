@@ -13,6 +13,11 @@ import {
   PaymasterDetails,
   shortString,
 } from "starknet";
+import {
+  resercherReports,
+  validatorValidation,
+  voteReport,
+} from "./fetch-requests";
 
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
@@ -28,7 +33,6 @@ export const uploadProjectHandle = async (
 ): Promise<void> => {
   const {
     amount,
-    contractAddress,
     deadline,
     description,
     priority,
@@ -66,14 +70,8 @@ export const uploadProjectHandle = async (
     return;
   }
 
-  if (contractAddress.length > 1 && contractAddress.length != 66) {
-    toast.error("input a valid contract address");
-    return;
-  }
-  if (amount == null || amount < minimun_amount) {
-    toast.error(
-      `minimum baounty amount for ${projectType} is ${minimun_amount}`
-    );
+  if (amount == null || amount <= 0) {
+    toast.error(`minimum baounty amount for ${projectType} is 1 STRK`);
     return;
   }
   if (!priority) {
@@ -95,8 +93,7 @@ export const uploadProjectHandle = async (
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
-          smart_contract_address: formData.contractAddress,
-          amount: cairo.uint256(10),
+          amount: cairo.uint256(formData.amount),
         }),
       };
       const approveCall = {
@@ -135,9 +132,6 @@ export const uploadProjectHandle = async (
         result?.transaction_hash as string
       );
       setIsOpen(true);
-      console.log(result);
-
-      console.log(status);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -229,6 +223,7 @@ export const writeReport = async (
     recommendation: string | null | undefined;
     description: string | null | undefined;
   },
+  address: string,
   setIsSubmitting: SetIsSubmitting
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
@@ -249,39 +244,30 @@ export const writeReport = async (
   try {
     // setIsOpen(true);
     setIsSubmitting(true);
-    console.log("hey", data.description);
     if (
       account != undefined &&
       data.potential_risk &&
       data.recommendation &&
       data.description
     ) {
-      console.log("hey");
+      const description = JSON.stringify(data.description);
+      const risk = JSON.stringify(data.potential_risk);
+      const recommendation = JSON.stringify(data.recommendation);
+
       const Call = {
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "write_report",
         calldata: CallData.compile({
           project_id: cairo.uint256(data.id),
-          title: byteArray.byteArrayFromString(data.title),
-          description: byteArray.byteArrayFromString(
-            "smart contracts can interact with user private keys in various ways to facilitate secure transactions, authentication, or asset management. However"
-          ),
-          category: byteArray.byteArrayFromString(data.category),
-          severity_level: byteArray.byteArrayFromString(data.severity_level),
-          potential_risk: byteArray.byteArrayFromString(data.potential_risk),
-          recommendation: byteArray.byteArrayFromString(data.recommendation),
-          // title: byteArray.byteArrayFromString("hello world"),
-          // description: byteArray.byteArrayFromString("sam"),
-          // category: byteArray.byteArrayFromString("kelv"),
-          // severity_level: byteArray.byteArrayFromString("High"),
-          // potential_risk: byteArray.byteArrayFromString("user lose some"),
-          // recommendation: byteArray.byteArrayFromString(
-          //   "no recommendation yet"
-          // ),
+          title: byteArray.byteArrayFromString(""),
+          description: byteArray.byteArrayFromString(""),
+          category: byteArray.byteArrayFromString(""),
+          severity_level: byteArray.byteArrayFromString(""),
+          potential_risk: byteArray.byteArrayFromString(""),
+          recommendation: byteArray.byteArrayFromString(""),
         }),
       };
 
-      console.log(Call);
       const multicallData = [Call];
       const feeDetails: PaymasterDetails = {
         feeMode: {
@@ -304,10 +290,180 @@ export const writeReport = async (
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
+      await resercherReports(
+        data.category,
+        description,
+        risk,
+        data.id,
+        recommendation,
+        data.severity_level,
+        data.title,
+        address
+      );
       // setIsOpen(true);
       console.log(result);
 
       console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const voteOnValidation = async (
+  account: AccountInterface | undefined,
+  report_id: string,
+  voteType: string,
+  reason: HTMLDivElement | null,
+  setIsSubmitting: SetIsSubmitting,
+  address: string
+): Promise<void> => {
+  try {
+    // setIsOpen(true);
+    setIsSubmitting(true);
+    if (account != undefined) {
+      //@ts-expect-error parmas can be undefined
+      const voteReason = JSON.stringify(reason?.getJSON());
+
+      // const Call = {
+      //   contractAddress: FORTICHAINADDRESS,
+      //   entrypoint: "vote_on_validation",
+      //   calldata: CallData.compile({
+      //     report_id: cairo.uint256(report_id),
+      //     agrees_with_validation: voteType === "Invalid" ? false : true,
+      //     reason: byteArray.byteArrayFromString(""),
+      //   }),
+      // };
+
+      // const multicallData = [Call];
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      // //   [...multicallData],
+      // //   feeDetails
+      // // );
+
+      // // const result = await account?.executePaymasterTransaction(
+      // //   [...multicallData],
+      // //   feeDetails,
+      // //   feeEstimation?.suggested_max_fee_in_gas_token
+      // // );
+      // const result = await account.execute(multicallData);
+
+      // const status = await myProvider.waitForTransaction(
+      //   result?.transaction_hash as string
+      // );
+      await voteReport(
+        report_id,
+        voteType === "Invalid" ? false : true,
+        voteReason,
+        address
+      );
+      // setIsOpen(true);
+      // console.log(result);
+
+      // console.log(status);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // setIsError(true);
+    toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const validateReport = async (
+  account: AccountInterface | undefined,
+  data: {
+    id: number;
+    status: string;
+    severity_level: string;
+    audit_report: string;
+    description: string | null | undefined;
+  },
+  setIsSubmitting: SetIsSubmitting,
+  project_id: number,
+  address: string
+  // formData: EditProjectProps,
+  // setIsOpen: SetIsOpen,
+  // handler: () => void,
+  // setIsError: SetIsError
+): Promise<void> => {
+  // const { projectId, description, repoUrl } = formData;
+
+  // if (!description) {
+  //   toast.error("project description is required!");
+  //   return;
+  // }
+  // if (!repoUrl) {
+  //   toast.error("project  is required!");
+  //   return;
+  // }
+  // handler();
+  try {
+    // setIsOpen(true);
+    setIsSubmitting(true);
+    if (account != undefined && data.description) {
+      const reason = JSON.stringify(data.description);
+      // let add = `0x${normalizeAddress(address).slice(1)}`;
+      // console.log(add);
+      // const Call = {
+      //   contractAddress: FORTICHAINADDRESS,
+      //   entrypoint: "validate_report",
+      //   calldata: CallData.compile({
+      //     validator_address: add,
+      //     project_id: cairo.uint256(project_id),
+      //     status: byteArray.byteArrayFromString(""),
+      //     severity_level_confirmation: byteArray.byteArrayFromString(""),
+      //     category_confirmation: byteArray.byteArrayFromString(""),
+      //     reason: byteArray.byteArrayFromString(""),
+      //   }),
+      // };
+
+      // const multicallData = [Call];
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
+
+      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+      // //   [...multicallData],
+      // //   feeDetails
+      // // );
+
+      // // const result = await account?.executePaymasterTransaction(
+      // //   [...multicallData],
+      // //   feeDetails,
+      // //   feeEstimation?.suggested_max_fee_in_gas_token
+      // // );
+      // const result = await account.execute(multicallData);
+
+      // const status = await myProvider.waitForTransaction(
+      //   result?.transaction_hash as string
+      // );
+      console.log(data);
+      await validatorValidation(
+        data.status,
+        reason,
+        data.severity_level,
+        data.audit_report,
+        data.id.toString(),
+        address
+      );
+      // setIsOpen(true);
+      // console.log(result);
+
+      // console.log(status);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -345,7 +501,6 @@ export const validatorWithdrawal = async (
     // setIsOpen(true);
     // setIsSubmitting(true);
     if (account != undefined) {
-      console.log("hey");
       const Call = {
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "withdraw_validator_bounty",
@@ -354,8 +509,6 @@ export const validatorWithdrawal = async (
           amount: cairo.uint256(data.amount),
         }),
       };
-
-      console.log(Call);
       const multicallData = [Call];
       const feeDetails: PaymasterDetails = {
         feeMode: {
@@ -390,6 +543,21 @@ export const validatorWithdrawal = async (
   } finally {
     // setIsSubmitting(false);
   }
+};
+
+const normalizeAddress = (address: string): string => {
+  // Remove 0x prefix if present
+  if (address.length === 66) {
+    // console.log("man-2",address.slice(2))
+    return `${address.slice(2)}`;
+  }
+  const cleanAddress = address.startsWith("0x") ? address.slice(2) : address;
+
+  // Pad with zeros to make it 64 characters (standard length)
+  const paddedAddress = cleanAddress.padStart(64, "0");
+  // console.log("man-",paddedAddress);
+  // Add back 0x prefix
+  return `${paddedAddress.slice()}`;
 };
 
 export const create_validator_profile = async (
@@ -430,13 +598,12 @@ export const create_validator_profile = async (
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "create_validator",
         calldata: CallData.compile({
-          validator_address: address,
+          // validator_address: address,
           username: byteArray.byteArrayFromString(userName),
           github_profile_url: byteArray.byteArrayFromString(githubLink),
           pass_work: pass,
         }),
       };
-      console.log(Call);
       const multicallData = [Call];
       // const feeDetails: PaymasterDetails = {
       //   feeMode: {
@@ -510,7 +677,6 @@ export const create_resercher_profile = async (
           username: byteArray.byteArrayFromString(userName),
         }),
       };
-      console.log(Call);
       const multicallData = [Call];
       // const feeDetails: PaymasterDetails = {
       //   feeMode: {
@@ -560,8 +726,6 @@ export const assign_validator = async (
   // handler: () => void,
   setIsError: SetIsError
 ): Promise<void> => {
-  // handler();
-  console.log(address);
   try {
     setIsOpen(true);
     setIsSubmitting(true);
@@ -582,8 +746,6 @@ export const assign_validator = async (
           validator_address: address,
         }),
       };
-
-      console.log(Call);
       const multicallData = [approve_validator_call, Call];
       // const feeDetails: PaymasterDetails = {
       //   feeMode: {

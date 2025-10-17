@@ -15,7 +15,7 @@ import { writeReport } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
 
 export default function ResearcherReportEditor() {
-  const { account } = useAccount();
+  const { account, address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
     title: "",
@@ -29,13 +29,6 @@ export default function ResearcherReportEditor() {
   const recommendationRef = useRef<HTMLDivElement>(null);
 
   function handleSubmit() {
-    // console.log({
-    //   // @ts-expect-error parmas can be undefined
-    //   recommendationRef: recommendationRef.current?.getText(),
-    //   potentialRiskRef: potentialRiskRef.current?.getText(),
-    //   issueDescriptionRef: issueDescriptionRef.current?.getText(),
-    // });
-    // console.log(reportDetails);
     if (!id) return;
     const data = {
       id: id,
@@ -43,18 +36,19 @@ export default function ResearcherReportEditor() {
       severity_level: reportDetails.severity_level,
       category: reportDetails.category,
       //@ts-expect-error parmas can be undefined getText(),
-      potential_risk: potentialRiskRef.current?.getText(),
+      potential_risk: potentialRiskRef.current?.getJSON(),
       //@ts-expect-error parmas can be undefined
-      recommendation: recommendationRef.current?.getText(),
+      recommendation: recommendationRef.current?.getJSON(),
       //@ts-expect-error parmas can be undefined
-      description: issueDescriptionRef.current?.getText(),
+      description: issueDescriptionRef.current?.getJSON(),
     };
-    console.log(data);
+    console.log(data, "");
     if (!id) return;
     writeReport(
       account,
       //@ts-expect-error parmas can be undefined
       data,
+      address,
       setIsSubmitting
       // recommendationRef.current?.getText(),
       // potentialRiskRef.current?.getText(),
@@ -63,7 +57,6 @@ export default function ResearcherReportEditor() {
   }
   const handleFilesChange = (files: UploadedFile[]) => {
     setUploadedFiles(files);
-    console.log("Files updated:", files);
   };
 
   return (
@@ -94,11 +87,11 @@ export default function ResearcherReportEditor() {
             placeholder="Enter title"
           />
         </div>
-        <div className="border-dark-border-gray border rounded-full py-2 w-full">
+        {/* <div className="border-dark-border-gray border rounded-full py-2 w-full">
           <Select
             onValueChange={(data) => {
               setReportDetails((prev) => {
-                return { ...prev, severity_level: data };
+                return { ...prev, category: data };
               });
             }}
           >
@@ -115,27 +108,27 @@ export default function ResearcherReportEditor() {
               <SelectItem value="Others">Others</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
         <div className="border-dark-border-gray border rounded-full py-2 w-full">
           <Select
             onValueChange={(data) => {
               setReportDetails((prev) => {
-                return { ...prev, category: data };
+                return { ...prev, severity_level: data };
               });
             }}
           >
             <SelectTrigger className="rounded-full w-full border-none pl-7">
-              <SelectValue placeholder="Select category" />
+              <SelectValue placeholder="Select severity level" />
             </SelectTrigger>
             <SelectContent className="bg-main-bg text-white-text">
-              <SelectItem value="ALL">ALL</SelectItem>
-              <SelectItem value="High">High</SelectItem>
-              <SelectItem value="Low">Low</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={issueDescriptionRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -144,7 +137,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Potential Risk</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={potentialRiskRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
@@ -153,7 +146,7 @@ export default function ResearcherReportEditor() {
         </span>
         <span className="text-base">Recommendation</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px]">
+      <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={recommendationRef} />
       </div>
       <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">

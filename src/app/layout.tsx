@@ -7,6 +7,7 @@ import localFont from "next/font/local";
 
 import RouteProvider from "@/provider/route-provider";
 import { StarknetProvider } from "@/provider/walletProvider";
+import StructuredData from "@/components/StructuredData";
 
 const myCustomFont = localFont({
   src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://fortichain.io"),
+  metadataBase: new URL("https://forti-chain.xyz"),
   alternates: {
     canonical: "/",
   },
@@ -56,10 +57,11 @@ export const metadata: Metadata = {
     siteName: "FortiChain",
     images: [
       {
-        url: "https://forti-chain.xyz/Logo plain.svg",
+        url: "https://forti-chain.xyz/seo.png",
         width: 1200,
         height: 630,
         alt: "FortiChain - Decentralized Blockchain Security Platform",
+        type: "image/png",
       },
     ],
   },
@@ -68,7 +70,7 @@ export const metadata: Metadata = {
     title: "FortiChain - Decentralized Blockchain Security Platform",
     description:
       "Enhance blockchain security through automated vulnerability disclosure and bug bounty processes.",
-    images: ["https://forti-chain.xyz/Logo plain.svg"],
+    images: ["https://forti-chain.xyz/seo.png"],
     creator: "@fortichain",
     site: "@fortichain",
   },
@@ -121,8 +123,9 @@ export default function RootLayout({
       <head></head>
       <body
         className={`text-white-text font-walsheim relative mx-auto bg-main-bg ${myCustomFont.variable}`}
-        suppressHydrationWarning={true}
+        suppressHydrationWarning={false}
       >
+        <StructuredData />
         <Toaster
           position="top-right"
           toastOptions={{

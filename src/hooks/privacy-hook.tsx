@@ -44,21 +44,16 @@ export function usePrivacyNavigation() {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    console.log("[v0] Attempting to scroll to section:", sectionId);
     const element = document.getElementById(sectionId);
     if (element) {
-      console.log("[v0] Element found, scrolling...");
       const yOffset = -80; // Offset for fixed header/better positioning
       const elementTop = element.offsetTop + yOffset;
-
-      console.log("[v0] Scrolling to position:", elementTop);
 
       window.scrollTo({
         top: elementTop,
         behavior: "smooth",
       });
     } else {
-      console.log("[v0] Element not found for ID:", sectionId);
     }
     setSidebarOpen(false); // Close sidebar on mobile after clicking
   };
