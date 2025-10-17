@@ -36,7 +36,7 @@ export default function ResearcherReportDetails({
   const { address } = useAccount();
   const [validatorView, setValidatorView] = useState("none"); // audit , edit chat
   const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
-  const [showReport, setShowReport] = useState(0);
+  const [showReport, setShowReport] = useState("");
   const [voteType, setVoteType] = useState<null | string>(null);
   const { readData: isValidator } = useContractFetch(
     FORTICHAINABI,
@@ -107,7 +107,7 @@ export default function ResearcherReportDetails({
               "Medium".toLocaleUpperCase()
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
-
+        console.log(data);
         return (
           <div key={id} className="grid gap-2">
             <div className="bg-dark-gray p-6 rounded-[8px] border border-dark-border-gray gap-3 grid">
@@ -149,10 +149,10 @@ export default function ResearcherReportDetails({
 
                 <button
                   onClick={() => {
-                    if (showReport == +data.id) {
-                      setShowReport(0);
+                    if (showReport == data.id) {
+                      setShowReport("");
                     } else {
-                      setShowReport(+data.id);
+                      setShowReport(data.id);
                     }
                   }}
                   className="w-fit min-h-11 p-0.5 group             
@@ -167,12 +167,12 @@ export default function ResearcherReportDetails({
          group-hover:bg-gradient-to-r bg-[#1C1C1C]
      flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                   >
-                    {showReport != +data.id ? "View details" : "Collapse"}
+                    {showReport != data.id ? "View details" : "Collapse"}
                   </span>
                 </button>
               </div>
             </div>
-            {showReport === +data.id && (
+            {showReport === data.id && (
               <>
                 {openValidatorRepor && (
                   <ValidatorReportModal
