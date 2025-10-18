@@ -44,7 +44,7 @@ interface VoteResponse {
 }
 
 // const server = "http://127.0.0.1:3001/api";
-const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
+export const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
 export function useFetchProjectDetails(id: number) {
   const fetchProjectDetails = async (): Promise<ProjectData> => {
     const response = await fetch(`${server}/projects/${id}/complete`);
@@ -311,4 +311,74 @@ export function useVoteReport() {
     error: mutation.error,
     data: mutation.data,
   };
+}
+
+export function useValidatorCount() {
+  const [validatorCount, setValidatorCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchValidatorCount = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const req = await fetch(`${server}/validators/count`);
+        if (!req.ok) throw new Error("Failed to fetch");
+
+        const count = await req.json();
+        setValidatorCount(count?.data?.count);
+      } catch (err) {
+        if (err !== "AbortError") {
+          setError(err instanceof Error ? err.message : "An error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchValidatorCount();
+
+    return () => controller.abort();
+  }, [server]);
+
+  return { validatorCount, loading, error };
+}
+
+export function useProjectCount() {
+  const [projectCount, setProjectCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchValidatorCount = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const req = await fetch(`${server}/projects/count`);
+        if (!req.ok) throw new Error("Failed to fetch");
+
+        const count = await req.json();
+        setProjectCount(count?.data?.count);
+      } catch (err) {
+        if (err !== "AbortError") {
+          setError(err instanceof Error ? err.message : "An error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchValidatorCount();
+
+    return () => controller.abort();
+  }, [server]);
+
+  return { projectCount, loading, error };
 }

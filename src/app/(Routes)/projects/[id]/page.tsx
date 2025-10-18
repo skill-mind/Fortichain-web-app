@@ -5,12 +5,9 @@ import { useAccount } from "@starknet-react/core";
 import {
   epocTime,
   Project,
-  useCompleteProjectDetails,
   useContractFetch,
-  useProjectValidator,
   useReportsOnProject,
   useResearchers,
-  useValidators,
 } from "@/hook/useBlockchain";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -35,11 +32,8 @@ export default function Page() {
   const router = useRouter();
   const [viewSection, setViewSection] = useState("none"); // none resercher-report, validator-report , view-report
   const [reporterChecker, setReporterChecker] = useState(false);
-  const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
   const researchers = useResearchers();
   const [projectDetail, setProjectDetail] = useState<Project | null>();
-  const platformValidators = useValidators();
-  const asignedValidator = useProjectValidator(id ? +id : 0);
   const reports = useReportsOnProject(id ? +id : 0);
   const { readData: project } = useContractFetch(
     FORTICHAINABI,
@@ -51,7 +45,6 @@ export default function Page() {
     router.back();
   };
 
-  const projectDetails = useCompleteProjectDetails(1);
   const data = useFetchProjectDetails(id ? +id : 0);
   const hasReport =
     data && address
@@ -61,16 +54,6 @@ export default function Page() {
       : false;
 
   const hasVotes = (data?.data?.validation_votes?.length ?? 0) > 0;
-
-  // useEffect(() => {
-  //   if (!platformValidators) return;
-  //   const checker = platformValidators?.filter((data) =>
-  //     compareAddresses(String(data?.validator_address), String(address))
-  //   );
-  //   if (checker.length > 0) {
-  //     setIsValidator(true);
-  //   }
-  // }, [platformValidators, address]);
 
   useEffect(() => {
     if (project) {
@@ -119,11 +102,6 @@ export default function Page() {
   function viewHandler(section: string) {
     setViewSection(section);
   }
-
-  function validatorHandler() {
-    setOpenValidatorRepor((prev) => !prev);
-  }
-  // const viewer = asignedValidator?.validator_address == address || hasReport;
 
   if (data.loading) {
     return <Loader />;

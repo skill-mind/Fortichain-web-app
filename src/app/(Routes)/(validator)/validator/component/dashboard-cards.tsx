@@ -1,4 +1,5 @@
-import { validatorType } from "@/hook/useBlockchain";
+import { server, useValidatorCount } from "@/hook/fetch-requests";
+import { useAllProjects, validatorType } from "@/hook/useBlockchain";
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
 import {
@@ -9,6 +10,7 @@ import {
   Timer,
 } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function SubmitReport({
   isSubmitOpen,
@@ -19,6 +21,7 @@ export function SubmitReport({
   handdleClick: () => void;
   validator: validatorType;
 }) {
+  const projects = useAllProjects()?.slice().reverse().slice(0, 3) ?? [];
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 grid gap-3">
       <div className="bg-dark-gray rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
@@ -37,19 +40,21 @@ export function SubmitReport({
       {isSubmitOpen && (
         <div className="sm:hidden flex flex-col gap-3">
           <h2 className="text-sm mt-3 ">New Project Alerts</h2>
-          {dashboardData.newProjectAlerts.map((data) => {
+          {projects?.map((data) => {
             return (
               <div
                 key={data.id}
                 className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]"
               >
                 <div className="flex justify-between items-center border-b border-[#343434] pb-6">
-                  <h3>{data.title}</h3>
+                  <h3>{data.name}</h3>
                   <span
                     className={`${
-                      data.priority === "High"
+                      data.priority.toLocaleLowerCase() ===
+                      "High".toLocaleLowerCase()
                         ? "bg-pririty-high-bg text-pririty-high-text"
-                        : data.priority === "Medium"
+                        : data.priority.toLocaleLowerCase() ===
+                          "Medium".toLocaleLowerCase()
                         ? "bg-warning-bg text-warning"
                         : "bg-pririty-low-bg text-blue-ball"
                     } rounded-full px-3 py-1 w-fit text-12`}
@@ -59,7 +64,7 @@ export function SubmitReport({
                 </div>
                 <div className="text-sm text-gray-text flex items-center ">
                   <Timer />
-                  <span>{data.timestamp}</span>
+                  <span>{data.created_at.replace("1970", "2025")}</span>
                 </div>
               </div>
             );
@@ -70,7 +75,7 @@ export function SubmitReport({
       hover:from-sky-blue-border hover:to-sky-blue-border
       bg-gradient-to-r group to-[#312F2F] from-[#212121]
   rounded-full group"
-            href="/projects"
+            href="/assigned-projects"
           >
             <span
               className="px-6 py-3 text-sm
@@ -95,19 +100,21 @@ export function SubmitReport({
       </div>
       {/* desktop */}
       <h2 className="text-sm mt-3 hidden sm:block">New Project Alerts</h2>
-      {dashboardData.newProjectAlerts.map((data) => {
+      {projects?.map((data) => {
         return (
           <div
             key={data.id}
             className="bg-dark-gray-pop p-6  gap-3 rounded-[8px] hidden sm:block"
           >
             <div className="flex justify-between items-center border-b border-[#343434] pb-6 mb-4">
-              <h3>{data.title}</h3>
+              <h3>{data.name}</h3>
               <span
                 className={`${
-                  data.priority === "High"
+                  data.priority.toLocaleLowerCase() ===
+                  "High".toLocaleLowerCase()
                     ? "bg-pririty-high-bg text-pririty-high-text"
-                    : data.priority === "Medium"
+                    : data.priority.toLocaleLowerCase() ===
+                      "Medium".toLocaleLowerCase()
                     ? "bg-warning-bg text-warning"
                     : "bg-pririty-low-bg text-blue-ball"
                 } rounded-full px-3 py-1 w-fit text-12`}
@@ -117,7 +124,7 @@ export function SubmitReport({
             </div>
             <div className="text-sm text-gray-text flex items-center">
               <Timer />
-              <span>{data.timestamp}</span>
+              <span>{data.created_at.replace("1970", "2025")}</span>
             </div>
           </div>
         );
@@ -128,7 +135,7 @@ export function SubmitReport({
       hover:from-sky-blue-border hover:to-sky-blue-border
       bg-gradient-to-r group to-[#312F2F] from-[#212121]
   rounded-full group hidden sm:block"
-        href="/assigned-project"
+        href="/assigned-projects"
       >
         <span
           className="px-6 py-3 text-sm
@@ -174,9 +181,9 @@ export function ApproveReport({
             <h3>Overall Accuracy</h3>
 
             <div>
-              <h3 className="text-2xl">70%</h3>
+              <h3 className="text-2xl">0%</h3>
               <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                <span className="bg-blue-ball rounded-full w-[70%] block h-1.5" />
+                <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
               </span>
             </div>
           </div>
@@ -184,7 +191,7 @@ export function ApproveReport({
             <h3>Total Votes</h3>
 
             <div>
-              <h3 className="text-2xl">4</h3>
+              <h3 className="text-2xl">0</h3>
               <span className="text-gray-text text-sm">
                 1 Report in progress
               </span>
@@ -194,7 +201,7 @@ export function ApproveReport({
             <h3>Success Rate</h3>
 
             <div>
-              <h3 className="text-2xl">3/4</h3>
+              <h3 className="text-2xl">0/0</h3>
             </div>
           </div>
         </>
@@ -215,25 +222,25 @@ export function ApproveReport({
         <h3>Overall Accuracy</h3>
 
         <div>
-          <h3 className="text-2xl">70%</h3>
+          <h3 className="text-2xl">0%</h3>
           <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-            <span className="bg-blue-ball rounded-full w-[70%] block h-1.5" />
+            <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
           </span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+      <div className="min-h-[150px] bg-dark-gray-pop p-6  gap-3 rounded-[8px] hidden sm:grid">
         <h3>Total Votes</h3>
 
         <div>
-          <h3 className="text-2xl">4</h3>
+          <h3 className="text-2xl">0</h3>
           <span className="text-gray-text text-sm">1 Report in progress</span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+      <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] hidden sm:grid">
         <h3>Success Rate</h3>
 
         <div>
-          <h3 className="text-2xl">3/4</h3>
+          <h3 className="text-2xl">0/0</h3>
         </div>
       </div>
     </div>
@@ -249,6 +256,8 @@ export function Earnings({
   handdleClick: () => void;
   validator: validatorType;
 }) {
+  const count = useValidatorCount();
+  console.log(count, "--44");
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 flex flex-col gap-3">
       <div className="bg-dark-gray rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
@@ -272,7 +281,7 @@ export function Earnings({
             <div>
               <h3 className="text-2xl">#4</h3>
               <span className="text-gray-text text-sm">
-                Out of 247 validators
+                Out of {count?.validatorCount} validators
               </span>
             </div>
           </div>
@@ -280,9 +289,9 @@ export function Earnings({
             <h3>Reputation</h3>
 
             <div>
-              <h3 className="text-2xl">90%</h3>
+              <h3 className="text-2xl">0%</h3>
               <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                <span className="bg-blue-ball rounded-full w-[90%] block h-1.5" />
+                <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
               </span>
             </div>
           </div>
@@ -321,19 +330,20 @@ export function Earnings({
       <h2 className="text-sm mt-3 sm:block hidden">Performance Snapshot</h2>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] sm:grid hidden">
         <h3>Rank</h3>
-
         <div>
-          <h3 className="text-2xl">#4</h3>
-          <span className="text-gray-text text-sm">Out of 247 validators</span>
+          <h3 className="text-2xl">#0</h3>
+          <span className="text-gray-text text-sm">
+            Out of {count?.validatorCount} validators
+          </span>
         </div>
       </div>
       <div className="min-h-[150px] bg-dark-gray-pop p-6 hidden gap-3 rounded-[8px] sm:grid">
         <h3>Reputation</h3>
 
         <div>
-          <h3 className="text-2xl">90%</h3>
+          <h3 className="text-2xl">0%</h3>
           <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-            <span className="bg-blue-ball rounded-full w-[90%] block h-1.5" />
+            <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
           </span>
         </div>
       </div>
