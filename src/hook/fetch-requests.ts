@@ -43,7 +43,6 @@ interface VoteResponse {
   message?: string;
 }
 
-// const server = "http://127.0.0.1:3001/api";
 export const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
 export function useFetchProjectDetails(id: number) {
   const fetchProjectDetails = async (): Promise<ProjectData> => {
