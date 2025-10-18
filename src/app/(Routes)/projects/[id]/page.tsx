@@ -47,19 +47,19 @@ export default function Page() {
     typeof id !== "undefined" ? [+id] : []
   );
 
-  const { readData: hasReport } = useContractFetch(
-    FORTICHAINABI,
-    "has_researcher_submitted_report",
-    // @ts-expect-error parmas can be undefined
-    typeof id !== "undefined" ? [+id, address] : []
-  );
-
   const handleBack = () => {
     router.back();
   };
 
   const projectDetails = useCompleteProjectDetails(1);
-  const data = useFetchProjectDetails(id ? +id : 0, viewSection);
+  const data = useFetchProjectDetails(id ? +id : 0);
+  const hasReport =
+    data && address
+      ? data?.data?.researcher_reports.some((data) =>
+          compareAddresses(data.researcher_wallet_address, address)
+        )
+      : false;
+
   const hasVotes = (data?.data?.validation_votes?.length ?? 0) > 0;
 
   // useEffect(() => {
@@ -123,10 +123,11 @@ export default function Page() {
   function validatorHandler() {
     setOpenValidatorRepor((prev) => !prev);
   }
-  const viewer = asignedValidator?.validator_address == address || hasReport;
-  // if (data.loading) {
-  //   return <Loader />;
-  // }
+  // const viewer = asignedValidator?.validator_address == address || hasReport;
+
+  if (data.loading) {
+    return <Loader />;
+  }
   return (
     <div className="grid gap-3">
       {isOpen && (
@@ -164,9 +165,9 @@ export default function Page() {
       )}
       {viewSection === "view-report" && <ComingSoon />}
       {viewSection === "chat-report" && <ComingSoon />}
-      {reporterChecker && (
+      {data.data !== undefined && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm  xl:flex-nowrap">
-          {!hasReport && (
+          {!hasReport && data.data.researcher_reports.length > 0 && (
             <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
               <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
                 <h3>Write Report</h3>
@@ -189,7 +190,7 @@ export default function Page() {
                     group-hover:bg-gradient-to-r bg-[#1C1C1C]
                 flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                   >
-                    Start
+                    {viewSection == "resercher-report" ? " close" : " Start"}
                   </span>
                 </button>
               </div>
@@ -218,7 +219,9 @@ export default function Page() {
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                 >
-                  Chat with validator
+                  {viewSection === "chat-report"
+                    ? " close"
+                    : "  Chat with validator"}
                 </span>
               </button>
             </div>
@@ -246,7 +249,7 @@ export default function Page() {
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                 >
-                  Edit
+                  {viewSection === "chat-report" ? " close" : "  Edit"}
                 </span>
               </button>
             </div>

@@ -44,7 +44,7 @@ export default function ResearcherReportDetails({
     [address ?? ""]
   );
   const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
-  console.log(showReport, "show report");
+
   function validatorHandler(type: string | null) {
     setOpenValidatorRepor((prev) => !prev);
     setVoteType(type);
@@ -69,13 +69,13 @@ export default function ResearcherReportDetails({
     isIncluded || isOwner || isAdmin || isAssignedValidator
       ? researchers
       : has_report;
+  console.log(validatorView);
   return (
     <>
       {reportToValidate?.map((data, id) => {
         const reportValidationInfo = validatedReport.find((report) => {
           return report.report_id === data.id;
         });
-        // console.log(data.researcher_id);
         const reportValidated = validatedReport.some(
           (report) => report.report_id == data.id
         );
@@ -286,7 +286,7 @@ export default function ResearcherReportDetails({
                           <h3 className="text-gray-text">{validateDate}</h3>
                         </div>
                         <span className={`rounded-full ${vbg} py-2 px-4`}>
-                          Priority:{" "}
+                          Priority:
                           {reportValidationInfo?.severity_level_confirmation}
                         </span>
                       </div>
@@ -333,7 +333,7 @@ export default function ResearcherReportDetails({
                     </section>
                   )}
                 </>
-                {validatorView == `audit-${id}` && (
+                {validatorView == `audit-${id}` && !reportValidated && (
                   <ValidatorReportEditor
                     researcherId={data.id}
                     valdatorViewHandler={valdatorViewHandler}
@@ -369,7 +369,9 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                             >
-                              Start
+                              {validatorView == `audit-${id}`
+                                ? " close"
+                                : " Start"}
                             </span>
                           </button>
                         </div>
@@ -397,7 +399,9 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                           >
-                            Chat with validator
+                            {validatorView == `chat-${id}`
+                              ? " Close"
+                              : "Chat with validator"}
                           </span>
                         </button>
                       </div>
@@ -425,7 +429,7 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                           >
-                            Edit
+                            {validatorView == `edit-${id}` ? " Close" : "Edit"}
                           </span>
                         </button>
                       </div>

@@ -1,140 +1,186 @@
 import { AssignedValidator, ProjectData } from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
 import { compareAddresses } from "./blockchainWriteFunction";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export interface ReportInput {
+  category: string;
+  description: string;
+  potential_risk: string;
+  project_id: number;
+  recommendation: string;
+  severity: string;
+  title: string;
+  wallet_address: string;
+}
+
+interface ReportResponse {
+  id?: number;
+  message?: string;
+}
+
+export interface ValidationInput {
+  category_confirmation: string;
+  reason: string;
+  severity_level_confirmation: string;
+  status: string;
+  report_id: string;
+  validator_wallet_address: string;
+}
+interface ValidationResponse {
+  id?: string;
+  message?: string;
+}
+
+export interface VoteInput {
+  report_id: string;
+  is_valid: boolean;
+  reason: string;
+  voter_wallet_address: string;
+}
+interface VoteResponse {
+  id?: string;
+  message?: string;
+}
 
 // const server = "http://127.0.0.1:3001/api";
 const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
-export function useFetchProjectDetails(id: number, viewSection: string) {
-  const [data, setData] = useState<ProjectData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    // Reset state when id changes
-    setLoading(true);
-    setError(null);
-
-    async function fetchData() {
-      try {
-        const response = await fetch(`${server}/projects/${id}/complete`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch project details");
-        }
-
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("Unknown error"));
-      } finally {
-        setLoading(false);
-      }
+export function useFetchProjectDetails(id: number) {
+  const fetchProjectDetails = async (): Promise<ProjectData> => {
+    const response = await fetch(`${server}/projects/${id}/complete`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch project details");
     }
+    return response.json();
+  };
 
-    fetchData();
-  }, [id, viewSection]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["projectDetails", id], // Unique key for caching
+    queryFn: fetchProjectDetails,
+    refetchInterval: 5000,
+    retry: 2,
+  });
 
-  return { data: data?.data, loading, error };
+  return {
+    data: data?.data, // Extract the `data` property from the response
+    loading: isLoading,
+    error: error as Error | null,
+  };
 }
 
-export const resercherReports = async (
-  category: string,
-  description: string,
-  potential_risk: string,
-  project_id: number,
-  recommendation: string,
-  severity: string,
-  title: string,
-  wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        category: category,
-        description: description,
-        potential_risk: potential_risk,
-        project_id: +project_id,
-        recommendation: recommendation,
-        severity: severity,
-        title: title,
-        wallet_address: wallet_address,
-      }),
-    });
+export function useResearcherReports() {
+  const queryClient = useQueryClient();
 
-    if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
-    }
+  const mutation = useMutation<ReportResponse, Error, ReportInput>({
+    mutationFn: async ({
+      category,
+      description,
+      potential_risk,
+      project_id,
+      recommendation,
+      severity,
+      title,
+      wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category,
+          description,
+          potential_risk,
+          project_id: +project_id,
+          recommendation,
+          severity,
+          title,
+          wallet_address,
+        }),
+      });
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error uploading project:", error);
-  }
-};
-// interface AssignedValidator {
-//   wallet_address: string;
-//   username: string;
-//   status: string;
-//   reputation: number;
-//   // ... other fields
-// }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
 
-// interface ProjectData {
-//   approved_researchers: any[];
-//   assigned_validator: AssignedValidator | null;
-// }
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Optionally invalidate related queries to refetch data
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
 
-// interface ProjectResponse {
-//   status: string;
-//   message: string;
-//   data: ProjectData;
-// }
-export const validatorValidation = async (
-  category_confirmation: string,
-  reason: string,
-  severity_level_confirmation: string,
-  status: string,
-  report_id: string,
-  validator_wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports/${report_id}/validate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  return {
+    createReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}
 
-      body: JSON.stringify({
-        category_confirmation: category_confirmation,
-        reason: reason,
-        severity_level_confirmation: severity_level_confirmation,
-        status: status,
-        validator_wallet_address: validator_wallet_address,
-      }),
-    });
+export function useValidatorValidation() {
+  const queryClient = useQueryClient();
 
-    if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
-    }
+  const mutation = useMutation<ValidationResponse, Error, ValidationInput>({
+    mutationFn: async ({
+      category_confirmation,
+      reason,
+      severity_level_confirmation,
+      status,
+      report_id,
+      validator_wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports/${report_id}/validate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category_confirmation,
+          reason,
+          severity_level_confirmation,
+          status,
+          validator_wallet_address,
+        }),
+      });
 
-    const data = await response.json();
-    console.log("Response:", data);
-    return data;
-  } catch (error) {
-    console.log("Error uploading project:", error);
-  }
-};
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
 
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      console.log("Response:", data);
+      // Optionally invalidate related queries to refetch data
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails" /* project_id */], // Add project_id if available
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
+
+  return {
+    validateReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}
 export function useCheckWalletInValidators(
   walletAddress: string,
   projectId: number
@@ -218,36 +264,51 @@ export function useCheckWalletInValidators(
   };
 }
 
-export const voteReport = async (
-  report_id: string,
-  is_valid: boolean,
-  reason: string,
-  voter_wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports/${report_id}/vote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+export function useVoteReport() {
+  const queryClient = useQueryClient();
 
-      body: JSON.stringify({
-        is_valid: is_valid,
-        reason: reason,
-        voter_wallet_address: voter_wallet_address,
-      }),
-    });
+  const mutation = useMutation<VoteResponse, Error, VoteInput>({
+    mutationFn: async ({
+      report_id,
+      is_valid,
+      reason,
+      voter_wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports/${report_id}/vote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          is_valid,
+          reason,
+          voter_wallet_address,
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
-    }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log("Error uploading project:", error);
-  }
-};
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
+
+  return {
+    voteReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}

@@ -7,9 +7,9 @@ export function WidthrawTable() {
         <h3>Withdrawal History</h3>
         <h5 className="text-gray-text">view Total amount withdrawn</h5>
       </div>
-      <div className=" w-full flex h-1/2 justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
-        <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">Coming Soon</h2>
-      </div>
+      <h2 className="mx-auto h-fit md:p-28 p-2.5 text-center ">
+        No widthrawal made yet
+      </h2>
       {/* <div className="overflow-x-auto scrollbar-hide">
           <table
             className="w-full min-w-[600px] sticky text-base"

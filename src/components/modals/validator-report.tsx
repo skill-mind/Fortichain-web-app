@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { voteOnValidation } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
 import { SetShowReport } from "@/app/(Routes)/projects/component/validator-report-editor";
+import { useVoteReport } from "@/hook/fetch-requests";
 
 export default function ValidatorReportModal({
   handler,
@@ -17,11 +18,11 @@ export default function ValidatorReportModal({
   researcherId: string;
   setShowReport: SetShowReport;
 }) {
-  console.log(researcherId);
   const { address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { account } = useAccount();
   const reportRef = useRef<HTMLDivElement>(null);
+  const { voteReport, isLoading, error, data } = useVoteReport();
   return (
     <>
       <div
@@ -62,7 +63,10 @@ export default function ValidatorReportModal({
                 reportRef.current,
                 setIsSubmitting,
                 address,
-                setShowReport
+                setShowReport,
+                async (reportData) => {
+                  voteReport(reportData);
+                }
               );
             }}
             className="min-h-50 p-0.5 group   w-fit          

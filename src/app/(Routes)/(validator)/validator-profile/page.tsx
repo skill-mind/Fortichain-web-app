@@ -249,9 +249,9 @@ export default function Page() {
                 <h3>Overall Accuracy</h3>
 
                 <div>
-                  <h3 className="text-2xl">70%</h3>
+                  <h3 className="text-2xl">0%</h3>
                   <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                    <span className="bg-blue-ball rounded-full w-[70%] block h-1.5" />
+                    <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
                   </span>
                 </div>
               </div>
@@ -261,21 +261,21 @@ export default function Page() {
                 <h3>Reputation Score</h3>
 
                 <div>
-                  <h3 className="text-2xl">70</h3>
+                  <h3 className="text-2xl">0</h3>
                 </div>
                 <span
                   className={`bg-good-bg text-good rounded-full px-3 py-1 w-fit text-12`}
                 >
-                  +6 this month
+                  +1 this month
                 </span>
               </div>
               <div className="min-h-[150px] bg-dark-gray-pop p-6 hidden gap-3 rounded-[8px] sm:grid">
                 <h3>Participation</h3>
 
                 <div>
-                  <h3 className="text-2xl">90%</h3>
+                  <h3 className="text-2xl">0%</h3>
                   <span className="w-full h-1.5 rounded-full bg-percentage-bg block mt-2">
-                    <span className="bg-blue-ball rounded-full w-[90%] block h-1.5" />
+                    <span className="bg-blue-ball rounded-full w-[0%] block h-1.5" />
                   </span>
                 </div>
               </div>

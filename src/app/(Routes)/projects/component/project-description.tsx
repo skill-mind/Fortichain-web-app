@@ -1,5 +1,5 @@
 "use client";
-import { epocTime } from "@/hook/useBlockchain";
+import { epocTime, useContractFetch } from "@/hook/useBlockchain";
 import { ArrowGray, GithubIcon } from "@/icons/github";
 import { useAccount } from "@starknet-react/core";
 import { FileCode, FileMinus } from "lucide-react";
@@ -10,6 +10,7 @@ import { ONE_STK } from "@/contract/address";
 import { useState } from "react";
 import VoteTableModal from "@/components/modals/vote-table-modal";
 import { Project } from "@/util/types";
+import { FORTICHAINABI } from "@/contract/abi";
 export default function Description({
   projectDetail,
   projectOwner,
@@ -26,7 +27,8 @@ export default function Description({
     ? +projectDetail?.total_amount / ONE_STK
     : 0;
   const [viewVote, setVieVote] = useState(false);
-
+  const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
+  const isAdmin = admin && address === `0x0${admin?.toString(16)}`;
   return (
     <>
       <div className="md:grid flex flex-col gap-y-3 bg-dark-gray border border-dark-border-gray rounded-[8px] h-fit px-6 py-3 w-full">
@@ -96,7 +98,7 @@ export default function Description({
             <Link
               href="#"
               // target="_blank"
-              className="w-fit bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
+              className="w-fit opacity-0 bg-dark-border-gray py-1 px-3 rounded-full flex items-center gap-2 border border-[#312F2F]"
             >
               <FileMinus className="text-gray-text w-5" />
               <span>View Certificate</span>
@@ -111,7 +113,7 @@ export default function Description({
           </p>
         </div>
 
-        {hasVote && (
+        {isAdmin && (
           <div className="mt-8 grid gap-2">
             <h3 className="text-gray-text">View Validators Voting</h3>
             <button

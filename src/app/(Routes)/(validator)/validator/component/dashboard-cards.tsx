@@ -99,7 +99,7 @@ export function SubmitReport({
         return (
           <div
             key={data.id}
-            className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block"
+            className="bg-dark-gray-pop p-6  gap-3 rounded-[8px] hidden sm:block"
           >
             <div className="flex justify-between items-center border-b border-[#343434] pb-6 mb-4">
               <h3>{data.title}</h3>

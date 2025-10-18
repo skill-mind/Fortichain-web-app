@@ -13,6 +13,7 @@ import FileUploadComponent, { UploadedFile } from "./upload-file";
 import { useParams } from "next/navigation";
 import { writeReport } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
+import { useResearcherReports } from "@/hook/fetch-requests";
 
 export type ViewSection = (viewSection: string) => void;
 export default function ResearcherReportEditor({
@@ -32,7 +33,8 @@ export default function ResearcherReportEditor({
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
   const potentialRiskRef = useRef<HTMLDivElement>(null);
   const recommendationRef = useRef<HTMLDivElement>(null);
-
+  const { createReport, isLoading, error, data } = useResearcherReports();
+  console.log({ isLoading, error, data }, "resercher report");
   function handleSubmit() {
     if (!id) return;
     const data = {
@@ -47,7 +49,6 @@ export default function ResearcherReportEditor({
       //@ts-expect-error parmas can be undefined
       description: issueDescriptionRef.current?.getJSON(),
     };
-    console.log(data, "");
     if (!id) return;
     writeReport(
       account,
@@ -55,10 +56,11 @@ export default function ResearcherReportEditor({
       data,
       address,
       setIsSubmitting,
-      setViewSection
+      setViewSection,
       // recommendationRef.current?.getText(),
       // potentialRiskRef.current?.getText(),
-      // issueDescriptionRef.current?.getHTML()
+      // issueDescriptionRef.current?.getHTML(),
+      createReport
     );
   }
   const handleFilesChange = (files: UploadedFile[]) => {

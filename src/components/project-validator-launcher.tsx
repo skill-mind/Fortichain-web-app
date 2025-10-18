@@ -83,14 +83,12 @@ export default function ProjectValidatorLauncher() {
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
-      console.log("redirect");
       redirect("/validator");
     }
   }, [formsection, isSuccess]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log(formData);
     await create_validator_profile(
       account,
       setIsSubmitting,

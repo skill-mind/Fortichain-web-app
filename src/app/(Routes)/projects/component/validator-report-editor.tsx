@@ -12,6 +12,7 @@ import { useRef } from "react";
 import { useParams } from "next/navigation";
 import { useAccount } from "@starknet-react/core";
 import { validateReport } from "@/hook/blockchainWriteFunction";
+import { useValidatorValidation } from "@/hook/fetch-requests";
 
 export type ValdatorViewHandler = (isSubmitting: string) => void;
 export type SetShowReport = (setShowReport: string) => void;
@@ -34,9 +35,14 @@ export default function ValidatorReportEditor({
   });
   const { id } = useParams();
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
+  const {
+    validateReport: writeReport,
+    isLoading,
+    error,
+    data,
+  } = useValidatorValidation();
 
   function handleSubmit() {
-    console.log("submit", researcherId);
     if (!researcherId) return;
     const data = {
       id: researcherId,
@@ -46,7 +52,6 @@ export default function ValidatorReportEditor({
       //@ts-expect-error parmas can be undefined
       description: issueDescriptionRef.current?.getText(),
     };
-    console.log(data);
     if (!id || !address) return;
     validateReport(
       account,
@@ -55,7 +60,10 @@ export default function ValidatorReportEditor({
       +id,
       address,
       valdatorViewHandler,
-      setShowReport
+      setShowReport,
+      async (reportData) => {
+        writeReport(reportData);
+      }
     );
   }
 

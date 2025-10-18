@@ -13,11 +13,7 @@ import {
   PaymasterDetails,
   shortString,
 } from "starknet";
-import {
-  resercherReports,
-  validatorValidation,
-  voteReport,
-} from "./fetch-requests";
+import { ReportInput, ValidationInput, VoteInput } from "./fetch-requests";
 import { ViewSection } from "@/app/(Routes)/projects/component/resercher-report-editors";
 import {
   SetShowReport,
@@ -230,7 +226,8 @@ export const writeReport = async (
   },
   address: string,
   setIsSubmitting: SetIsSubmitting,
-  setViewSection: ViewSection
+  setViewSection: ViewSection,
+  createReport: (reportData: ReportInput) => Promise<void>
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
   // handler: () => void,
@@ -296,16 +293,16 @@ export const writeReport = async (
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
-      await resercherReports(
-        data.category,
-        description,
-        risk,
-        data.id,
-        recommendation,
-        data.severity_level,
-        data.title,
-        address
-      );
+      await createReport({
+        category: data.category,
+        description: description,
+        potential_risk: risk,
+        project_id: data.id,
+        recommendation: recommendation,
+        severity: data.severity_level,
+        title: data.title,
+        wallet_address: address,
+      });
       // setIsOpen(true);
       console.log(result);
 
@@ -329,7 +326,8 @@ export const voteOnValidation = async (
   reason: HTMLDivElement | null,
   setIsSubmitting: SetIsSubmitting,
   address: string,
-  setShowReport: SetShowReport
+  setShowReport: SetShowReport,
+  voteReport: (reportData: VoteInput) => Promise<void>
 ): Promise<void> => {
   try {
     // setIsOpen(true);
@@ -370,12 +368,12 @@ export const voteOnValidation = async (
       // const status = await myProvider.waitForTransaction(
       //   result?.transaction_hash as string
       // );
-      await voteReport(
-        report_id,
-        voteType === "Invalid" ? false : true,
-        voteReason,
-        address
-      );
+      await voteReport({
+        report_id: report_id,
+        is_valid: voteType === "Invalid" ? false : true,
+        reason: voteReason,
+        voter_wallet_address: address,
+      });
       // setIsOpen(true);
       // console.log(result);
 
@@ -404,7 +402,8 @@ export const validateReport = async (
   project_id: number,
   address: string,
   valdatorViewHandler: ValdatorViewHandler,
-  setShowReport: SetShowReport
+  setShowReport: SetShowReport,
+  writeReport: (reportData: ValidationInput) => Promise<void>
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
   // handler: () => void,
@@ -464,14 +463,14 @@ export const validateReport = async (
       //   result?.transaction_hash as string
       // );
       console.log(data);
-      await validatorValidation(
-        data.status,
-        reason,
-        data.severity_level,
-        data.audit_report,
-        data.id.toString(),
-        address
-      );
+      await writeReport({
+        category_confirmation: data.status,
+        reason: reason,
+        severity_level_confirmation: data.severity_level,
+        status: data.audit_report,
+        report_id: data.id.toString(),
+        validator_wallet_address: address,
+      });
       // setIsOpen(true);
       // console.log(result);
 

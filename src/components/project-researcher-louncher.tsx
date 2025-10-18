@@ -68,7 +68,6 @@ export default function ProjectResearcherLauncher() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log(formData);
     await create_resercher_profile(
       account,
       setIsSubmitting,
