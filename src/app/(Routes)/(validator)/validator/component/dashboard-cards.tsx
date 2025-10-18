@@ -1,4 +1,4 @@
-import { server, useValidatorCount } from "@/hook/fetch-requests";
+import { server } from "@/hook/fetch-requests";
 import { useAllProjects, validatorType } from "@/hook/useBlockchain";
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
@@ -256,7 +256,7 @@ export function Earnings({
   handdleClick: () => void;
   validator: validatorType;
 }) {
-  const count = useValidatorCount();
+  const count = 0;
   console.log(count, "--44");
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 flex flex-col gap-3">
@@ -281,7 +281,7 @@ export function Earnings({
             <div>
               <h3 className="text-2xl">#4</h3>
               <span className="text-gray-text text-sm">
-                Out of {count?.validatorCount} validators
+                Out of {count} validators
               </span>
             </div>
           </div>
@@ -333,7 +333,7 @@ export function Earnings({
         <div>
           <h3 className="text-2xl">#0</h3>
           <span className="text-gray-text text-sm">
-            Out of {count?.validatorCount} validators
+            Out of {count} validators
           </span>
         </div>
       </div>
