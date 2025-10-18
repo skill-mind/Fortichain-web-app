@@ -1,4 +1,4 @@
-import { SecurityResearcher } from "@/hook/useBlockchain";
+import { SecurityResearcher, useAllProjects } from "@/hook/useBlockchain";
 import { Badge, WaveIcon } from "@/icons/github";
 import { dashboardData } from "@/util/mock-data";
 import {
@@ -19,6 +19,7 @@ export function SubmitReport({
   handdleClick: () => void;
   researcher: SecurityResearcher;
 }) {
+  const projects = useAllProjects()?.slice().reverse().slice(0, 3) ?? [];
   return (
     <div className="bg-dark-gray roundd-[8px] p-6 grid gap-3">
       <div className="bg-dark-gray rounded-[8px] flex flex-col gap-3 w-full sm:min-w-80">
@@ -37,19 +38,21 @@ export function SubmitReport({
       {isSubmitOpen && (
         <div className="sm:hidden flex flex-col gap-3">
           <h2 className="text-sm mt-3 ">New Project Alerts</h2>
-          {dashboardData.newProjectAlerts.map((data) => {
+          {projects.map((data) => {
             return (
               <div
                 key={data.id}
                 className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px]"
               >
                 <div className="flex justify-between items-center border-b border-[#343434] pb-6">
-                  <h3>{data.title}</h3>
+                  <h3>{data.name}</h3>
                   <span
                     className={`${
-                      data.priority === "High"
+                      data.priority.toLocaleLowerCase() ===
+                      "High".toLocaleLowerCase()
                         ? "bg-pririty-high-bg text-pririty-high-text"
-                        : data.priority === "Medium"
+                        : data.priority.toLocaleLowerCase() ===
+                          "Medium".toLocaleLowerCase()
                         ? "bg-warning-bg text-warning"
                         : "bg-pririty-low-bg text-blue-ball"
                     } rounded-full px-3 py-1 w-fit text-12`}
@@ -59,7 +62,7 @@ export function SubmitReport({
                 </div>
                 <div className="text-sm text-gray-text flex items-center">
                   <Timer />
-                  <span>{data.timestamp}</span>
+                  <span>{data.created_at.replace("1970", "2025")}</span>
                 </div>
               </div>
             );
@@ -95,19 +98,21 @@ export function SubmitReport({
       </div>
       {/* desktop */}
       <h2 className="text-sm mt-3 hidden sm:block">New Project Alerts</h2>
-      {dashboardData.newProjectAlerts.map((data) => {
+      {projects.map((data) => {
         return (
           <div
             key={data.id}
-            className="bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block"
+            className="bg-dark-gray-pop p-6 gap-3 rounded-[8px] hidden sm:grid"
           >
             <div className="flex justify-between items-center border-b border-[#343434] pb-6 mb-4">
-              <h3>{data.title}</h3>
+              <h3>{data.name}</h3>
               <span
                 className={`${
-                  data.priority === "High"
+                  data.priority.toLocaleLowerCase() ===
+                  "High".toLocaleLowerCase()
                     ? "bg-pririty-high-bg text-pririty-high-text"
-                    : data.priority === "Medium"
+                    : data.priority.toLocaleLowerCase() ===
+                      "Medium".toLocaleLowerCase()
                     ? "bg-warning-bg text-warning"
                     : "bg-pririty-low-bg text-blue-ball"
                 } rounded-full px-3 py-1 w-fit text-12`}
@@ -117,7 +122,7 @@ export function SubmitReport({
             </div>
             <div className="text-sm text-gray-text flex items-center">
               <Timer />
-              <span>{data.timestamp}</span>
+              <span>{data.created_at.replace("1970", "2025")}</span>
             </div>
           </div>
         );
@@ -233,7 +238,7 @@ export function ApproveReport({
       </div>
       {/* desktop */}
       <h2 className="text-sm mt-3 hidden sm:block">Report Stats</h2>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+      <div className="min-h-[150px] bg-dark-gray-pop p-6  gap-3 rounded-[8px] hidden sm:grid">
         <h3>Report Score</h3>
 
         <div>
@@ -257,7 +262,7 @@ export function ApproveReport({
           </span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+      <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] hidden sm:grid">
         <h3>Total Reports</h3>
 
         <div>
@@ -269,7 +274,7 @@ export function ApproveReport({
           </span>
         </div>
       </div>
-      <div className="min-h-[150px] bg-dark-gray-pop p-6 grid gap-3 rounded-[8px] hidden sm:block">
+      <div className="min-h-[150px] bg-dark-gray-pop p-6 gap-3 rounded-[8px] hidden sm:grid">
         <h3>Approval Rate</h3>
 
         <div>

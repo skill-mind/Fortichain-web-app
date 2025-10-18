@@ -13,7 +13,8 @@ import Image from "next/image";
 import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
 // import ready from "../../public/Argent.svg";
 // import bravoos from "../../public/braavos_icon.jpeg.svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Router } from "./route-provider";
 
 export function WalletConnectorModal({
   isDisconnectOpen,
@@ -27,6 +28,7 @@ export function WalletConnectorModal({
     modalTheme: "dark",
     connectors: connectors as StarknetkitConnector[],
   });
+  const { setter } = useContext(Router);
 
   async function connectWallet() {
     const { connector } = await starknetkitConnectModal();
@@ -88,7 +90,12 @@ rounded-full group"
    hover:from-sky-blue-border hover:to-sky-blue-border
    bg-gradient-to-r group to-[#312F2F] from-[#212121]
 rounded-full group"
-              onClick={() => disconnect()}
+              onClick={() => {
+                disconnect();
+                setter((prev) => {
+                  return { ...prev, isComplete: false, route: "none" };
+                });
+              }}
               type="button"
             >
               <span

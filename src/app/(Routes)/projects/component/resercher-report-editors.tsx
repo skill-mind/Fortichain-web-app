@@ -13,8 +13,14 @@ import FileUploadComponent, { UploadedFile } from "./upload-file";
 import { useParams } from "next/navigation";
 import { writeReport } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
+import { useResearcherReports } from "@/hook/fetch-requests";
 
-export default function ResearcherReportEditor() {
+export type ViewSection = (viewSection: string) => void;
+export default function ResearcherReportEditor({
+  setViewSection,
+}: {
+  setViewSection: ViewSection;
+}) {
   const { account, address } = useAccount();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportDetails, setReportDetails] = useState({
@@ -27,7 +33,8 @@ export default function ResearcherReportEditor() {
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
   const potentialRiskRef = useRef<HTMLDivElement>(null);
   const recommendationRef = useRef<HTMLDivElement>(null);
-
+  const { createReport, isLoading, error, data } = useResearcherReports();
+  console.log({ isLoading, error, data }, "resercher report");
   function handleSubmit() {
     if (!id) return;
     const data = {
@@ -42,17 +49,18 @@ export default function ResearcherReportEditor() {
       //@ts-expect-error parmas can be undefined
       description: issueDescriptionRef.current?.getJSON(),
     };
-    console.log(data, "");
     if (!id) return;
     writeReport(
       account,
       //@ts-expect-error parmas can be undefined
       data,
       address,
-      setIsSubmitting
+      setIsSubmitting,
+      setViewSection,
       // recommendationRef.current?.getText(),
       // potentialRiskRef.current?.getText(),
-      // issueDescriptionRef.current?.getHTML()
+      // issueDescriptionRef.current?.getHTML(),
+      createReport
     );
   }
   const handleFilesChange = (files: UploadedFile[]) => {
@@ -149,7 +157,7 @@ export default function ResearcherReportEditor() {
       <div className="border border-dark-border-gray rounded-[4px] min-h-[400px]">
         <Editor ref={recommendationRef} />
       </div>
-      <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
+      {/* <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
         <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
           Section 4
         </span>
@@ -165,7 +173,7 @@ export default function ResearcherReportEditor() {
           maxFileSize={10}
           maxFiles={5}
         />
-      </div>
+      </div> */}
       <button
         className="hover:bg-dark-gray w-fit min-h-50 p-0.5 group             
     from-sky-blue-border to-sky-blue-border

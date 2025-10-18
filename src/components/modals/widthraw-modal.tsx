@@ -17,7 +17,6 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
   const { address, account } = useAccount();
   const validatorDetail = useValidatorDetail(address ?? "");
   function handleWithdral() {
-    console.log(details);
     validatorWithdrawal(account, details);
   }
   return (

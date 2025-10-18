@@ -1,139 +1,185 @@
 import { AssignedValidator, ProjectData } from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
+import { compareAddresses } from "./blockchainWriteFunction";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// const server = "http://127.0.0.1:3001/api";
-const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
-export function useFetchProjectDetails(id: number) {
-  const [data, setData] = useState<ProjectData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    // Reset state when id changes
-    setLoading(true);
-    setError(null);
-
-    async function fetchData() {
-      try {
-        const response = await fetch(`${server}/projects/${id}/complete`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch project details");
-        }
-
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("Unknown error"));
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [id]); // Only re-run when id changes
-
-  return { data: data?.data, loading, error };
+export interface ReportInput {
+  category: string;
+  description: string;
+  potential_risk: string;
+  project_id: number;
+  recommendation: string;
+  severity: string;
+  title: string;
+  wallet_address: string;
 }
 
-export const resercherReports = async (
-  category: string,
-  description: string,
-  potential_risk: string,
-  project_id: number,
-  recommendation: string,
-  severity: string,
-  title: string,
-  wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        category: category,
-        description: description,
-        potential_risk: potential_risk,
-        project_id: +project_id,
-        recommendation: recommendation,
-        severity: severity,
-        title: title,
-        wallet_address: wallet_address,
-      }),
-    });
+interface ReportResponse {
+  id?: number;
+  message?: string;
+}
 
+export interface ValidationInput {
+  category_confirmation: string;
+  reason: string;
+  severity_level_confirmation: string;
+  status: string;
+  report_id: string;
+  validator_wallet_address: string;
+}
+interface ValidationResponse {
+  id?: string;
+  message?: string;
+}
+
+export interface VoteInput {
+  report_id: string;
+  is_valid: boolean;
+  reason: string;
+  voter_wallet_address: string;
+}
+interface VoteResponse {
+  id?: string;
+  message?: string;
+}
+
+export const server = process.env.NEXT_PUBLIC_FORTICHAIN_API ?? "";
+export function useFetchProjectDetails(id: number) {
+  const fetchProjectDetails = async (): Promise<ProjectData> => {
+    const response = await fetch(`${server}/projects/${id}/complete`);
     if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
+      throw new Error("Failed to fetch project details");
     }
+    return response.json();
+  };
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error uploading project:", error);
-  }
-};
-// interface AssignedValidator {
-//   wallet_address: string;
-//   username: string;
-//   status: string;
-//   reputation: number;
-//   // ... other fields
-// }
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["projectDetails", id], // Unique key for caching
+    queryFn: fetchProjectDetails,
+    refetchInterval: 5000,
+    retry: 2,
+  });
 
-// interface ProjectData {
-//   approved_researchers: any[];
-//   assigned_validator: AssignedValidator | null;
-// }
+  return {
+    data: data?.data, // Extract the `data` property from the response
+    loading: isLoading,
+    error: error as Error | null,
+  };
+}
 
-// interface ProjectResponse {
-//   status: string;
-//   message: string;
-//   data: ProjectData;
-// }
-export const validatorValidation = async (
-  category_confirmation: string,
-  reason: string,
-  severity_level_confirmation: string,
-  status: string,
-  report_id: string,
-  validator_wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports/${report_id}/validate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+export function useResearcherReports() {
+  const queryClient = useQueryClient();
 
-      body: JSON.stringify({
-        category_confirmation: category_confirmation,
-        reason: reason,
-        severity_level_confirmation: severity_level_confirmation,
-        status: status,
-        validator_wallet_address: validator_wallet_address,
-      }),
-    });
+  const mutation = useMutation<ReportResponse, Error, ReportInput>({
+    mutationFn: async ({
+      category,
+      description,
+      potential_risk,
+      project_id,
+      recommendation,
+      severity,
+      title,
+      wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category,
+          description,
+          potential_risk,
+          project_id: +project_id,
+          recommendation,
+          severity,
+          title,
+          wallet_address,
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
-    }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
 
-    const data = await response.json();
-    console.log("Response:", data);
-    return data;
-  } catch (error) {
-    console.log("Error uploading project:", error);
-  }
-};
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Optionally invalidate related queries to refetch data
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
 
+  return {
+    createReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}
+
+export function useValidatorValidation() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<ValidationResponse, Error, ValidationInput>({
+    mutationFn: async ({
+      category_confirmation,
+      reason,
+      severity_level_confirmation,
+      status,
+      report_id,
+      validator_wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports/${report_id}/validate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category_confirmation,
+          reason,
+          severity_level_confirmation,
+          status,
+          validator_wallet_address,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
+
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      console.log("Response:", data);
+      // Optionally invalidate related queries to refetch data
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails" /* project_id */], // Add project_id if available
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
+
+  return {
+    validateReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}
 export function useCheckWalletInValidators(
   walletAddress: string,
   projectId: number
@@ -159,9 +205,11 @@ export function useCheckWalletInValidators(
       const validatorsData = await validatorsResponse.json();
 
       // Check if wallet is in validators list
-      const isFound = validatorsData.data.some(
-        (validator: AssignedValidator) =>
-          validator.wallet_address.toLowerCase() === walletAddress.toLowerCase()
+      const isFound = validatorsData.data.some((validator: AssignedValidator) =>
+        compareAddresses(
+          validator.wallet_address.toLowerCase(),
+          walletAddress.toLowerCase()
+        )
       );
       setIsIncluded(isFound);
 
@@ -177,10 +225,13 @@ export function useCheckWalletInValidators(
       // Check if wallet is the assigned validator for this project
       const assigned = projectData.data.assigned_validator;
       setAssignedValidator(assigned);
-
+      console.log("isAss", assigned && assigned.wallet_address);
       if (assigned && assigned.wallet_address) {
-        const isAssigned =
-          assigned.wallet_address.toLowerCase() === walletAddress.toLowerCase();
+        const isAssigned = compareAddresses(
+          assigned.wallet_address.toLowerCase(),
+          walletAddress.toLowerCase()
+        );
+        console.log("is_list", isAssigned);
         setIsAssignedValidator(isAssigned);
       } else {
         setIsAssignedValidator(false);
@@ -212,36 +263,121 @@ export function useCheckWalletInValidators(
   };
 }
 
-export const voteReport = async (
-  report_id: string,
-  is_valid: boolean,
-  reason: string,
-  voter_wallet_address: string
-) => {
-  try {
-    const response = await fetch(`${server}/reports/${report_id}/vote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+export function useVoteReport() {
+  const queryClient = useQueryClient();
 
-      body: JSON.stringify({
-        is_valid: is_valid,
-        reason: reason,
-        voter_wallet_address: voter_wallet_address,
-      }),
-    });
+  const mutation = useMutation<VoteResponse, Error, VoteInput>({
+    mutationFn: async ({
+      report_id,
+      is_valid,
+      reason,
+      voter_wallet_address,
+    }) => {
+      const response = await fetch(`${server}/reports/${report_id}/vote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          is_valid,
+          reason,
+          voter_wallet_address,
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text(); // Capture response body
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
-    }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log("Error uploading project:", error);
-  }
-};
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
+
+  return {
+    voteReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}
+
+// export function useValidatorCount() {
+//   const [validatorCount, setValidatorCount] = useState<number>(0);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const controller = new AbortController();
+
+//     const fetchValidatorCount = async () => {
+//       try {
+//         setLoading(true);
+//         setError(null);
+
+//         const req = await fetch(`${server}/validators/count`);
+//         if (!req.ok) throw new Error("Failed to fetch");
+
+//         const count = await req.json();
+//         setValidatorCount(count?.data?.count);
+//       } catch (err) {
+//         if (err !== "AbortError") {
+//           setError(err instanceof Error ? err.message : "An error occurred");
+//         }
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchValidatorCount();
+
+//     return () => controller.abort();
+//   }, [server]);
+
+//   return { validatorCount, loading, error };
+// }
+
+// export function useProjectCount() {
+//   const [projectCount, setProjectCount] = useState<number>(0);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const controller = new AbortController();
+
+//     const fetchValidatorCount = async () => {
+//       try {
+//         setLoading(true);
+//         setError(null);
+
+//         const req = await fetch(`${server}/projects/count`);
+//         if (!req.ok) throw new Error("Failed to fetch");
+
+//         const count = await req.json();
+//         setProjectCount(count?.data?.count);
+//       } catch (err) {
+//         if (err !== "AbortError") {
+//           setError(err instanceof Error ? err.message : "An error occurred");
+//         }
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchValidatorCount();
+
+//     return () => controller.abort();
+//   }, [server]);
+
+//   return { projectCount, loading, error };
+// }

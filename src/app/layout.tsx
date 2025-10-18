@@ -118,6 +118,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const year = new Date();
+
   return (
     <html lang="en">
       <head></head>

@@ -151,7 +151,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                   <Link
                     href={route.url}
                     className={`px-6 py-3 ${
-                      path === route.url || path.includes(route.url)
+                      path === route.url
                         ? " bg-gradient-to-r from-sky-from to-sky-to"
                         : "group-hover:from-sky-from group-hover:to-sky-to bg-gradient-to-r"
                     }   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full`}

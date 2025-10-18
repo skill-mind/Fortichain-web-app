@@ -69,13 +69,13 @@ export default function ResearcherReportDetails({
     isIncluded || isOwner || isAdmin || isAssignedValidator
       ? researchers
       : has_report;
+  console.log(validatorView);
   return (
     <>
       {reportToValidate?.map((data, id) => {
         const reportValidationInfo = validatedReport.find((report) => {
           return report.report_id === data.id;
         });
-
         const reportValidated = validatedReport.some(
           (report) => report.report_id == data.id
         );
@@ -107,7 +107,6 @@ export default function ResearcherReportDetails({
               "Medium".toLocaleUpperCase()
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
-        console.log(data);
         return (
           <div key={id} className="grid gap-2">
             <div className="bg-dark-gray p-6 rounded-[8px] border border-dark-border-gray gap-3 grid">
@@ -179,6 +178,7 @@ export default function ResearcherReportDetails({
                     handler={validatorHandler}
                     voteType={voteType}
                     researcherId={data.id}
+                    setShowReport={setShowReport}
                   />
                 )}
                 {!voteReport && !isAssignedValidator && isIncluded && (
@@ -286,7 +286,7 @@ export default function ResearcherReportDetails({
                           <h3 className="text-gray-text">{validateDate}</h3>
                         </div>
                         <span className={`rounded-full ${vbg} py-2 px-4`}>
-                          Priority:{" "}
+                          Priority:
                           {reportValidationInfo?.severity_level_confirmation}
                         </span>
                       </div>
@@ -310,7 +310,7 @@ export default function ResearcherReportDetails({
                           {reportValidationInfo?.validation_status} Report
                         </span>
                       </div>
-                      <div className="flex justify-between items-center">
+                      {/* <div className="flex justify-between items-center">
                         <div className="flex gap-1 items-center ">
                           <span className="text-gray-text ">Audited:</span>
                           <span className="py-1 px-3 bg-dark-gray-pop rounded-full">
@@ -329,12 +329,16 @@ export default function ResearcherReportDetails({
                             Yunus
                           </span>
                         </div>
-                      </div>
+                      </div> */}
                     </section>
                   )}
                 </>
-                {validatorView == `audit-${id}` && (
-                  <ValidatorReportEditor researcherId={+data.id} />
+                {validatorView == `audit-${id}` && !reportValidated && (
+                  <ValidatorReportEditor
+                    researcherId={data.id}
+                    valdatorViewHandler={valdatorViewHandler}
+                    setShowReport={setShowReport}
+                  />
                 )}
                 {validatorView == `edit-${id}` && <ComingSoon />}
                 {validatorView == `chat-${id}` && <ComingSoon />}
@@ -365,7 +369,9 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                             >
-                              Start
+                              {validatorView == `audit-${id}`
+                                ? " close"
+                                : " Start"}
                             </span>
                           </button>
                         </div>
@@ -393,7 +399,9 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                           >
-                            Chat with validator
+                            {validatorView == `chat-${id}`
+                              ? " Close"
+                              : "Chat with validator"}
                           </span>
                         </button>
                       </div>
@@ -421,7 +429,7 @@ export default function ResearcherReportDetails({
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
                           >
-                            Edit
+                            {validatorView == `edit-${id}` ? " Close" : "Edit"}
                           </span>
                         </button>
                       </div>

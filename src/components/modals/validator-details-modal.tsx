@@ -9,7 +9,6 @@ export default function ValidatorModal({
   handler: () => void;
   selectedValidator: validatorType;
 }) {
-  console.log(selectedValidator);
   return (
     <>
       <div

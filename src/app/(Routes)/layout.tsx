@@ -9,6 +9,7 @@ import {
   validatorRoute,
 } from "@/util/route";
 import { useAccount } from "@starknet-react/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import { useContext, useEffect } from "react";
 
@@ -47,12 +48,14 @@ export default function Layou({
       redirect("/");
     }
   }, [account, isConnected]);
+  const queryClient = new QueryClient();
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <DashboardNavBar routeType={description} routes={location} />
+
       <main className="xl:px-20 px-10 max-w-sit-screen mx-auto py-7 mt-[120px] xl:mt-[180px]">
         {children}
       </main>
-    </>
+    </QueryClientProvider>
   );
 }

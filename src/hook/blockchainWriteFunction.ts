@@ -13,15 +13,16 @@ import {
   PaymasterDetails,
   shortString,
 } from "starknet";
+import { ReportInput, ValidationInput, VoteInput } from "./fetch-requests";
+import { ViewSection } from "@/app/(Routes)/projects/component/resercher-report-editors";
 import {
-  resercherReports,
-  validatorValidation,
-  voteReport,
-} from "./fetch-requests";
+  SetShowReport,
+  ValdatorViewHandler,
+} from "@/app/(Routes)/projects/component/validator-report-editor";
 
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
-type SetIsError = (isSubmitting: boolean) => void;
+type SetIsSuccess = (isSubmitting: boolean) => void;
 
 export const uploadProjectHandle = async (
   account: AccountInterface | undefined,
@@ -29,7 +30,7 @@ export const uploadProjectHandle = async (
   formData: UploadProjectProps,
   setIsOpen: SetIsOpen,
   handler: () => void,
-  setIsError: SetIsError
+  setIsError: SetIsSuccess
 ): Promise<void> => {
   const {
     amount,
@@ -148,7 +149,7 @@ export const EditProjectHandle = async (
   formData: EditProjectProps,
   setIsOpen: SetIsOpen,
   handler: () => void,
-  setIsError: SetIsError
+  setIsError: SetIsSuccess
 ): Promise<void> => {
   const { projectId, description, repoUrl } = formData;
 
@@ -224,7 +225,9 @@ export const writeReport = async (
     description: string | null | undefined;
   },
   address: string,
-  setIsSubmitting: SetIsSubmitting
+  setIsSubmitting: SetIsSubmitting,
+  setViewSection: ViewSection,
+  createReport: (reportData: ReportInput) => Promise<void>
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
   // handler: () => void,
@@ -290,20 +293,22 @@ export const writeReport = async (
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
-      await resercherReports(
-        data.category,
-        description,
-        risk,
-        data.id,
-        recommendation,
-        data.severity_level,
-        data.title,
-        address
-      );
+      await createReport({
+        category: data.category,
+        description: description,
+        potential_risk: risk,
+        project_id: data.id,
+        recommendation: recommendation,
+        severity: data.severity_level,
+        title: data.title,
+        wallet_address: address,
+      });
       // setIsOpen(true);
       console.log(result);
 
       console.log(status);
+      setViewSection("none");
+      toast.success("report submitted");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -320,7 +325,9 @@ export const voteOnValidation = async (
   voteType: string,
   reason: HTMLDivElement | null,
   setIsSubmitting: SetIsSubmitting,
-  address: string
+  address: string,
+  setShowReport: SetShowReport,
+  voteReport: (reportData: VoteInput) => Promise<void>
 ): Promise<void> => {
   try {
     // setIsOpen(true);
@@ -361,16 +368,17 @@ export const voteOnValidation = async (
       // const status = await myProvider.waitForTransaction(
       //   result?.transaction_hash as string
       // );
-      await voteReport(
-        report_id,
-        voteType === "Invalid" ? false : true,
-        voteReason,
-        address
-      );
+      await voteReport({
+        report_id: report_id,
+        is_valid: voteType === "Invalid" ? false : true,
+        reason: voteReason,
+        voter_wallet_address: address,
+      });
       // setIsOpen(true);
       // console.log(result);
 
       // console.log(status);
+      setShowReport("");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -384,7 +392,7 @@ export const voteOnValidation = async (
 export const validateReport = async (
   account: AccountInterface | undefined,
   data: {
-    id: number;
+    id: string;
     status: string;
     severity_level: string;
     audit_report: string;
@@ -392,7 +400,10 @@ export const validateReport = async (
   },
   setIsSubmitting: SetIsSubmitting,
   project_id: number,
-  address: string
+  address: string,
+  valdatorViewHandler: ValdatorViewHandler,
+  setShowReport: SetShowReport,
+  writeReport: (reportData: ValidationInput) => Promise<void>
   // formData: EditProjectProps,
   // setIsOpen: SetIsOpen,
   // handler: () => void,
@@ -452,14 +463,14 @@ export const validateReport = async (
       //   result?.transaction_hash as string
       // );
       console.log(data);
-      await validatorValidation(
-        data.status,
-        reason,
-        data.severity_level,
-        data.audit_report,
-        data.id.toString(),
-        address
-      );
+      await writeReport({
+        category_confirmation: data.status,
+        reason: reason,
+        severity_level_confirmation: data.severity_level,
+        status: data.audit_report,
+        report_id: data.id.toString(),
+        validator_wallet_address: address,
+      });
       // setIsOpen(true);
       // console.log(result);
 
@@ -469,6 +480,8 @@ export const validateReport = async (
     console.error("Error:", error);
     // setIsError(true);
     toast.error("error editing project");
+    valdatorViewHandler("none");
+    setShowReport("");
   } finally {
     setIsSubmitting(false);
   }
@@ -545,7 +558,7 @@ export const validatorWithdrawal = async (
   }
 };
 
-const normalizeAddress = (address: string): string => {
+export const normalizeAddress = (address: string): string => {
   // Remove 0x prefix if present
   if (address.length === 66) {
     // console.log("man-2",address.slice(2))
@@ -560,13 +573,18 @@ const normalizeAddress = (address: string): string => {
   return `${paddedAddress.slice()}`;
 };
 
+export const compareAddresses = (addr1: string, addr2: string): boolean => {
+  const normalized1 = normalizeAddress(addr1.toLowerCase());
+  const normalized2 = normalizeAddress(addr2.toLowerCase());
+  console.log(normalized1 === normalized2);
+  return normalized1 === normalized2;
+};
+
 export const create_validator_profile = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
   formData: validatorType,
-  setIsOpen: SetIsOpen,
-  // handler: () => void,
-  setIsError: SetIsError,
+  setIsSuccess: SetIsSuccess,
   setter: Dispatch<SetStateAction<RouteState>>,
   redirect: (url: string) => void
 ): Promise<void> => {
@@ -587,9 +605,7 @@ export const create_validator_profile = async (
     toast.error("A valid github link is required for passworks");
     return;
   }
-  // handler();
   try {
-    setIsOpen(true);
     setIsSubmitting(true);
     const pass = passworks.filter((data) => data !== "");
     console.log(pass);
@@ -598,7 +614,7 @@ export const create_validator_profile = async (
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "create_validator",
         calldata: CallData.compile({
-          // validator_address: address,
+          validator_address: address,
           username: byteArray.byteArrayFromString(userName),
           github_profile_url: byteArray.byteArrayFromString(githubLink),
           pass_work: pass,
@@ -623,24 +639,20 @@ export const create_validator_profile = async (
       // );
       const result = await account.execute(multicallData);
 
-      const status = await myProvider.waitForTransaction(
+      const _ = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
-      console.log(result);
-
-      console.log(status);
       redirect("/validator");
-      setIsOpen(true);
     }
   } catch (error) {
     console.error("Error:", error);
-    setIsError(true);
-    toast.error("error creating validator profile");
+    // toast.error("error creating validator profile");
   } finally {
     setIsSubmitting(false);
+    setIsSuccess(true);
   }
 };
 
@@ -648,9 +660,7 @@ export const create_resercher_profile = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
   formData: { userName: string; address: string },
-  setIsOpen: SetIsOpen,
-  // handler: () => void,
-  setIsError: SetIsError,
+  setIsSuccess: SetIsSuccess,
   setter: Dispatch<SetStateAction<RouteState>>,
   redirect: (url: string) => void
 ): Promise<void> => {
@@ -663,9 +673,7 @@ export const create_resercher_profile = async (
     toast.error("user name with minimum 5 charcter is required");
     return;
   }
-  // handler();
   try {
-    setIsOpen(true);
     setIsSubmitting(true);
 
     if (account != undefined) {
@@ -699,10 +707,6 @@ export const create_resercher_profile = async (
       const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
-      setIsOpen(true);
-      console.log(result);
-
-      console.log(status);
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
@@ -710,10 +714,10 @@ export const create_resercher_profile = async (
     }
   } catch (error) {
     console.error("Error:", error);
-    setIsError(true);
-    toast.error("error editing project");
+    // toast.error("error creating resercher profile");
   } finally {
     setIsSubmitting(false);
+    setIsSuccess(true);
   }
 };
 
@@ -724,7 +728,7 @@ export const assign_validator = async (
   setIsSubmitting: SetIsSubmitting,
   setIsOpen: SetIsOpen,
   // handler: () => void,
-  setIsError: SetIsError
+  setIsSuccess: SetIsSuccess
 ): Promise<void> => {
   try {
     setIsOpen(true);
@@ -775,7 +779,7 @@ export const assign_validator = async (
     }
   } catch (error) {
     console.error("Error:", error);
-    setIsError(true);
+    setIsSuccess(true);
     toast.error("error editing project");
   } finally {
     setIsSubmitting(false);
