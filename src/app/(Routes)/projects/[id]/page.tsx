@@ -145,7 +145,7 @@ export default function Page() {
       {viewSection === "chat-report" && <ComingSoon />}
       {data.data !== undefined && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm  xl:flex-nowrap">
-          {!hasReport && data.data.researcher_reports.length > 0 && (
+          {!hasReport && (
             <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
               <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
                 <h3>Write Report</h3>
