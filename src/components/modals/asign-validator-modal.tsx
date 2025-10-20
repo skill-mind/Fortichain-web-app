@@ -1,7 +1,6 @@
 "use client";
 "use client";
 import { X } from "lucide-react";
-import { mockUserAccountData } from "@/app/(Routes)/(admin)/suspension/component/suspention-table";
 import { useState } from "react";
 import { FORTICHAINABI } from "@/contract/abi";
 import { useAccount } from "@starknet-react/core";

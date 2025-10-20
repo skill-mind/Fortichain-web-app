@@ -94,7 +94,7 @@ export default function Metrics() {
       >
         <motion.div
           className="flex flex-col items-center w-full px-[60px] py-3 border-b xl:border-b-0 xl:border-r border-dark-border-gray"
-          initial={{ opacity: 0, x: -80, rotate: -10 }}
+          initial={{ opacity: 0, rotate: -10 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
           viewport={{ once: true }}
           transition={{
@@ -115,7 +115,7 @@ export default function Metrics() {
 
         <motion.div
           className="flex flex-col items-center w-full px-[60px] py-3 border-b xl:border-b-0 xl:border-r border-dark-border-gray"
-          initial={{ opacity: 0, x: 80, rotate: 10 }}
+          initial={{ opacity: 0, rotate: 10 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
           viewport={{ once: true }}
           transition={{
@@ -134,7 +134,7 @@ export default function Metrics() {
 
         <motion.div
           className="flex flex-col items-center w-full px-[60px] py-3 border-b xl:border-b-0 xl:border-r border-dark-border-gray"
-          initial={{ opacity: 0, x: -80, rotate: -10 }}
+          initial={{ opacity: 0, rotate: -10 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
           viewport={{ once: true }}
           transition={{
@@ -151,7 +151,7 @@ export default function Metrics() {
 
         <motion.div
           className="flex flex-col items-center w-full px-[60px] py-3 border-dark-border-gray"
-          initial={{ opacity: 0, x: 80, rotate: 10 }}
+          initial={{ opacity: 0, rotate: 10 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
           viewport={{ once: true }}
           transition={{

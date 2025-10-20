@@ -26,7 +26,7 @@ export default function Page() {
         className="xl:px-20 px-1 my-20"
         initial={{ opacity: 0, y: 100, scale: 0.95 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true }}
         transition={{ duration: 1, type: "spring", stiffness: 80 }}
       >
         <div className="flex sm:w-[90%] flex-col items-start gap-5 justify-center px-5 xl:min-w-6xl max-w-6xl mx-auto">
@@ -38,7 +38,7 @@ export default function Page() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <motion.div
-              initial={{ opacity: 0, x: -50, rotate: -20 }}
+              initial={{ opacity: 0, rotate: -20 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
               viewport={{ once: true }}
               transition={{
@@ -51,7 +51,7 @@ export default function Page() {
               <Quote />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 50, rotate: 20 }}
+              initial={{ opacity: 0, rotate: 20 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
               viewport={{ once: true }}
               transition={{
@@ -118,7 +118,7 @@ export default function Page() {
         </div>
       </motion.div>
       <Explore />
-      <motion.section
+      {/* <motion.section
         className="my-36 px-5"
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -171,7 +171,7 @@ export default function Page() {
           Subscribe to get updates on bounties, project launches, and security
           insights.
         </motion.div>
-      </motion.section>
+      </motion.section> */}
       <Footer />
     </div>
   );

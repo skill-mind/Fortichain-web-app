@@ -15,7 +15,6 @@ export default function Validator() {
   const [isEarningOpen, setIsEarningOpen] = useState(false);
   const { address } = useAccount();
   const validatorDetail = useValidatorDetail(address ?? "");
-
   function handleOpenSubmit() {
     setIsSubmitOpen((prev) => !prev);
     setIsApproveOpen(false);
