@@ -95,28 +95,6 @@ export default function ResearcherReportEditor({
             placeholder="Enter title"
           />
         </div>
-        {/* <div className="border-dark-border-gray border rounded-full py-2 w-full">
-          <Select
-            onValueChange={(data) => {
-              setReportDetails((prev) => {
-                return { ...prev, category: data };
-              });
-            }}
-          >
-            <SelectTrigger className="rounded-full w-full border-none pl-7">
-              <SelectValue placeholder="Select severity level" />
-            </SelectTrigger>
-            <SelectContent className="bg-main-bg text-white-text">
-              <SelectItem value="ALL">ALL</SelectItem>
-              <SelectItem value="Re-entrancy">Re-entrancy</SelectItem>
-              <SelectItem value="Access-Control">Access Control</SelectItem>
-              <SelectItem value="Logic-Error">Logic Error</SelectItem>
-              <SelectItem value="Gas-Optimization">Gas Optimization</SelectItem>
-              <SelectItem value="Best-Practice">Best Practice</SelectItem>
-              <SelectItem value="Others">Others</SelectItem>
-            </SelectContent>
-          </Select>
-        </div> */}
         <div className="border-dark-border-gray border rounded-full py-2 w-full">
           <Select
             onValueChange={(data) => {

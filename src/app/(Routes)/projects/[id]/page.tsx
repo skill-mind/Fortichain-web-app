@@ -24,6 +24,7 @@ import ResearcherReportDetails from "../component/resercher-report-details";
 import ValidatorReportEditor from "../component/validator-report-editor";
 import { useFetchProjectDetails } from "@/hook/fetch-requests";
 import ComingSoon from "@/components/coming-soon";
+import ResearcherReportEditEditor from "../component/edit-report";
 
 export default function Page() {
   const { address } = useAccount();
@@ -142,7 +143,12 @@ export default function Page() {
         />
       )}
       {viewSection === "view-report" && <ComingSoon />}
-      {viewSection === "chat-report" && <ComingSoon />}
+      {viewSection === "edit-report" && (
+        <ResearcherReportEditEditor
+          setViewSection={setViewSection}
+          researchers={data?.data?.researcher_reports ?? []}
+        />
+      )}
       {data.data !== undefined && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm  xl:flex-nowrap">
           {!hasReport && (
@@ -214,10 +220,10 @@ export default function Page() {
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
                 onClick={() => {
-                  if (viewSection === "chat-report") {
+                  if (viewSection === "edit-report") {
                     return viewHandler("none");
                   }
-                  viewHandler("chat-report");
+                  viewHandler("edit-report");
                 }}
                 type="button"
               >
