@@ -118,7 +118,7 @@ export default function Page() {
         </div>
       </motion.div>
       <Explore />
-      {/* <motion.section
+      <motion.section
         className="my-36 px-5"
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -171,7 +171,7 @@ export default function Page() {
           Subscribe to get updates on bounties, project launches, and security
           insights.
         </motion.div>
-      </motion.section> */}
+      </motion.section>
       <Footer />
     </div>
   );

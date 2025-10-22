@@ -127,7 +127,7 @@ export default function Metrics() {
           whileHover={{ scale: 1.1, y: -5 }}
         >
           <span className="text-[38px]">
-            {bounties.count.toLocaleString()}+
+            ${bounties.count.toLocaleString()}+
           </span>
           <span className="text-sm text-gray-text">Bounties Paid Out</span>
         </motion.div>
@@ -145,7 +145,7 @@ export default function Metrics() {
           }}
           whileHover={{ scale: 1.1, y: -5 }}
         >
-          <span className="text-[38px]">${projects.count}K+</span>
+          <span className="text-[38px]">{projects.count}K+</span>
           <span className="text-sm text-gray-text">Projects Onboarded</span>
         </motion.div>
 
