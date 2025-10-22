@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import MetricsCard from "../admin/component/metrics-card";
-import { ReportHistoryChart } from "../../(owner)/overview/component/chart";
+import MetricsCard from "../component/metrics-card";
+import { ReportHistoryChart } from "../../owner/component/chart";
 import { Github } from "lucide-react";
 import {
   Select,

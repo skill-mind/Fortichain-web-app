@@ -1,20 +1,39 @@
 "use client";
 import { Router } from "@/provider/route-provider";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import logo from "../../public/Logo.svg";
 import Link from "next/link";
 import LaunchAppNavModal from "./modals/lauch-app-modal";
 
 export default function Nav() {
   const { setter, launchModal } = useContext(Router);
+  const [isScrolled, setIsScrolled] = useState(false);
   function handleCloseAppLouncher() {
     setter((prev) => {
       return { ...prev, launchModal: !launchModal };
     });
   }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5 z-50">
+    <div
+      className={`${
+        isScrolled ? "py-2 backdrop-blur-md bg-main-bg/60" : ""
+      }  fixed w-full top-0 py-5 border-b border-dark-border-gray xl:px-20 px-5 z-50`}
+    >
       <nav className="max-w-sit-screen mx-auto flex justify-between items-center">
         <Link href="/">
           <Image src={logo} alt="forticahin" />

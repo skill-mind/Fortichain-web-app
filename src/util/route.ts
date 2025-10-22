@@ -9,7 +9,7 @@ export const researcherRoute = [
   },
   {
     label: "My Report",
-    url: "/my-reports",
+    url: "/researcher/reports",
   },
   {
     label: "Ranking",
@@ -17,7 +17,7 @@ export const researcherRoute = [
   },
   {
     label: "Profile",
-    url: "/researcher-profile",
+    url: "/researcher/profile",
   },
 ];
 
@@ -28,11 +28,11 @@ export const validatorRoute = [
   },
   {
     label: "Report",
-    url: "/validator-reports",
+    url: "/validator/reports",
   },
   {
     label: "Assigned Projects",
-    url: "/assigned-projects",
+    url: "/validator/assigned-projects",
   },
   {
     label: "Ranking",
@@ -40,7 +40,7 @@ export const validatorRoute = [
   },
   {
     label: "Profile",
-    url: "/validator-profile",
+    url: "/validator/profile",
   },
 ];
 
@@ -51,42 +51,42 @@ export const adminRoute = [
   },
   {
     label: "projects",
-    url: "/fortichain-projects",
+    url: "/admin/fortichain-projects",
   },
   {
     label: "Researchers",
-    url: "/fortichain-researchers",
+    url: "/admin/fortichain-researchers",
   },
   {
     label: "Validators",
-    url: "/fortichain-validators",
+    url: "/admin/fortichain-validators",
   },
   {
     label: "Metrics",
-    url: "/fortichain-metrics",
+    url: "/admin/fortichain-metrics",
   },
   {
     label: "Blog managements",
-    url: "/fortichain-blog",
+    url: "/admin/fortichain-blog",
   },
   {
     label: "Help center",
-    url: "/help-desk",
+    url: "/admin/help-desk",
   },
   {
     label: "Suspention",
-    url: "/suspension",
+    url: "/admin/suspension",
   },
 ];
 
 export const ownerRoute = [
   {
     label: "Overview",
-    url: "/overview",
+    url: "/owner",
   },
   {
     label: "Upload Project",
-    url: "/upload-project",
+    url: "/owner/upload-project",
   },
   {
     label: "View Projects",
@@ -98,6 +98,6 @@ export const ownerRoute = [
   },
   {
     label: "Profile",
-    url: "/profile",
+    url: "/owner/profile",
   },
 ];

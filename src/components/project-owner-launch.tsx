@@ -36,7 +36,7 @@ export default function ProjectOwnerLauncher() {
 
   useEffect(() => {
     if (isComplete && route == "owner") {
-      redirect("/overview");
+      redirect("/owner");
     }
   }, [isComplete, route]);
 

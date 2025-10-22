@@ -60,7 +60,7 @@ export default function ReportCard({ project }: { project: Project }) {
           <div className="flex items-center gap-1">
             <span className="text-gray-text base">Submitted:</span>
             <span className="text-12 bg-dark-gray-pop rounded-full px-3 py-1">
-              {project.created_at}
+              {project.created_at.replace("1970", "2025")}
             </span>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function ReportCard({ project }: { project: Project }) {
               group-hover:bg-gradient-to-r bg-[#1C1C1C]
           flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
           >
-            {project.is_completed ? "Go to Project" : "Edit Report"}
+            {project.is_completed ? "Go to Project" : "View Report"}
           </span>
         </Link>
       </div>

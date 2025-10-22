@@ -114,7 +114,7 @@ export default function ShowCase() {
       >
         <motion.div
           className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
-          initial={{ opacity: 0, x: -100, rotateY: -10 }}
+          initial={{ opacity: 0, rotateY: -100 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{
@@ -144,7 +144,7 @@ export default function ShowCase() {
 
         <motion.div
           className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
-          initial={{ opacity: 0, x: 100, rotateY: 10 }}
+          initial={{ opacity: 0, rotateY: 100 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{
@@ -179,7 +179,7 @@ export default function ShowCase() {
 
         <motion.div
           className="md:p-3 md:h-[374px] flex-col md:flex-row p-6 md:pl-10 flex justify-between items-start md:items-center border border-dark-border-gray mx-auto rounded-[8px] max-w-6xl"
-          initial={{ opacity: 0, x: -100, rotateY: -10 }}
+          initial={{ opacity: 0, rotateY: -100 }}
           whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{

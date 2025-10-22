@@ -37,9 +37,9 @@ export default function LaunchAppNavModal({
         onClick={handleClose}
       ></div>
       <div
-        className={`bg-dark-gray border border-dark-border-gray min-w-80 z-[400] xl:min-w-6xl max-w-6xl mx-auto rounded-[8px] p-10 gap-10 flex flex-col mt-6 items-center absolute top-24 left-1/2 -translate-x-[50%] transition-all duration-300 ease-in-out ${
+        className={`bg-dark-gray border border-dark-border-gray max-h-[500px] min-w-80 z-[400] xl:min-w-6xl max-w-6xl mx-auto rounded-[8px] p-10 gap-10 flex flex-col mt-6 items-center absolute top-24 left-1/2 -translate-x-[50%] transition-all duration-300 ease-in-out ${
           isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
+        } overflow-y-auto scrollbar-hide`}
       >
         <button
           type="button"

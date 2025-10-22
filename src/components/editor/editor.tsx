@@ -211,6 +211,11 @@ export const Editor = forwardRef((props, ref) => {
       setMobileView("main");
     }
   }, [isMobile, mobileView]);
+  const handleEditorClick = () => {
+    if (editor) {
+      editor.commands.focus();
+    }
+  };
   return (
     <EditorContext.Provider value={{ editor }}>
       <Toolbar
@@ -234,7 +239,8 @@ export const Editor = forwardRef((props, ref) => {
       <EditorContent
         editor={editor}
         role="presentation"
-        className="p-6 h-full"
+        className="p-6 h-full simple-editor"
+        onClick={handleEditorClick}
       />
     </EditorContext.Provider>
   );

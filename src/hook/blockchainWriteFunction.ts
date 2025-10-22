@@ -590,7 +590,7 @@ export const create_validator_profile = async (
 ): Promise<void> => {
   const { userName, address, githubLink, passworks } = formData;
 
-  if (!githubLink.startsWith("https://github.com/")) {
+  if (!githubLink.includes("github.com")) {
     toast.error("A valid github link is required");
     return;
   }
@@ -599,7 +599,7 @@ export const create_validator_profile = async (
     return;
   }
   const wrongPassWorkLink: string[] = passworks.filter(
-    (m: string) => !m.startsWith("https://github.com/")
+    (m: string) => !m.includes("github.com")
   );
   if (wrongPassWorkLink.length > 0) {
     toast.error("A valid github link is required for passworks");
@@ -638,21 +638,26 @@ export const create_validator_profile = async (
       //   feeEstimation?.suggested_max_fee_in_gas_token
       // );
       const result = await account.execute(multicallData);
-
-      const _ = await myProvider.waitForTransaction(
+      console.log(result);
+      if (!result) {
+        throw new Error("unable to create validator account");
+      }
+      const status = await myProvider.waitForTransaction(
         result?.transaction_hash as string
       );
+
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
+      toast.success("your validator profile crated succesfully");
       redirect("/validator");
+      setIsSuccess(true);
     }
   } catch (error) {
     console.error("Error:", error);
-    // toast.error("error creating validator profile");
+    toast.error("error creating validator profile");
   } finally {
     setIsSubmitting(false);
-    setIsSuccess(true);
   }
 };
 
@@ -710,14 +715,15 @@ export const create_resercher_profile = async (
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
+      toast.success("your validator profile crated succesfully");
       redirect("/researcher");
+      setIsSuccess(true);
     }
   } catch (error) {
     console.error("Error:", error);
-    // toast.error("error creating resercher profile");
+    toast.error("error creating resercher profile");
   } finally {
     setIsSubmitting(false);
-    setIsSuccess(true);
   }
 };
 
