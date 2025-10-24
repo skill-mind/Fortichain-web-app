@@ -48,10 +48,10 @@ export default function EditProjectModal({
   return (
     <>
       <div
-        className="bg-main-bg/75 fixed top-0 h-screen w-full"
+        className="bg-main-bg/75 fixed top-0 h-screen w-full z-50"
         onClick={handler}
       ></div>
-      <form className="p-6 max-w-[700px] w-full bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-40 left-1/2 -translate-x-[50%]">
+      <form className="z-50 p-6 max-w-[700px] w-full bg-dark-gray rounded-[8px] mx-auto grid gap-5 fixed top-50 sm:top-40 left-1/2 -translate-x-[50%]">
         {isOpen && (
           <SuccessModal
             handler={handler}

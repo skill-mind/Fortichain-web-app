@@ -66,8 +66,8 @@ export const uploadProjectHandle = async (
     toast.error("project deadline is required!");
     return;
   }
-  if (!repoUrl) {
-    toast.error("project  is required!");
+  if (!repoUrl.includes("github.com")) {
+    toast.error("project repi url is required!");
     return;
   }
 
@@ -220,32 +220,16 @@ export const writeReport = async (
     title: string;
     severity_level: string;
     category: string;
-    potential_risk: string | null | undefined;
-    recommendation: string | null | undefined;
-    description: string | null | undefined;
+    potential_risk?: string | null | undefined;
+    recommendation?: string | null | undefined;
+    description?: string | null | undefined;
   },
   address: string,
   setIsSubmitting: SetIsSubmitting,
   setViewSection: ViewSection,
   createReport: (reportData: ReportInput) => Promise<void>
-  // formData: EditProjectProps,
-  // setIsOpen: SetIsOpen,
-  // handler: () => void,
-  // setIsError: SetIsError
 ): Promise<void> => {
-  // const { projectId, description, repoUrl } = formData;
-
-  // if (!description) {
-  //   toast.error("project description is required!");
-  //   return;
-  // }
-  // if (!repoUrl) {
-  //   toast.error("project  is required!");
-  //   return;
-  // }
-  // handler();
   try {
-    // setIsOpen(true);
     setIsSubmitting(true);
     if (
       account != undefined &&
@@ -272,11 +256,11 @@ export const writeReport = async (
       };
 
       const multicallData = [Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
 
       // const feeEstimation = await account?.estimatePaymasterTransactionFee(
       //   [...multicallData],
@@ -649,7 +633,7 @@ export const create_validator_profile = async (
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
-      toast.success("your validator profile crated succesfully");
+      toast.success("validator profile crated succesfully");
       redirect("/validator");
       setIsSuccess(true);
     }

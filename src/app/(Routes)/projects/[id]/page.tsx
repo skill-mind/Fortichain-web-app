@@ -130,25 +130,6 @@ export default function Page() {
           />
         )}
       </div>
-      {viewSection === "resercher-report" && (
-        <ResearcherReportEditor setViewSection={setViewSection} />
-      )}
-      {reports && data?.data?.project && (
-        <ResearcherReportDetails
-          reports={reports}
-          researchers={data?.data?.researcher_reports}
-          validatedReport={data?.data?.validator_validations}
-          votes={data?.data?.validation_votes}
-          project={data?.data?.project}
-        />
-      )}
-      {viewSection === "view-report" && <ComingSoon />}
-      {viewSection === "edit-report" && (
-        <ResearcherReportEditEditor
-          setViewSection={setViewSection}
-          researchers={data?.data?.researcher_reports ?? []}
-        />
-      )}
       {data.data !== undefined && reporterChecker && (
         <div className="flex flex-wrap gap-4 text-sm  xl:flex-nowrap">
           {!hasReport && (
@@ -181,64 +162,56 @@ export default function Page() {
             </div>
           )}
 
-          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-              <h3>Discussions</h3>
-              <button
-                className="w-fit min-h-11 p-0.5 group             
+          {hasReport && (
+            <>
+              <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+                <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                  <h3>Edit Report</h3>
+                  <button
+                    className="w-fit min-h-11 p-0.5 group             
                   hover:from-sky-blue-border hover:to-sky-blue-border
                   bg-gradient-to-r group to-[#312F2F] from-[#212121]
               rounded-full group"
-                type="button"
-                onClick={() => {
-                  if (viewSection === "chat-report") {
-                    return viewHandler("none");
-                  }
-                  viewHandler("chat-report");
-                }}
-              >
-                <span
-                  className="px-12 py-6
+                    onClick={() => {
+                      if (viewSection === "edit-report") {
+                        return viewHandler("none");
+                      }
+                      viewHandler("edit-report");
+                    }}
+                    type="button"
+                  >
+                    <span
+                      className="px-12 py-6
                       group-hover:from-sky-from group-hover:to-sky-to text-sm
                       group-hover:bg-gradient-to-r bg-[#1C1C1C]
                   flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                >
-                  {viewSection === "chat-report"
-                    ? " close"
-                    : "  Chat with validator"}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-            <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-              <h3>Edit Report</h3>
-              <button
-                className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                onClick={() => {
-                  if (viewSection === "edit-report") {
-                    return viewHandler("none");
-                  }
-                  viewHandler("edit-report");
-                }}
-                type="button"
-              >
-                <span
-                  className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                >
-                  {viewSection === "chat-report" ? " close" : "  Edit"}
-                </span>
-              </button>
-            </div>
-          </div>
+                    >
+                      {viewSection === "chat-report" ? " close" : "  Edit"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
+      )}
+      {viewSection === "resercher-report" && (
+        <ResearcherReportEditor setViewSection={setViewSection} />
+      )}
+      {viewSection === "edit-report" && (
+        <ResearcherReportEditEditor
+          setViewSection={setViewSection}
+          researchers={data?.data?.researcher_reports ?? []}
+        />
+      )}
+      {reports && data?.data?.project && (
+        <ResearcherReportDetails
+          reports={reports}
+          researchers={data?.data?.researcher_reports}
+          validatedReport={data?.data?.validator_validations}
+          votes={data?.data?.validation_votes}
+          project={data?.data?.project}
+        />
       )}
     </div>
   );

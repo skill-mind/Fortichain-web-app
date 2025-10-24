@@ -2,9 +2,9 @@
 
 import { FORTICHAINABI } from "@/contract/abi";
 import { FORTICHAINADDRESS } from "@/contract/address";
-import { useReadContract } from "@starknet-react/core";
-import { useEffect, useState } from "react";
-import { Abi, shortString } from "starknet";
+import { useAccount, useReadContract } from "@starknet-react/core";
+import { useCallback, useEffect, useState } from "react";
+import { Abi, shortString, uint256 } from "starknet";
 
 export function useContractFetch(
   abi: Abi,
@@ -751,48 +751,48 @@ export function useValidatorDetail(address: string) {
   return validators;
 }
 
-export function useProjectValidator(id: number) {
-  const [validators, setValidators] = useState<validatorType>();
+// export function useProjectValidator(id: number) {
+//   const [validators, setValidators] = useState<validatorType>();
 
-  const { readData: validatorsData } = useContractFetch(
-    FORTICHAINABI,
-    "get_assigned_project_validator",
-    [id]
-  );
-  useEffect(() => {
-    if (!validatorsData) return; //
-    const rawValidatorData: validatorType = {
-      validator_data_uri: validatorsData?.validator_data_uri?.toString(),
-      validator_address: `0x0${validatorsData?.validator_address?.toString(
-        16
-      )}`,
-      username: validatorsData?.username,
-      id: +validatorsData?.id?.toString(),
-      is_open_for_work: validatorsData?.is_open_for_work,
-      created_at: epocTime(validatorsData?.created_at?.toString()),
-      status: shortString?.decodeShortString(validatorsData?.status),
-      kyc_uri: validatorsData?.kyc_uri?.toString(),
-      updated_at: epocTime(validatorsData?.updated_at?.toString()),
-      kyc_approved: validatorsData?.kyc_approved?.toString(),
-      github_profile_url: validatorsData?.github_profile_url,
-      total_bounty_won: Number(validatorsData?.total_bounty_won),
-      approval_rate: Number(validatorsData?.approval_rate),
-      total_amount_withdrawn: Number(validatorsData?.total_amount_withdrawn),
-      reputation: Number(validatorsData?.reputation),
-      available_amount_to_widthdraw: Number(
-        validatorsData?.available_amount_to_withdraw
-      ),
-      number_project_validated: Number(
-        validatorsData?.number_project_validated
-      ),
-      passwork: validatorsData["1"],
-    };
+//   const { readData: validatorsData } = useContractFetch(
+//     FORTICHAINABI,
+//     "get_assigned_project_validator",
+//     [id]
+//   );
+//   useEffect(() => {
+//     if (!validatorsData) return; //
+//     const rawValidatorData: validatorType = {
+//       validator_data_uri: validatorsData?.validator_data_uri?.toString(),
+//       validator_address: `0x0${validatorsData?.validator_address?.toString(
+//         16
+//       )}`,
+//       username: validatorsData?.username,
+//       id: +validatorsData?.id?.toString(),
+//       is_open_for_work: validatorsData?.is_open_for_work,
+//       created_at: epocTime(validatorsData?.created_at?.toString()),
+//       status: shortString?.decodeShortString(validatorsData?.status),
+//       kyc_uri: validatorsData?.kyc_uri?.toString(),
+//       updated_at: epocTime(validatorsData?.updated_at?.toString()),
+//       kyc_approved: validatorsData?.kyc_approved?.toString(),
+//       github_profile_url: validatorsData?.github_profile_url,
+//       total_bounty_won: Number(validatorsData?.total_bounty_won),
+//       approval_rate: Number(validatorsData?.approval_rate),
+//       total_amount_withdrawn: Number(validatorsData?.total_amount_withdrawn),
+//       reputation: Number(validatorsData?.reputation),
+//       available_amount_to_widthdraw: Number(
+//         validatorsData?.available_amount_to_withdraw
+//       ),
+//       number_project_validated: Number(
+//         validatorsData?.number_project_validated
+//       ),
+//       passwork: validatorsData["1"],
+//     };
 
-    setValidators(rawValidatorData);
-  }, [validatorsData]);
+//     setValidators(rawValidatorData);
+//   }, [validatorsData]);
 
-  return validators;
-}
+//   return validators;
+// }
 
 export function getTimeFromEpoch(time: string) {
   if (!time) return "";
@@ -810,3 +810,71 @@ export function epocTime(time: string) {
   const date = new Date(+epochSeconds); // multiply by 1000 to convert to milliseconds
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
+
+// Simplified ERC-20 ABI for USDC (includes balanceOf function)
+const USDC_ABI = [
+  {
+    name: "balanceOf",
+    type: "function",
+    inputs: [
+      {
+        name: "account",
+        type: "felt",
+      },
+    ],
+    outputs: [
+      {
+        name: "balance",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+];
+
+const USDC_CONTRACT_ADDRESS = "0xYOUR_USDC_CONTRACT_ADDRESS_HERE"; // e.g., '0x05a...'
+
+export const useUSDCBalance = () => {
+  // Get the connected account and chain ID from Starknet React
+  const { account, address } = useAccount();
+
+  // Initialize the USDC contract
+  const { readData: contract } = useContractFetch(
+    USDC_ABI,
+    USDC_CONTRACT_ADDRESS,
+    []
+  );
+
+  const fetchBalance = useCallback(async () => {
+    if (!account || !address || !contract) {
+      console.error("Wallet not connected or contract not initialized");
+      return null;
+    }
+
+    try {
+      // Call the balanceOf function on the USDC contract
+      const balanceResult = await contract.call("balanceOf", [address]);
+
+      // Extract low and high parts of uint256 balance
+      const balanceUint256 = uint256.uint256ToBN({
+        low: balanceResult.balance.low,
+        high: balanceResult.balance.high,
+      });
+
+      // Convert to human-readable format (USDC has 6 decimals)
+      const balanceInUSDC = Number(balanceUint256) / 10 ** 6;
+
+      console.log(`USDC Balance: ${balanceInUSDC}`);
+      return balanceInUSDC.toString();
+    } catch (error) {
+      console.error("Error fetching USDC balance:", error);
+      return null;
+    }
+  }, [account, address, contract]);
+
+  return {
+    fetchBalance,
+    isLoading: !account || !contract, // Loading state if account or contract is not ready
+    error: !account ? "Wallet not connected" : null,
+  };
+};

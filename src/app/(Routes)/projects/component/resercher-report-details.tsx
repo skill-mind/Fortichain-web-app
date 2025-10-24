@@ -38,11 +38,11 @@ export default function ResearcherReportDetails({
   const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
   const [showReport, setShowReport] = useState("");
   const [voteType, setVoteType] = useState<null | string>(null);
-  const { readData: isValidator } = useContractFetch(
-    FORTICHAINABI,
-    "is_validator",
-    [address ?? ""]
-  );
+  // const { readData: isValidator } = useContractFetch(
+  //   FORTICHAINABI,
+  //   "is_validator",
+  //   [address ?? ""]
+  // );
   const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
 
   function validatorHandler(type: string | null) {
@@ -69,7 +69,7 @@ export default function ResearcherReportDetails({
     isIncluded || isOwner || isAdmin || isAssignedValidator
       ? researchers
       : has_report;
-  console.log(validatorView);
+
   return (
     <>
       {reportToValidate?.map((data, id) => {

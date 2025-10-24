@@ -21,3 +21,37 @@ export const compareAddresses = (addr1: string, addr2: string): boolean => {
 
   return normalized1 === normalized2;
 };
+
+interface TiptapNode {
+  type: string; //
+  content?: TiptapNode[];
+  text?: string;
+  attrs?: Record<string, string>;
+}
+
+interface TiptapJSON {
+  type: "doc";
+  content: TiptapNode[];
+}
+
+// Utility function to convert Tiptap JSON to plain text
+export const getTextFromTiptapJSON = (
+  json: TiptapJSON | null | undefined
+): string => {
+  if (!json || !json.content) return "";
+
+  let text = "";
+
+  const processNode = (node: TiptapNode): void => {
+    if (node.type === "text" && node.text) {
+      text += node.text;
+    }
+    if (node.content && Array.isArray(node.content)) {
+      node.content.forEach((child) => processNode(child));
+    }
+  };
+
+  json.content.forEach((node) => processNode(node));
+
+  return text.trim();
+};
