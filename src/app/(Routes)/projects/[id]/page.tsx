@@ -47,6 +47,10 @@ export default function Page() {
   };
 
   const data = useFetchProjectDetails(id ? +id : 0);
+  const repotMade = data.data?.researcher_reports?.length
+    ? data.data?.researcher_reports?.length > 0
+    : false;
+  console.log(repotMade, "repoet-made");
   const hasReport =
     data && address
       ? data?.data?.researcher_reports.some((data) =>
@@ -55,7 +59,7 @@ export default function Page() {
       : false;
 
   const hasVotes = (data?.data?.validation_votes?.length ?? 0) > 0;
-
+  // const validatorValidations = data.data?.validator_validations;
   useEffect(() => {
     if (project) {
       setProjectDetail({
@@ -127,6 +131,7 @@ export default function Page() {
             projectDetail={data?.data?.project}
             editHandler={handler}
             hasVote={hasVotes}
+            reportMade={repotMade}
           />
         )}
       </div>

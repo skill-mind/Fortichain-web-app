@@ -832,11 +832,13 @@ const USDC_ABI = [
   },
 ];
 
-const USDC_CONTRACT_ADDRESS = "0xYOUR_USDC_CONTRACT_ADDRESS_HERE"; // e.g., '0x05a...'
+const USDC_CONTRACT_ADDRESS =
+  "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8"; // e.g., '0x05a...'
 
 export const useUSDCBalance = () => {
   // Get the connected account and chain ID from Starknet React
   const { account, address } = useAccount();
+  const [balance, setBalance] = useState(0);
 
   // Initialize the USDC contract
   const { readData: contract } = useContractFetch(
@@ -863,7 +865,7 @@ export const useUSDCBalance = () => {
 
       // Convert to human-readable format (USDC has 6 decimals)
       const balanceInUSDC = Number(balanceUint256) / 10 ** 6;
-
+      setBalance(balanceInUSDC);
       console.log(`USDC Balance: ${balanceInUSDC}`);
       return balanceInUSDC.toString();
     } catch (error) {
@@ -876,5 +878,6 @@ export const useUSDCBalance = () => {
     fetchBalance,
     isLoading: !account || !contract, // Loading state if account or contract is not ready
     error: !account ? "Wallet not connected" : null,
+    balance,
   };
 };

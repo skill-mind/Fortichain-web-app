@@ -6,6 +6,7 @@ import { voteOnValidation } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
 import { SetShowReport } from "@/app/(Routes)/projects/component/validator-report-editor";
 import { useVoteReport } from "@/hook/fetch-requests";
+import toast from "react-hot-toast";
 
 export default function ValidatorReportModal({
   handler,
@@ -54,9 +55,16 @@ export default function ValidatorReportModal({
         </div>
         <div>
           <button
-            onClick={() => {
+            onClick={async () => {
               if (!address) return;
-              voteOnValidation(
+              //@ts-expect-error parmas can be undefined getText(),
+              const reportText = reportRef?.current?.getText().length;
+              console.log(reportText);
+              if (reportText < 50) {
+                toast.error("character length is less than 50");
+                return;
+              }
+              await voteOnValidation(
                 account,
                 researcherId,
                 voteType ?? "",
@@ -68,6 +76,7 @@ export default function ValidatorReportModal({
                   voteReport(reportData);
                 }
               );
+              handler(null);
             }}
             className="min-h-50 p-0.5 group   w-fit          
               from-sky-blue-border to-sky-blue-border

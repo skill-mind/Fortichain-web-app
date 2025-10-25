@@ -16,12 +16,15 @@ export default function Description({
   projectOwner,
   editHandler,
   hasVote,
+  reportMade,
 }: {
   projectOwner: string;
   projectDetail: Project;
   editHandler: () => void;
   hasVote: boolean;
+  reportMade: boolean;
 }) {
+  console.log(projectDetail, "details");
   const { address } = useAccount();
   const amount = +projectDetail?.total_amount
     ? +projectDetail?.total_amount / ONE_STK
@@ -57,7 +60,7 @@ export default function Description({
               {epocTime(projectDetail?.deadline?.toString() ?? "")}
             </span>
           </div>
-          {projectOwner == address && (
+          {!reportMade && projectOwner == address && (
             <button
               className="w-fit min-h-11 p-0.5 group             
         hover:from-sky-blue-border hover:to-sky-blue-border

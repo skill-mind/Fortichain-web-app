@@ -51,7 +51,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
           };
         },
       })}
-      chains={[sepolia]}
+      chains={[sepolia, mainnet]}
       connectors={connectors as Connector[]}
       explorer={voyager}
       // autoConnect={true}

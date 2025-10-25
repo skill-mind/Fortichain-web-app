@@ -593,50 +593,40 @@ export const create_validator_profile = async (
     setIsSubmitting(true);
     const pass = passworks.filter((data) => data !== "");
     console.log(pass);
-    if (account != undefined) {
-      const Call = {
-        contractAddress: FORTICHAINADDRESS,
-        entrypoint: "create_validator",
-        calldata: CallData.compile({
-          validator_address: address,
-          username: byteArray.byteArrayFromString(userName),
-          github_profile_url: byteArray.byteArrayFromString(githubLink),
-          pass_work: pass,
-        }),
-      };
-      const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
+    if (account === undefined) return;
+    const Call = {
+      contractAddress: FORTICHAINADDRESS,
+      entrypoint: "create_validator",
+      calldata: CallData.compile({
+        validator_address: address,
+        username: byteArray.byteArrayFromString(userName),
+        github_profile_url: byteArray.byteArrayFromString(githubLink),
+        pass_work: pass,
+      }),
+    };
+    const multicallData = [Call];
+    // const feeDetails: PaymasterDetails = {
+    //   feeMode: {
+    //     mode: "sponsored",
+    //   },
+    // };
 
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
+    // const feeEstimation = await account?.estimatePaymasterTransactionFee(
+    //   [...multicallData],
+    //   feeDetails
+    // );
 
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
-      const result = await account.execute(multicallData);
-      console.log(result);
-      if (!result) {
-        throw new Error("unable to create validator account");
-      }
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
-
-      setter((prev) => {
-        return { ...prev, isComplete: true };
-      });
-      toast.success("validator profile crated succesfully");
-      redirect("/validator");
-      setIsSuccess(true);
-    }
+    // const result = await account?.executePaymasterTransaction(
+    //   [...multicallData],
+    //   feeDetails,
+    //   feeEstimation?.suggested_max_fee_in_gas_token
+    // );
+    await account.execute(multicallData);
+    setter((prev) => {
+      return { ...prev, isComplete: true };
+    });
+    setIsSuccess(true);
+    toast.success("validator profile crated succesfully");
   } catch (error) {
     console.error("Error:", error);
     toast.error("error creating validator profile");
@@ -691,17 +681,12 @@ export const create_resercher_profile = async (
       //   feeDetails,
       //   feeEstimation?.suggested_max_fee_in_gas_token
       // );
-      const result = await account.execute(multicallData);
-
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
+      await account.execute(multicallData);
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
-      toast.success("your validator profile crated succesfully");
-      redirect("/researcher");
       setIsSuccess(true);
+      toast.success("your validator profile crated succesfully");
     }
   } catch (error) {
     console.error("Error:", error);

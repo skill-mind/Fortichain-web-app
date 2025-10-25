@@ -1,3 +1,5 @@
+import { useBalance } from "@starknet-react/core";
+
 export const formatAddress = (address: string, len = 6, lenRight = 4) => {
   return `${address.slice(0, len)}...${address.slice(-lenRight)}`;
 };
@@ -54,4 +56,16 @@ export const getTextFromTiptapJSON = (
   json.content.forEach((node) => processNode(node));
 
   return text.trim();
+};
+
+export const useGetBalance = (userAddress: string) => {
+  const { data: balance } = useBalance({
+    token:
+      "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d" as `0x${string}`,
+    address: userAddress
+      ? (userAddress as `0x${string}`)
+      : ("0x0" as `0x${string}`),
+  });
+
+  return balance;
 };

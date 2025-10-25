@@ -55,7 +55,12 @@ export default function DashboardNavBar({ routeType, routes }: route) {
           <div
             onClick={() => {
               setter((prev) => {
-                return { ...prev, isComplete: false, route: "none" };
+                return {
+                  ...prev,
+                  isComplete: false,
+                  route: "none",
+                  launchModal: false,
+                };
               });
               redirect("/");
             }}
