@@ -7,7 +7,7 @@ export interface ReportInput {
   category: string;
   description: string;
   potential_risk: string;
-  project_id: number;
+  project_id: number | string;
   recommendation: string;
   severity: string;
   title: string;
@@ -381,3 +381,72 @@ export function useVoteReport() {
 
 //   return { projectCount, loading, error };
 // }
+
+export function useResearcherEditReports() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<ReportResponse, Error, ReportInput>({
+    mutationFn: async ({
+      category,
+      description,
+      potential_risk,
+      project_id: report_id,
+      recommendation,
+      severity,
+      title,
+      wallet_address,
+    }) => {
+      console.log({
+        blockchain_tx_hash: "",
+        category: category,
+        description: description,
+        potential_risk: potential_risk,
+        recommendation: recommendation,
+        report_id: report_id,
+        severity: severity,
+        title: title,
+      });
+      const response = await fetch(`${server}/reports/${report_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          blockchain_tx_hash: "",
+          category: category,
+          description: description,
+          potential_risk: potential_risk,
+          recommendation: recommendation,
+          report_id: report_id,
+          severity: severity,
+          title: title,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
+
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      // Optionally invalidate related queries to refetch data
+      queryClient.invalidateQueries({
+        queryKey: ["projectDetails"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error uploading project:", error);
+    },
+  });
+
+  return {
+    createReport: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    data: mutation.data,
+  };
+}

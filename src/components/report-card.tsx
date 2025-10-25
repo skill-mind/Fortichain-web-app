@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export default function ReportCard({ project }: { project: Project }) {
   const bg =
-    project.priority.toLocaleUpperCase() === "low"
+    project.priority.toLocaleUpperCase() == "low"
       ? "bg-pririty-low-bg text-blue-ball"
-      : project.priority.toLocaleLowerCase() === "medium"
+      : project.priority.toLocaleLowerCase() == "medium"
       ? "bg-warning-bg text-warning"
       : "bg-pririty-high-bg text-pririty-high-text";
   return (
@@ -34,10 +34,6 @@ export default function ReportCard({ project }: { project: Project }) {
           <h3 className="text-base capitalize">{project.name}</h3>
         </div>
         <div className="flex gap-2 items-center text-sm w-full sm:w-fit justify-end">
-          <div className="flex gap-1 items-center">
-            <Message />
-            <span>0</span>
-          </div>
           <span
             className={` ${bg} rounded-full py-1.5 px-3 text-12 sm:text-base`}
           >

@@ -14,6 +14,7 @@ import { useParams } from "next/navigation";
 import { writeReport } from "@/hook/blockchainWriteFunction";
 import { useAccount } from "@starknet-react/core";
 import { useResearcherReports } from "@/hook/fetch-requests";
+import toast from "react-hot-toast";
 
 export type ViewSection = (viewSection: string) => void;
 export default function ResearcherReportEditor({
@@ -34,8 +35,26 @@ export default function ResearcherReportEditor({
   const potentialRiskRef = useRef<HTMLDivElement>(null);
   const recommendationRef = useRef<HTMLDivElement>(null);
   const { createReport, isLoading, error, data } = useResearcherReports();
-  console.log({ isLoading, error, data }, "resercher report");
   function handleSubmit() {
+    //@ts-expect-error parmas can be undefined getText(),
+    const desc = issueDescriptionRef.current?.getText()?.length;
+    //@ts-expect-error parmas can be undefined getText(),
+    const risk = potentialRiskRef.current?.getText()?.length;
+    //@ts-expect-error parmas can be undefined getText(),
+    const recommend = recommendationRef.current?.getText()?.length;
+
+    if (desc < 50) {
+      toast.error("description is less than 50 character");
+      return;
+    }
+    if (risk < 50) {
+      toast.error("risk is less than 50 character");
+      return;
+    }
+    if (recommend < 50) {
+      toast.error("recommendation is less than 50 character");
+      return;
+    }
     if (!id) return;
     const data = {
       id: id,
@@ -57,9 +76,6 @@ export default function ResearcherReportEditor({
       address,
       setIsSubmitting,
       setViewSection,
-      // recommendationRef.current?.getText(),
-      // potentialRiskRef.current?.getText(),
-      // issueDescriptionRef.current?.getHTML(),
       createReport
     );
   }
