@@ -94,8 +94,7 @@ export default function ProjectValidatorLauncher() {
       setIsSubmitting,
       formData,
       setIsSuccess,
-      setter,
-      redirect
+      setter
     );
   }
 

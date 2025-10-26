@@ -52,7 +52,7 @@ export default function Header() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+          initial={{ opacity: 0, scale: 0.5, rotate: 0 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{
             duration: 0.8,

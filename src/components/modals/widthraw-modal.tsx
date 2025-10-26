@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import WidthrawMessageModal from "./widthraw-message";
 import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { validatorWithdrawal } from "@/hook/blockchainWriteFunction";
+import { WithdrawaBounty } from "@/hook/blockchainWriteFunction";
 
 export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,8 +16,9 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isError, setIsError] = useState(false);
   const { address, account } = useAccount();
   const validatorDetail = useValidatorDetail(address ?? "");
-  function handleWithdral() {
-    validatorWithdrawal(account, details);
+  async function handleWithdral() {
+    await WithdrawaBounty(account, details, setIsSubmitting);
+    handler();
   }
   return (
     <>

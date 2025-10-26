@@ -471,17 +471,13 @@ export const validateReport = async (
   }
 };
 
-export const validatorWithdrawal = async (
+export const WithdrawaBounty = async (
   account: AccountInterface | undefined,
   data: {
     amount: number;
     address: string;
-  }
-  // setIsSubmitting: SetIsSubmitting
-  // formData: EditProjectProps,
-  // setIsOpen: SetIsOpen,
-  // handler: () => void,
-  // setIsError: SetIsError
+  },
+  setIsSubmitting: SetIsSubmitting
 ): Promise<void> => {
   // const { projectId, description, repoUrl } = formData;
 
@@ -496,49 +492,25 @@ export const validatorWithdrawal = async (
   // handler();
   try {
     // setIsOpen(true);
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
     if (account != undefined) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
-        entrypoint: "withdraw_validator_bounty",
+        entrypoint: "withdraw_bounty",
         calldata: CallData.compile({
-          address: data.address,
           amount: cairo.uint256(data.amount),
+          recipient: data.address,
         }),
       };
       const multicallData = [Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
-
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
-
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
-      const result = await account.execute(multicallData);
-
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
-      // setIsOpen(true);
-      console.log(result);
-
-      console.log(status);
+      await account.execute(multicallData);
     }
   } catch (error) {
     console.error("Error:", error);
     // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error withdrawing bounty please try again");
   } finally {
-    // setIsSubmitting(false);
+    setIsSubmitting(false);
   }
 };
 
@@ -569,8 +541,7 @@ export const create_validator_profile = async (
   setIsSubmitting: SetIsSubmitting,
   formData: validatorType,
   setIsSuccess: SetIsSuccess,
-  setter: Dispatch<SetStateAction<RouteState>>,
-  redirect: (url: string) => void
+  setter: Dispatch<SetStateAction<RouteState>>
 ): Promise<void> => {
   const { userName, address, githubLink, passworks } = formData;
 
@@ -605,22 +576,6 @@ export const create_validator_profile = async (
       }),
     };
     const multicallData = [Call];
-    // const feeDetails: PaymasterDetails = {
-    //   feeMode: {
-    //     mode: "sponsored",
-    //   },
-    // };
-
-    // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-    //   [...multicallData],
-    //   feeDetails
-    // );
-
-    // const result = await account?.executePaymasterTransaction(
-    //   [...multicallData],
-    //   feeDetails,
-    //   feeEstimation?.suggested_max_fee_in_gas_token
-    // );
     await account.execute(multicallData);
     setter((prev) => {
       return { ...prev, isComplete: true };
@@ -640,8 +595,7 @@ export const create_resercher_profile = async (
   setIsSubmitting: SetIsSubmitting,
   formData: { userName: string; address: string },
   setIsSuccess: SetIsSuccess,
-  setter: Dispatch<SetStateAction<RouteState>>,
-  redirect: (url: string) => void
+  setter: Dispatch<SetStateAction<RouteState>>
 ): Promise<void> => {
   const { userName, address } = formData;
   if (!address) {
@@ -726,22 +680,6 @@ export const assign_validator = async (
         }),
       };
       const multicallData = [approve_validator_call, Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
-
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
-
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
       const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
@@ -756,6 +694,38 @@ export const assign_validator = async (
     console.error("Error:", error);
     setIsSuccess(true);
     toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const finalize_project_payments = async (
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  project_id: number
+): Promise<void> => {
+  if (account === undefined) {
+    toast.error("connect your wallet");
+    return;
+  }
+  try {
+    setIsSubmitting(true);
+
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "finalize_project_payments",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(project_id),
+        }),
+      };
+      const multicallData = [Call];
+      await account.execute(multicallData);
+      toast.success("payment finalize succesfully");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("error finalizing payment");
   } finally {
     setIsSubmitting(false);
   }

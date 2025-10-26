@@ -73,8 +73,7 @@ export default function ProjectResearcherLauncher() {
       setIsSubmitting,
       formData,
       setIsSuccess,
-      setter,
-      redirect
+      setter
     );
   }
 
