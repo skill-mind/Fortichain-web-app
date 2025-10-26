@@ -9,11 +9,13 @@ import { useVoteReport } from "@/hook/fetch-requests";
 import toast from "react-hot-toast";
 
 export default function ValidatorReportModal({
+  reportId,
   handler,
   voteType,
   researcherId,
   setShowReport,
 }: {
+  reportId: number;
   handler: (x: string | null) => void;
   voteType: string | null;
   researcherId: string;
@@ -59,7 +61,6 @@ export default function ValidatorReportModal({
               if (!address) return;
               //@ts-expect-error parmas can be undefined getText(),
               const reportText = reportRef?.current?.getText().length;
-              console.log(reportText);
               if (reportText < 50) {
                 toast.error("character length is less than 50");
                 return;
@@ -74,9 +75,10 @@ export default function ValidatorReportModal({
                 setShowReport,
                 async (reportData) => {
                   voteReport(reportData);
-                }
+                },
+                reportId
               );
-              handler(null);
+              // handler(null);
             }}
             className="min-h-50 p-0.5 group   w-fit          
               from-sky-blue-border to-sky-blue-border

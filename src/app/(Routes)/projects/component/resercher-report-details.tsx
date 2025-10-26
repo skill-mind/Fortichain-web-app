@@ -18,6 +18,7 @@ import {
   ValidationVote,
   ValidatorValidation,
 } from "@/util/types";
+import { compareAddresses } from "@/hook/blockchainWriteFunction";
 export default function ResearcherReportDetails({
   reports,
   researchers,
@@ -68,10 +69,21 @@ export default function ResearcherReportDetails({
     isIncluded || isOwner || isAdmin || isAssignedValidator
       ? researchers
       : has_report;
-
   return (
     <>
       {reportToValidate?.map((data, id) => {
+        const reportId = reports.find((report) => {
+          console.log(
+            report?.researcher_address,
+            data.researcher_wallet_address
+          );
+          return compareAddresses(
+            //@ts-expect-error undefined
+            report?.researcher_address,
+            data.researcher_wallet_address
+          );
+        })?.id;
+        console.log("finder", reportId);
         const reportValidationInfo = validatedReport.find((report) => {
           return report.report_id === data.id;
         });
@@ -107,7 +119,6 @@ export default function ResearcherReportDetails({
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
         const availableToVote = reportValidationInfo?.report_id === data.id;
-
         return (
           <div key={id} className="grid gap-2">
             <div className="bg-dark-gray p-6 rounded-[8px] border border-dark-border-gray gap-3 grid">
@@ -174,8 +185,9 @@ export default function ResearcherReportDetails({
             </div>
             {showReport === data.id && (
               <>
-                {openValidatorRepor && (
+                {openValidatorRepor && reportId !== undefined && (
                   <ValidatorReportModal
+                    reportId={reportId}
                     handler={validatorHandler}
                     voteType={voteType}
                     researcherId={data.id}
@@ -219,7 +231,7 @@ export default function ResearcherReportDetails({
                   )}
                 <>
                   <section
-                    key={data.id}
+                    // key={data.id}
                     className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-14 "
                   >
                     <div className="flex items-center justify-between">
@@ -270,7 +282,7 @@ export default function ResearcherReportDetails({
                   </section>
                   {reportValidationInfo && (
                     <section
-                      key={data.id}
+                      // key={data.id}
                       className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-14 "
                     >
                       <div className="flex items-center justify-between">
@@ -337,13 +349,16 @@ export default function ResearcherReportDetails({
                     </section>
                   )}
                 </>
-                {validatorView == `audit-${id}` && !reportValidated && (
-                  <ValidatorReportEditor
-                    researcherId={data.id}
-                    valdatorViewHandler={valdatorViewHandler}
-                    setShowReport={setShowReport}
-                  />
-                )}
+                {validatorView == `audit-${id}` &&
+                  !reportValidated &&
+                  reportId !== undefined && (
+                    <ValidatorReportEditor
+                      reportId={reportId}
+                      researcherId={data.id}
+                      valdatorViewHandler={valdatorViewHandler}
+                      setShowReport={setShowReport}
+                    />
+                  )}
                 {validatorView == `edit-${id}` && <ComingSoon />}
                 {isAssignedValidator && (
                   <div

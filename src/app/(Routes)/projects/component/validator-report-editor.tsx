@@ -18,10 +18,12 @@ export type ValdatorViewHandler = (isSubmitting: string) => void;
 export type SetShowReport = (setShowReport: string) => void;
 
 export default function ValidatorReportEditor({
+  reportId,
   researcherId,
   valdatorViewHandler,
   setShowReport,
 }: {
+  reportId: number;
   researcherId: string;
   valdatorViewHandler: ValdatorViewHandler;
   setShowReport: SetShowReport;
@@ -35,30 +37,27 @@ export default function ValidatorReportEditor({
   });
   const { id } = useParams();
   const issueDescriptionRef = useRef<HTMLDivElement>(null);
-  const {
-    validateReport: writeReport,
-    isLoading,
-    error,
-    data,
-  } = useValidatorValidation();
+  const { validateReport: writeReport } = useValidatorValidation();
 
   function handleSubmit() {
     if (!researcherId) return;
     const data = {
+      reportId,
+      address,
       id: researcherId,
       status: reportDetails.status,
       severity_level: reportDetails.severity_level,
-      audit_report: reportDetails.audit_report,
+      audit_report: "Valid",
       //@ts-expect-error parmas can be undefined
       description: issueDescriptionRef.current?.getText(),
     };
-    if (!id || !address) return;
+    if (!id || address == undefined) return;
     validateReport(
       account,
+      //@ts-expect-error parmas can be undefined
       data,
       setIsSubmitting,
       +id,
-      address,
       valdatorViewHandler,
       setShowReport,
       async (reportData) => {
@@ -143,10 +142,10 @@ export default function ValidatorReportEditor({
         </span>
         <span className="text-base">Validator Notes</span>
       </div>
-      <div className="border border-dark-border-gray rounded-[4px] h-[600px]">
+      <div className="border border-dark-border-gray rounded-[4px] h-fit">
         <Editor ref={issueDescriptionRef} />
       </div>
-      <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
+      {/* <div className="bg-dark-gray-pop rounded-[8px] w-fit p-3 flex gap-1 items-center">
         <span className="text-gray-text border-r border-gray-text pr-2 text-sm">
           Section 3
         </span>
@@ -168,7 +167,7 @@ export default function ValidatorReportEditor({
             <SelectItem value="Invalid">Invalid Badge</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
       <button
         className="hover:bg-dark-gray w-[250px] min-h-50 p-0.5 group             
     from-sky-blue-border to-sky-blue-border

@@ -99,8 +99,16 @@ export default function Description({
                   projectDetail.id
                 );
               }}
+              type="button"
             >
-              Finalize Payment
+              <span
+                className="px-6 py-3
+            group-hover:from-sky-from group-hover:to-sky-to text-sm
+            group-hover:bg-gradient-to-r bg-[#1C1C1C]
+        flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+              >
+                Finalize Payment
+              </span>
             </button>
           )}
         </div>

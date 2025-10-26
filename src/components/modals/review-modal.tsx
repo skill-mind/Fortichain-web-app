@@ -130,7 +130,7 @@ export default function ReviewModal({
             </button>
 
             <Link
-              href={`projects/${project?.id.toString()}`}
+              href={`/projects/${project?.id.toString()}`}
               className="w-full min-h-50 p-0.5 group             
               from-sky-blue-border to-sky-blue-border
               bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]

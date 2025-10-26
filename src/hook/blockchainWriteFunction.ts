@@ -23,7 +23,7 @@ import {
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
 type SetIsSuccess = (isSubmitting: boolean) => void;
-
+export const ONESTK = 1000000000000000000;
 export const uploadProjectHandle = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
@@ -71,7 +71,7 @@ export const uploadProjectHandle = async (
     return;
   }
 
-  if (amount == null || amount <= 0) {
+  if (amount == null || amount < minimun_amount) {
     toast.error(`minimum baounty amount for ${projectType} is 1 STRK`);
     return;
   }
@@ -94,7 +94,8 @@ export const uploadProjectHandle = async (
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
-          amount: cairo.uint256(formData.amount),
+          // amount: cairo.uint256(formData.amount),
+          amount: cairo.uint256(10),
         }),
       };
       const approveCall = {
@@ -311,63 +312,42 @@ export const voteOnValidation = async (
   setIsSubmitting: SetIsSubmitting,
   address: string,
   setShowReport: SetShowReport,
-  voteReport: (reportData: VoteInput) => Promise<void>
+  voteReport: (reportData: VoteInput) => Promise<void>,
+  reportId: number
 ): Promise<void> => {
   try {
-    // setIsOpen(true);
     setIsSubmitting(true);
     if (account != undefined) {
       //@ts-expect-error parmas can be undefined
       const voteReason = JSON.stringify(reason?.getJSON());
+      console.log("indigo", reportId, report_id);
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "vote_on_validation",
+        calldata: CallData.compile({
+          report_id: cairo.uint256(reportId),
+          agrees_with_validation: voteType === "Invalid" ? false : true,
+          reason: byteArray.byteArrayFromString("FORTICHAIN-API"),
+        }),
+      };
+      console.log("kate");
+      console.log(Call);
+      const multicallData = [Call];
+      // await account.execute(multicallData);
 
-      // const Call = {
-      //   contractAddress: FORTICHAINADDRESS,
-      //   entrypoint: "vote_on_validation",
-      //   calldata: CallData.compile({
-      //     report_id: cairo.uint256(report_id),
-      //     agrees_with_validation: voteType === "Invalid" ? false : true,
-      //     reason: byteArray.byteArrayFromString(""),
-      //   }),
-      // };
-
-      // const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
-
-      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      // //   [...multicallData],
-      // //   feeDetails
-      // // );
-
-      // // const result = await account?.executePaymasterTransaction(
-      // //   [...multicallData],
-      // //   feeDetails,
-      // //   feeEstimation?.suggested_max_fee_in_gas_token
-      // // );
-      // const result = await account.execute(multicallData);
-
-      // const status = await myProvider.waitForTransaction(
-      //   result?.transaction_hash as string
-      // );
-      await voteReport({
-        report_id: report_id,
-        is_valid: voteType === "Invalid" ? false : true,
-        reason: voteReason,
-        voter_wallet_address: address,
-      });
-      // setIsOpen(true);
-      // console.log(result);
-
-      // console.log(status);
-      setShowReport("");
+      // await voteReport({
+      //   report_id: report_id,
+      //   is_valid: voteType === "Invalid" ? false : true,
+      //   reason: voteReason,
+      //   voter_wallet_address: address,
+      // });
+      // setShowReport("");
+      toast.success("vote made succesfully");
     }
+    console.log("kyy");
   } catch (error) {
     console.error("Error:", error);
-    // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error voting on a report");
   } finally {
     setIsSubmitting(false);
   }
@@ -376,6 +356,8 @@ export const voteOnValidation = async (
 export const validateReport = async (
   account: AccountInterface | undefined,
   data: {
+    reportId: number;
+    address: string;
     id: string;
     status: string;
     severity_level: string;
@@ -384,7 +366,6 @@ export const validateReport = async (
   },
   setIsSubmitting: SetIsSubmitting,
   project_id: number,
-  address: string,
   valdatorViewHandler: ValdatorViewHandler,
   setShowReport: SetShowReport,
   writeReport: (reportData: ValidationInput) => Promise<void>
@@ -411,41 +392,23 @@ export const validateReport = async (
       const reason = JSON.stringify(data.description);
       // let add = `0x${normalizeAddress(address).slice(1)}`;
       // console.log(add);
-      // const Call = {
-      //   contractAddress: FORTICHAINADDRESS,
-      //   entrypoint: "validate_report",
-      //   calldata: CallData.compile({
-      //     validator_address: add,
-      //     project_id: cairo.uint256(project_id),
-      //     status: byteArray.byteArrayFromString(""),
-      //     severity_level_confirmation: byteArray.byteArrayFromString(""),
-      //     category_confirmation: byteArray.byteArrayFromString(""),
-      //     reason: byteArray.byteArrayFromString(""),
-      //   }),
-      // };
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "validate_report",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(data.reportId),
+          status: byteArray.byteArrayFromString(""),
+          severity_level_confirmation: byteArray.byteArrayFromString(
+            data.severity_level
+          ),
+          category_confirmation: byteArray.byteArrayFromString(data.status),
+          reason: byteArray.byteArrayFromString("FORTICHAIN-API"),
+        }),
+      };
 
-      // const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
+      const multicallData = [Call];
+      await account.execute(multicallData);
 
-      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      // //   [...multicallData],
-      // //   feeDetails
-      // // );
-
-      // // const result = await account?.executePaymasterTransaction(
-      // //   [...multicallData],
-      // //   feeDetails,
-      // //   feeEstimation?.suggested_max_fee_in_gas_token
-      // // );
-      // const result = await account.execute(multicallData);
-
-      // const status = await myProvider.waitForTransaction(
-      //   result?.transaction_hash as string
-      // );
       console.log(data);
       await writeReport({
         category_confirmation: data.status,
@@ -453,17 +416,13 @@ export const validateReport = async (
         severity_level_confirmation: data.severity_level,
         status: data.audit_report,
         report_id: data.id.toString(),
-        validator_wallet_address: address,
+        validator_wallet_address: data.address,
       });
-      // setIsOpen(true);
-      // console.log(result);
-
-      // console.log(status);
+      toast.success("validation succesful");
     }
   } catch (error) {
     console.error("Error:", error);
-    // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error validating report");
     valdatorViewHandler("none");
     setShowReport("");
   } finally {
@@ -498,7 +457,7 @@ export const WithdrawaBounty = async (
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "withdraw_bounty",
         calldata: CallData.compile({
-          amount: cairo.uint256(data.amount),
+          amount: cairo.uint256(data.amount * ONESTK),
           recipient: data.address,
         }),
       };

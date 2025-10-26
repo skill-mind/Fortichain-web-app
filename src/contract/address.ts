@@ -1,7 +1,8 @@
 import { RpcProvider } from "starknet";
 
 export const FORTICHAINADDRESS =
-  "0x063d333c889af0e58a2d68d6d90f41ef11d3ab0b941b18eda875d91f23573609"; // latest testing
+  "0x012240995cf3916aed785097ef2d2083afb9943fa6f2458faf8f7aa7554146fe";
+// "0x063d333c889af0e58a2d68d6d90f41ef11d3ab0b941b18eda875d91f23573609"; // latest testing
 // "0x00cd136b659ab7909b4af0f9aee472ea3ad7e683703b57c5c10aee051496c61f";
 // "0x0031569ae81b445f1c5e4e4a7d98a4cf1e867faa74c5daae95efdb2b0c7b04a2"; // live with skillnet
 // "0x061f6c77582ee3343467a4cf5a60dbf772dfb0334124fde3b1dd979287e57554";

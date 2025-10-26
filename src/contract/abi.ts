@@ -207,6 +207,72 @@ export const FORTICHAINABI: Abi = [
   },
   {
     type: "struct",
+    name: "fortichain_contracts::base::types::SecurityResearcher",
+    members: [
+      {
+        name: "id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "researcher_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "username",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "created_at",
+        type: "core::integer::u64",
+      },
+      {
+        name: "updated_at",
+        type: "core::integer::u64",
+      },
+      {
+        name: "status",
+        type: "core::felt252",
+      },
+      {
+        name: "is_active",
+        type: "core::bool",
+      },
+      {
+        name: "reputation",
+        type: "core::integer::u256",
+      },
+      {
+        name: "total_projects_worked_on",
+        type: "core::integer::u256",
+      },
+      {
+        name: "vulnerability",
+        type: "core::integer::u256",
+      },
+      {
+        name: "reports_submitted_count",
+        type: "core::integer::u256",
+      },
+      {
+        name: "reports_approved_count",
+        type: "core::integer::u256",
+      },
+      {
+        name: "total_bounty_won",
+        type: "core::integer::u256",
+      },
+      {
+        name: "total_amount_withdrawn",
+        type: "core::integer::u256",
+      },
+      {
+        name: "available_amount_to_withdraw",
+        type: "core::integer::u256",
+      },
+    ],
+  },
+  {
+    type: "struct",
     name: "fortichain_contracts::base::types::ProjectOwner",
     members: [
       {
@@ -735,6 +801,66 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
+        name: "get_all_projects",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Project>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_all_validators",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Validator>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_security_researchers",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_all_researchers_detailed",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::SecurityResearcher>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_researcher_by_address",
+        inputs: [
+          {
+            name: "researcher_address",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "fortichain_contracts::base::types::SecurityResearcher",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
         name: "get_assigned_projects_for_validator",
         inputs: [
           {
@@ -745,6 +871,17 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::array::Array::<fortichain_contracts::base::types::Project>",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_unassigned_validators",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::array::Array::<fortichain_contracts::base::types::Validator>",
           },
         ],
         state_mutability: "view",
@@ -804,26 +941,6 @@ export const FORTICHAINABI: Abi = [
         outputs: [
           {
             type: "core::array::Array::<fortichain_contracts::base::types::Report>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "has_validator_voted_on_validation",
-        inputs: [
-          {
-            name: "report_id",
-            type: "core::integer::u256",
-          },
-          {
-            name: "validator_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
           },
         ],
         state_mutability: "view",

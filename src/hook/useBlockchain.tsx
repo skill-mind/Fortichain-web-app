@@ -141,140 +141,140 @@ export interface ProjectDetails {
   validation_votes: ValidatorVoteOnValidation[];
 }
 
-export function useCompleteProjectDetails(id: number) {
-  const [projectsData, setProjectsData] = useState<
-    ProjectDetails | undefined
-  >();
+// export function useCompleteProjectDetails(id: number) {
+//   const [projectsData, setProjectsData] = useState<
+//     ProjectDetails | undefined
+//   >();
 
-  const { readData: data } = useContractFetch(
-    FORTICHAINABI,
-    "get_complete_project_details",
-    [id]
-  );
+//   const { readData: data } = useContractFetch(
+//     FORTICHAINABI,
+//     "get_complete_project_details",
+//     [id]
+//   );
 
-  useEffect(() => {
-    if (!data || !id) return;
+//   useEffect(() => {
+//     if (!data || !id) return;
 
-    const projectDetails: ProjectDetails = {
-      project: {
-        validator_paid: data.project.validator_paid,
-        researchers_paid: data.project.researchers_paid,
-        repository_url: data.project.repository_url,
-        name: data.project.name,
-        id: +data.project.id?.toString(),
-        description: data.project.description,
-        is_active: data.project.is_active,
-        is_completed: data.project.is_completed,
-        created_at: epocTime(data.project.created_at?.toString()),
-        deadline: epocTime(data.project.deadline?.toString()),
-        priority: shortString.decodeShortString(data.project.priority),
-        project_type: data.project.project_type,
-        updated_at: epocTime(data.project.deadline?.toString()),
-        project_owner: `0x0${data.project["project_owner"].toString(16)}`,
-        amount: +data.project.amount?.toString(),
-        validator_assigned: data.project.validator_assigned,
-      },
+//     const projectDetails: ProjectDetails = {
+//       project: {
+//         validator_paid: data.project.validator_paid,
+//         researchers_paid: data.project.researchers_paid,
+//         repository_url: data.project.repository_url,
+//         name: data.project.name,
+//         id: +data.project.id?.toString(),
+//         description: data.project.description,
+//         is_active: data.project.is_active,
+//         is_completed: data.project.is_completed,
+//         created_at: epocTime(data.project.created_at?.toString()),
+//         deadline: epocTime(data.project.deadline?.toString()),
+//         priority: shortString.decodeShortString(data.project.priority),
+//         project_type: data.project.project_type,
+//         updated_at: epocTime(data.project.deadline?.toString()),
+//         project_owner: `0x0${data.project["project_owner"].toString(16)}`,
+//         amount: +data.project.amount?.toString(),
+//         validator_assigned: data.project.validator_assigned,
+//       },
 
-      researcher:
-        data?.researcher_reports?.map((report: Report) => {
-          return {
-            title: report.title,
-            category: report.category,
-            validation_status: report.validation_status,
-            researcher_address: `0x0${report["researcher_address"].toString(
-              16
-            )}`,
-            severity_level: report.severity_level,
-            id: +report.id?.toString(),
-            project_id: +report.project_id?.toString(),
-            description: report.description,
-            potential_risk: report.potential_risk,
-            created_at: epocTime(report.created_at?.toString()),
-            validator_report_id: +report.validator_report_id?.toString(),
-            status: shortString.decodeShortString(report.status),
-            recommendation: report.recommendation,
-            updated_at: epocTime(report.updated_at?.toString()),
-          };
-        }) || [],
+//       researcher:
+//         data?.researcher_reports?.map((report: Report) => {
+//           return {
+//             title: report.title,
+//             category: report.category,
+//             validation_status: report.validation_status,
+//             researcher_address: `0x0${report["researcher_address"].toString(
+//               16
+//             )}`,
+//             severity_level: report.severity_level,
+//             id: +report.id?.toString(),
+//             project_id: +report.project_id?.toString(),
+//             description: report.description,
+//             potential_risk: report.potential_risk,
+//             created_at: epocTime(report.created_at?.toString()),
+//             validator_report_id: +report.validator_report_id?.toString(),
+//             status: shortString.decodeShortString(report.status),
+//             recommendation: report.recommendation,
+//             updated_at: epocTime(report.updated_at?.toString()),
+//           };
+//         }) || [],
 
-      assigned_validator: {
-        id: +data.assigned_validator.id?.toString(),
-        validator_data_uri:
-          data.assigned_validator.validator_data_uri?.toString(),
-        created_at: epocTime(data.assigned_validator.created_at?.toString()),
-        updated_at: epocTime(data.assigned_validator.updated_at?.toString()),
-        status: data.assigned_validator.status?.toString(),
-        kyc_uri: data.assigned_validator.kyc_uri?.toString(),
-        kyc_approved: data.assigned_validator.kyc_approved?.toString(),
-        username: data.assigned_validator.username?.toString(),
-        github_profile_url:
-          data.assigned_validator.github_profile_url?.toString(),
-        is_open_for_work: data.assigned_validator.is_open_for_work,
-        validator_address:
-          data.assigned_validator.validator_address?.toString(16),
-        approval_rate: +data.assigned_validator.approval_rate?.toString(),
-        available_amount_to_widthdraw:
-          +data.assigned_validator.available_amount_to_widthdraw?.toString(),
-        number_project_validated:
-          +data.assigned_validator.number_project_validated?.toString(),
-        reputation: +data.assigned_validator.reputation?.toString(),
-        total_amount_withdrawn:
-          +data.assigned_validator.total_amount_withdrawn?.toString(),
-        total_bounty_won: +data.assigned_validator.total_bounty_won?.toString(),
-        passwork: data.assigned_validator.passwork,
-      },
+//       assigned_validator: {
+//         id: +data.assigned_validator.id?.toString(),
+//         validator_data_uri:
+//           data.assigned_validator.validator_data_uri?.toString(),
+//         created_at: epocTime(data.assigned_validator.created_at?.toString()),
+//         updated_at: epocTime(data.assigned_validator.updated_at?.toString()),
+//         status: data.assigned_validator.status?.toString(),
+//         kyc_uri: data.assigned_validator.kyc_uri?.toString(),
+//         kyc_approved: data.assigned_validator.kyc_approved?.toString(),
+//         username: data.assigned_validator.username?.toString(),
+//         github_profile_url:
+//           data.assigned_validator.github_profile_url?.toString(),
+//         is_open_for_work: data.assigned_validator.is_open_for_work,
+//         validator_address:
+//           data.assigned_validator.validator_address?.toString(16),
+//         approval_rate: +data.assigned_validator.approval_rate?.toString(),
+//         available_amount_to_widthdraw:
+//           +data.assigned_validator.available_amount_to_widthdraw?.toString(),
+//         number_project_validated:
+//           +data.assigned_validator.number_project_validated?.toString(),
+//         reputation: +data.assigned_validator.reputation?.toString(),
+//         total_amount_withdrawn:
+//           +data.assigned_validator.total_amount_withdrawn?.toString(),
+//         total_bounty_won: +data.assigned_validator.total_bounty_won?.toString(),
+//         passwork: data.assigned_validator.passwork,
+//       },
 
-      validation_votes:
-        data.validation_votes?.map((vote: ValidatorVoteOnValidation) => {
-          return {
-            report_id: +vote.report_id?.toString(),
-            voter: `0x0${vote["voter"]?.toString(16)}`,
-            agrees_with_validation: vote.agrees_with_validation,
-            reason: vote.reason,
-            voted_at: epocTime(vote.voted_at.toString()),
-          };
-        }) || [],
+//       validation_votes:
+//         data.validation_votes?.map((vote: ValidatorVoteOnValidation) => {
+//           return {
+//             report_id: +vote.report_id?.toString(),
+//             voter: `0x0${vote["voter"]?.toString(16)}`,
+//             agrees_with_validation: vote.agrees_with_validation,
+//             reason: vote.reason,
+//             voted_at: epocTime(vote.voted_at.toString()),
+//           };
+//         }) || [],
 
-      validator_validations:
-        data.validator_validations?.map((validation: ValidatorValidation) => {
-          return {
-            report_id: +validation.report_id?.toString(),
-            validator_address: `0x0${validation["validator"]?.toString(16)}`,
-            is_valid: validation.is_valid,
-            reason: validation.reason,
-            validated_at: epocTime(validation.validated_at?.toString()),
-          };
-        }) || [],
+//       validator_validations:
+//         data.validator_validations?.map((validation: ValidatorValidation) => {
+//           return {
+//             report_id: +validation.report_id?.toString(),
+//             validator_address: `0x0${validation["validator"]?.toString(16)}`,
+//             is_valid: validation.is_valid,
+//             reason: validation.reason,
+//             validated_at: epocTime(validation.validated_at?.toString()),
+//           };
+//         }) || [],
 
-      validator_reports:
-        data?.validator_reports?.map((validatorReport: ValidatorReport) => {
-          return {
-            id: +validatorReport.id.toString(),
-            researcher_report_id:
-              +validatorReport.researcher_report_id.toString(),
-            validator_address: `0x0${validatorReport[
-              "validator_address"
-            ]?.toString(16)}`,
-            project_id: +validatorReport.project_id.toString(),
-            title: validatorReport.title,
-            category: validatorReport.category,
-            severity_level: validatorReport.severity_level,
-            description: validatorReport.description,
-            potential_risk: validatorReport.potential_risk,
-            recommendation: validatorReport.recommendation,
-            is_valid: validatorReport.is_valid,
-            validation_reason: validatorReport.validation_reason,
-            created_at: epocTime(validatorReport.created_at.toString()),
-            updated_at: epocTime(validatorReport.updated_at.toString()),
-          };
-        }) || [],
-    };
+//       validator_reports:
+//         data?.validator_reports?.map((validatorReport: ValidatorReport) => {
+//           return {
+//             id: +validatorReport.id.toString(),
+//             researcher_report_id:
+//               +validatorReport.researcher_report_id.toString(),
+//             validator_address: `0x0${validatorReport[
+//               "validator_address"
+//             ]?.toString(16)}`,
+//             project_id: +validatorReport.project_id.toString(),
+//             title: validatorReport.title,
+//             category: validatorReport.category,
+//             severity_level: validatorReport.severity_level,
+//             description: validatorReport.description,
+//             potential_risk: validatorReport.potential_risk,
+//             recommendation: validatorReport.recommendation,
+//             is_valid: validatorReport.is_valid,
+//             validation_reason: validatorReport.validation_reason,
+//             created_at: epocTime(validatorReport.created_at.toString()),
+//             updated_at: epocTime(validatorReport.updated_at.toString()),
+//           };
+//         }) || [],
+//     };
 
-    setProjectsData(projectDetails);
-  }, [data, id]);
+//     setProjectsData(projectDetails);
+//   }, [data, id]);
 
-  return projectsData;
-}
+//   return projectsData;
+// }
 export function useProjectOwner(address: string) {
   const [owner, setOwner] = useState<ProjectOwner | undefined>();
   const { readData: ownerData } = useContractFetch(

@@ -57,9 +57,15 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
           <span className="text-gray-text text-base">
             Available to withdraw
           </span>
-          <h2 className="text-2xl">
-            ${validatorDetail?.available_amount_to_widthdraw.toFixed(2)}
-          </h2>
+          {validatorDetail?.available_amount_to_widthdraw && (
+            <h2 className="text-2xl">
+              $
+              {(
+                validatorDetail?.available_amount_to_widthdraw /
+                10 ** 18
+              ).toFixed(2)}
+            </h2>
+          )}
         </div>
         <div className="w-full grid gap-2 capitalize">
           <label htmlFor="">wallet Address</label>

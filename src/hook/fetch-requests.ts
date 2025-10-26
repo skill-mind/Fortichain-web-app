@@ -1,4 +1,9 @@
-import { AssignedValidator, ProjectData } from "@/util/types";
+import {
+  AssignedValidator,
+  ProjectData,
+  ResearchersResponse,
+  ValidatorsResponse,
+} from "@/util/types";
 import { useState, useEffect, useCallback } from "react";
 import { compareAddresses } from "./blockchainWriteFunction";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -56,6 +61,52 @@ export function useFetchProjectDetails(id: number) {
   const { data, isLoading, error } = useQuery({
     queryKey: ["projectDetails", id], // Unique key for caching
     queryFn: fetchProjectDetails,
+    refetchInterval: 5000,
+    retry: 2,
+  });
+
+  return {
+    data: data?.data, // Extract the `data` property from the response
+    loading: isLoading,
+    error: error as Error | null,
+  };
+}
+
+export function useFetchAllReserchersDetails() {
+  const fetchResearchers = async (): Promise<ResearchersResponse> => {
+    const response = await fetch(`${server}/researchers`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch researchers details");
+    }
+    return response.json();
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["researchers"], // Unique key for caching
+    queryFn: fetchResearchers,
+    refetchInterval: 5000,
+    retry: 2,
+  });
+
+  return {
+    data: data?.data, // Extract the `data` property from the response
+    loading: isLoading,
+    error: error as Error | null,
+  };
+}
+
+export function useFetchAllValidatorsDetails() {
+  const fetchValidators = async (): Promise<ValidatorsResponse> => {
+    const response = await fetch(`${server}/validators`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch researchers details");
+    }
+    return response.json();
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["validators"], // Unique key for caching
+    queryFn: fetchValidators,
     refetchInterval: 5000,
     retry: 2,
   });
@@ -162,7 +213,6 @@ export function useValidatorValidation() {
       return response.json();
     },
     onSuccess: (data, variables) => {
-      console.log("Response:", data);
       // Optionally invalidate related queries to refetch data
       queryClient.invalidateQueries({
         queryKey: ["projectDetails" /* project_id */], // Add project_id if available
@@ -225,13 +275,11 @@ export function useCheckWalletInValidators(
       // Check if wallet is the assigned validator for this project
       const assigned = projectData.data.assigned_validator;
       setAssignedValidator(assigned);
-      console.log("isAss", assigned && assigned.wallet_address);
       if (assigned && assigned.wallet_address) {
         const isAssigned = compareAddresses(
           assigned.wallet_address.toLowerCase(),
           walletAddress.toLowerCase()
         );
-        console.log("is_list", isAssigned);
         setIsAssignedValidator(isAssigned);
       } else {
         setIsAssignedValidator(false);
@@ -300,7 +348,7 @@ export function useVoteReport() {
       });
     },
     onError: (error) => {
-      console.error("Error uploading project:", error);
+      // console.error("Error uploading project:", error);
     },
   });
 
@@ -396,16 +444,6 @@ export function useResearcherEditReports() {
       title,
       wallet_address,
     }) => {
-      console.log({
-        blockchain_tx_hash: "",
-        category: category,
-        description: description,
-        potential_risk: potential_risk,
-        recommendation: recommendation,
-        report_id: report_id,
-        severity: severity,
-        title: title,
-      });
       const response = await fetch(`${server}/reports/${report_id}`, {
         method: "PUT",
         headers: {

@@ -217,6 +217,70 @@ type ProjectDetailsResponse = {
   data: ProjectData;
 };
 
+export interface Researcher {
+  available_amount_to_withdraw: string;
+  avatar_url: string | null;
+  created_at: string;
+  email: string | null;
+  github_id: number;
+  id: string;
+  is_active: boolean;
+  reports_approved_count: number;
+  reports_submitted_count: number;
+  reputation: number;
+  reputation_score: number;
+  status: string;
+  successful_reports: number;
+  total_amount_withdrawn: string;
+  total_bounty_won: string;
+  total_projects_worked_on: number;
+  total_reports: number;
+  updated_at: string;
+  username: string;
+  vulnerability_count: number;
+  wallet_address: string;
+}
+interface ResearchersResponse {
+  status: "success" | "error";
+  message: string;
+  data: Researcher[];
+}
+
+export interface Validator {
+  approval_rate: string;
+  available_amount_to_withdraw: string;
+  avatar_url: string | null;
+  created_at: string;
+  email: string | null;
+  github_id: number;
+  github_profile_url: string;
+  id: string;
+  kyc_approved: boolean;
+  kyc_uri: string | null;
+  number_project_validated: number;
+  pass_work: string[];
+  reports_approved_count: number;
+  reports_submitted_count: number;
+  reputation: number;
+  reputation_score: number;
+  status: string;
+  successful_validations: number;
+  total_amount_withdrawn: string;
+  total_bounty_won: string;
+  total_validations: number;
+  updated_at: string;
+  username: string;
+  validator_data_uri: string | null;
+  wallet_address: string;
+}
+
+// API response type
+interface ValidatorsResponse {
+  status: "success" | "error";
+  message: string;
+  data: Validator[];
+}
+
 // Export all types
 export type {
   AssignedValidator,
@@ -227,4 +291,6 @@ export type {
   ValidatorValidation,
   ProjectData,
   ProjectDetailsResponse,
+  ResearchersResponse,
+  ValidatorsResponse,
 };

@@ -61,7 +61,7 @@ export default function Header() {
             stiffness: 200,
             damping: 10,
           }}
-          whileHover={{ scale: 1.05, rotate: 2 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <LauchAppNav />

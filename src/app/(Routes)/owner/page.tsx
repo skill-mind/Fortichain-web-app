@@ -28,7 +28,7 @@ export default function Page() {
           <h3 className="text-18">Note:</h3>
           <span className="text-gray-text">Quick tips to get you started.</span>
           <ul className="list-disc grid gap-3 mt-3 pl-3 text-base">
-            <li>Please fund the audit with USDT or USDC on Starknet chain.</li>
+            <li>Please fund the audit with USDC on Starknet chain.</li>
             <li>
               Security researchers and validators can proceed with the audit
               once there’s an adequate bounty amount.

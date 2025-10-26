@@ -135,7 +135,7 @@ export function SubmitReport({
       hover:from-sky-blue-border hover:to-sky-blue-border
       bg-gradient-to-r group to-[#312F2F] from-[#212121]
   rounded-full group hidden sm:block"
-        href="/assigned-projects"
+        href="/validator/assigned-projects"
       >
         <span
           className="px-6 py-3 text-sm
@@ -265,7 +265,9 @@ export function Earnings({
           <h3>Token Earnings</h3>
           <CircleDollarSign className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">${validator.total_bounty_won.toFixed(2)}</h2>
+        <h2 className="text-2xl">
+          ${(validator.total_bounty_won / 10 ** 18).toFixed(2)}
+        </h2>
         <span
           className={`bg-[#320D35] text-[#BB00C1] rounded-full px-3 py-1 w-fit text-12`}
         >

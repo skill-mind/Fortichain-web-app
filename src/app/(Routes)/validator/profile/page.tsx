@@ -30,7 +30,7 @@ export default function Page() {
                 Total amount made from bounty
               </h4>
               <h2 className="text-2xl">
-                ${validatorDetail.total_bounty_won.toFixed(2)}
+                ${(validatorDetail.total_bounty_won / 10 ** 18).toFixed(2)}
               </h2>
             </div>
             <div className="flex items-center gap-2 mt-2">
@@ -71,7 +71,10 @@ export default function Page() {
                   Total amount withdrawn
                 </h4>
                 <h2 className="text-2xl">
-                  ${validatorDetail.total_amount_withdrawn.toFixed(2)}
+                  $
+                  {(validatorDetail.total_amount_withdrawn / 10 ** 18).toFixed(
+                    2
+                  )}
                 </h2>
               </div>
               <div className="flex items-center gap-2 mt-2 capitalize">
@@ -146,7 +149,11 @@ export default function Page() {
                     Available to withdraw
                   </h4>
                   <h2 className="text-2xl">
-                    ${validatorDetail.available_amount_to_widthdraw.toFixed(2)}
+                    $
+                    {(
+                      validatorDetail.available_amount_to_widthdraw /
+                      10 ** 18
+                    ).toFixed(2)}
                   </h2>
                 </div>
               </div>
