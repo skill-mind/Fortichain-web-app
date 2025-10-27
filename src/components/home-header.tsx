@@ -52,7 +52,7 @@ export default function Header() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+          initial={{ opacity: 0, scale: 0.5, rotate: 0 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{
             duration: 0.8,
@@ -61,7 +61,7 @@ export default function Header() {
             stiffness: 200,
             damping: 10,
           }}
-          whileHover={{ scale: 1.05, rotate: 2 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <LauchAppNav />

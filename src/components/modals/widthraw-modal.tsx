@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import WidthrawMessageModal from "./widthraw-message";
 import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { validatorWithdrawal } from "@/hook/blockchainWriteFunction";
+import { WithdrawaBounty } from "@/hook/blockchainWriteFunction";
 
 export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,8 +16,9 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isError, setIsError] = useState(false);
   const { address, account } = useAccount();
   const validatorDetail = useValidatorDetail(address ?? "");
-  function handleWithdral() {
-    validatorWithdrawal(account, details);
+  async function handleWithdral() {
+    await WithdrawaBounty(account, details, setIsSubmitting);
+    handler();
   }
   return (
     <>
@@ -56,9 +57,15 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
           <span className="text-gray-text text-base">
             Available to withdraw
           </span>
-          <h2 className="text-2xl">
-            ${validatorDetail?.available_amount_to_widthdraw.toFixed(2)}
-          </h2>
+          {validatorDetail?.available_amount_to_widthdraw && (
+            <h2 className="text-2xl">
+              $
+              {(
+                validatorDetail?.available_amount_to_widthdraw /
+                10 ** 18
+              ).toFixed(2)}
+            </h2>
+          )}
         </div>
         <div className="w-full grid gap-2 capitalize">
           <label htmlFor="">wallet Address</label>

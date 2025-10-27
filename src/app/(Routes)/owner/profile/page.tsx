@@ -1,13 +1,23 @@
 "use client";
 import { useUserProject } from "@/hook/useBlockchain";
 import { ArrowGray, GithubIcon } from "@/icons/github";
-import { useAccount, useDisconnect } from "@starknet-react/core";
+import {
+  useAccount,
+  useBalance,
+  useDisconnect,
+  useReadContract,
+} from "@starknet-react/core";
 import Link from "next/link";
 
 export default function Profile() {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
+  const { data: balnce, error } = useBalance({
+    address:
+      "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+  });
+  console.log(balnce, "ppooo");
   return (
     <section className="flex justify-between items-stretch flex-col md:flex-row gap-3">
       <div className=" w-full md:w-1/2 bg-dark-gray p-6 flex flex-col justify-between gap-10 rounded-[8px]">

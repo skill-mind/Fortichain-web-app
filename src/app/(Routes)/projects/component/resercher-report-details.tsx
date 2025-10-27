@@ -6,7 +6,6 @@ import { useState } from "react";
 import ValidatorReportEditor from "./validator-report-editor";
 import { useAccount } from "@starknet-react/core";
 import { FORTICHAINABI } from "@/contract/abi";
-import ProjectReviewCard from "./projectReviewCard";
 import img from "../../../../../public/Ellipse 1.svg";
 import Image from "next/image";
 import TiptapRenderer from "@/components/editor/editor-render";
@@ -19,6 +18,7 @@ import {
   ValidationVote,
   ValidatorValidation,
 } from "@/util/types";
+import { compareAddresses } from "@/hook/blockchainWriteFunction";
 export default function ResearcherReportDetails({
   reports,
   researchers,
@@ -38,11 +38,11 @@ export default function ResearcherReportDetails({
   const [openValidatorRepor, setOpenValidatorRepor] = useState(false);
   const [showReport, setShowReport] = useState("");
   const [voteType, setVoteType] = useState<null | string>(null);
-  const { readData: isValidator } = useContractFetch(
-    FORTICHAINABI,
-    "is_validator",
-    [address ?? ""]
-  );
+  // const { readData: isValidator } = useContractFetch(
+  //   FORTICHAINABI,
+  //   "is_validator",
+  //   [address ?? ""]
+  // );
   const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
 
   function validatorHandler(type: string | null) {
@@ -69,10 +69,21 @@ export default function ResearcherReportDetails({
     isIncluded || isOwner || isAdmin || isAssignedValidator
       ? researchers
       : has_report;
-  console.log(validatorView);
   return (
     <>
       {reportToValidate?.map((data, id) => {
+        const reportId = reports.find((report) => {
+          console.log(
+            report?.researcher_address,
+            data.researcher_wallet_address
+          );
+          return compareAddresses(
+            //@ts-expect-error undefined
+            report?.researcher_address,
+            data.researcher_wallet_address
+          );
+        })?.id;
+        console.log("finder", reportId);
         const reportValidationInfo = validatedReport.find((report) => {
           return report.report_id === data.id;
         });
@@ -107,6 +118,7 @@ export default function ResearcherReportDetails({
               "Medium".toLocaleUpperCase()
             ? "bg-warning-bg text-warning"
             : "bg-pririty-high-bg text-pririty-high-text";
+        const availableToVote = reportValidationInfo?.report_id === data.id;
         return (
           <div key={id} className="grid gap-2">
             <div className="bg-dark-gray p-6 rounded-[8px] border border-dark-border-gray gap-3 grid">
@@ -173,49 +185,53 @@ export default function ResearcherReportDetails({
             </div>
             {showReport === data.id && (
               <>
-                {openValidatorRepor && (
+                {openValidatorRepor && reportId !== undefined && (
                   <ValidatorReportModal
+                    reportId={reportId}
                     handler={validatorHandler}
                     voteType={voteType}
                     researcherId={data.id}
                     setShowReport={setShowReport}
                   />
                 )}
-                {!voteReport && !isAssignedValidator && isIncluded && (
-                  <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-                    <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                      <div>
-                        <h3>Validators Vote</h3>
-                        <h5 className="text-gray-text">
-                          Click valid or invalid to vote on vulnerability
-                        </h5>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            validatorHandler("Valid");
-                          }}
-                          className="px-10 py-3 bg-good-bg text-good rounded-full flex gap-2 items-center"
-                        >
-                          <BadgeCheck />
-                          Valid Report
-                        </button>
-                        <button
-                          onClick={() => {
-                            validatorHandler("Invalid");
-                          }}
-                          className="px-10 py-3 bg-pririty-high-bg text-pririty-high-text rounded-full flex gap-2 items-center"
-                        >
-                          <BadgeCheck />
-                          Invalid Report
-                        </button>
+                {availableToVote &&
+                  !voteReport &&
+                  !isAssignedValidator &&
+                  isIncluded && (
+                    <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
+                      <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
+                        <div>
+                          <h3>Validators Vote</h3>
+                          <h5 className="text-gray-text">
+                            Click valid or invalid to vote on vulnerability
+                          </h5>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              validatorHandler("Valid");
+                            }}
+                            className="px-10 py-3 bg-good-bg text-good rounded-full flex gap-2 items-center"
+                          >
+                            <BadgeCheck />
+                            Valid Report
+                          </button>
+                          <button
+                            onClick={() => {
+                              validatorHandler("Invalid");
+                            }}
+                            className="px-10 py-3 bg-pririty-high-bg text-pririty-high-text rounded-full flex gap-2 items-center"
+                          >
+                            <BadgeCheck />
+                            Invalid Report
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 <>
                   <section
-                    key={data.id}
+                    // key={data.id}
                     className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-14 "
                   >
                     <div className="flex items-center justify-between">
@@ -266,7 +282,7 @@ export default function ResearcherReportDetails({
                   </section>
                   {reportValidationInfo && (
                     <section
-                      key={data.id}
+                      // key={data.id}
                       className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-14 "
                     >
                       <div className="flex items-center justify-between">
@@ -333,15 +349,17 @@ export default function ResearcherReportDetails({
                     </section>
                   )}
                 </>
-                {validatorView == `audit-${id}` && !reportValidated && (
-                  <ValidatorReportEditor
-                    researcherId={data.id}
-                    valdatorViewHandler={valdatorViewHandler}
-                    setShowReport={setShowReport}
-                  />
-                )}
+                {validatorView == `audit-${id}` &&
+                  !reportValidated &&
+                  reportId !== undefined && (
+                    <ValidatorReportEditor
+                      reportId={reportId}
+                      researcherId={data.id}
+                      valdatorViewHandler={valdatorViewHandler}
+                      setShowReport={setShowReport}
+                    />
+                  )}
                 {validatorView == `edit-${id}` && <ComingSoon />}
-                {validatorView == `chat-${id}` && <ComingSoon />}
                 {isAssignedValidator && (
                   <div
                     className={`flex flex-wrap gap-4 text-sm  xl:flex-nowrap `}
@@ -377,35 +395,6 @@ export default function ResearcherReportDetails({
                         </div>
                       </div>
                     )}
-                    <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
-                      <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">
-                        <h3>Discussions</h3>
-                        <button
-                          className="w-fit min-h-11 p-0.5 group             
-                  hover:from-sky-blue-border hover:to-sky-blue-border
-                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
-              rounded-full group"
-                          type="button"
-                          onClick={() => {
-                            if (validatorView == `chat-${id}`) {
-                              return valdatorViewHandler("none");
-                            }
-                            valdatorViewHandler(`chat-${id}`);
-                          }}
-                        >
-                          <span
-                            className="px-12 py-6
-                      group-hover:from-sky-from group-hover:to-sky-to text-sm
-                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
-                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
-                          >
-                            {validatorView == `chat-${id}`
-                              ? " Close"
-                              : "Chat with validator"}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
 
                     <div className="border border-dark-border-gray rounded-[8px] p-5 bg-dark-gray w-full">
                       <div className="bg-dark-gray-bt rounded-[14px] flex items-center justify-between gap-5 py-3 px-6">

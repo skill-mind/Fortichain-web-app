@@ -11,24 +11,32 @@ import { useState } from "react";
 import VoteTableModal from "@/components/modals/vote-table-modal";
 import { Project } from "@/util/types";
 import { FORTICHAINABI } from "@/contract/abi";
+import { finalize_project_payments } from "@/hook/blockchainWriteFunction";
 export default function Description({
   projectDetail,
   projectOwner,
   editHandler,
   hasVote,
+  reportMade,
 }: {
   projectOwner: string;
   projectDetail: Project;
   editHandler: () => void;
   hasVote: boolean;
+  reportMade: boolean;
 }) {
-  const { address } = useAccount();
+  console.log(projectDetail.id, "details");
+  const { address, account } = useAccount();
   const amount = +projectDetail?.total_amount
     ? +projectDetail?.total_amount / ONE_STK
     : 0;
   const [viewVote, setVieVote] = useState(false);
   const { readData: admin } = useContractFetch(FORTICHAINABI, "owner", []);
   const isAdmin = admin && address === `0x0${admin?.toString(16)}`;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { readData: owner } = useContractFetch(FORTICHAINABI, "owner", []);
+  const isOwner = address === `0x0${owner?.toString(16)}`;
+
   return (
     <>
       <div className="md:grid flex flex-col gap-y-3 bg-dark-gray border border-dark-border-gray rounded-[8px] h-fit px-6 py-3 w-full">
@@ -57,7 +65,7 @@ export default function Description({
               {epocTime(projectDetail?.deadline?.toString() ?? "")}
             </span>
           </div>
-          {projectOwner == address && (
+          {!reportMade && projectOwner == address && (
             <button
               className="w-fit min-h-11 p-0.5 group             
         hover:from-sky-blue-border hover:to-sky-blue-border
@@ -75,6 +83,31 @@ export default function Description({
         flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
               >
                 Edit Project
+              </span>
+            </button>
+          )}
+          {isOwner && (
+            <button
+              className="w-fit min-h-11 p-0.5 group             
+        hover:from-sky-blue-border hover:to-sky-blue-border
+        bg-gradient-to-r group to-[#312F2F] from-[#212121]
+    rounded-full group"
+              onClick={() => {
+                finalize_project_payments(
+                  account,
+                  setIsSubmitting,
+                  projectDetail.id
+                );
+              }}
+              type="button"
+            >
+              <span
+                className="px-6 py-3
+            group-hover:from-sky-from group-hover:to-sky-to text-sm
+            group-hover:bg-gradient-to-r bg-[#1C1C1C]
+        flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-10 w-full"
+              >
+                Finalize Payment
               </span>
             </button>
           )}

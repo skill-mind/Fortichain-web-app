@@ -23,7 +23,7 @@ import {
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
 type SetIsSuccess = (isSubmitting: boolean) => void;
-
+export const ONEUSDC = 1000000;
 export const uploadProjectHandle = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
@@ -43,9 +43,9 @@ export const uploadProjectHandle = async (
   } = formData;
   const minimun_amount =
     projectType === "L1 (Layer 1 Protocols)"
-      ? 50000
+      ? 500000
       : projectType === "L2 (Layer 2 Protocols)"
-      ? 20000
+      ? 200000
       : projectType === "dApps (Decentralized Applications)"
       ? 2000
       : 1000;
@@ -66,12 +66,12 @@ export const uploadProjectHandle = async (
     toast.error("project deadline is required!");
     return;
   }
-  if (!repoUrl) {
-    toast.error("project  is required!");
+  if (!repoUrl.includes("github.com")) {
+    toast.error("project repi url is required!");
     return;
   }
 
-  if (amount == null || amount <= 0) {
+  if (amount == null || amount < minimun_amount) {
     toast.error(`minimum baounty amount for ${projectType} is 1 STRK`);
     return;
   }
@@ -94,7 +94,8 @@ export const uploadProjectHandle = async (
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
-          amount: cairo.uint256(formData.amount),
+          amount: cairo.uint256(+formData.amount * ONEUSDC),
+          // amount: cairo.uint256(10),
         }),
       };
       const approveCall = {
@@ -220,32 +221,16 @@ export const writeReport = async (
     title: string;
     severity_level: string;
     category: string;
-    potential_risk: string | null | undefined;
-    recommendation: string | null | undefined;
-    description: string | null | undefined;
+    potential_risk?: string | null | undefined;
+    recommendation?: string | null | undefined;
+    description?: string | null | undefined;
   },
   address: string,
   setIsSubmitting: SetIsSubmitting,
   setViewSection: ViewSection,
   createReport: (reportData: ReportInput) => Promise<void>
-  // formData: EditProjectProps,
-  // setIsOpen: SetIsOpen,
-  // handler: () => void,
-  // setIsError: SetIsError
 ): Promise<void> => {
-  // const { projectId, description, repoUrl } = formData;
-
-  // if (!description) {
-  //   toast.error("project description is required!");
-  //   return;
-  // }
-  // if (!repoUrl) {
-  //   toast.error("project  is required!");
-  //   return;
-  // }
-  // handler();
   try {
-    // setIsOpen(true);
     setIsSubmitting(true);
     if (
       account != undefined &&
@@ -272,11 +257,11 @@ export const writeReport = async (
       };
 
       const multicallData = [Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
+      // const feeDetails: PaymasterDetails = {
+      //   feeMode: {
+      //     mode: "sponsored",
+      //   },
+      // };
 
       // const feeEstimation = await account?.estimatePaymasterTransactionFee(
       //   [...multicallData],
@@ -327,63 +312,42 @@ export const voteOnValidation = async (
   setIsSubmitting: SetIsSubmitting,
   address: string,
   setShowReport: SetShowReport,
-  voteReport: (reportData: VoteInput) => Promise<void>
+  voteReport: (reportData: VoteInput) => Promise<void>,
+  reportId: number
 ): Promise<void> => {
   try {
-    // setIsOpen(true);
     setIsSubmitting(true);
     if (account != undefined) {
       //@ts-expect-error parmas can be undefined
       const voteReason = JSON.stringify(reason?.getJSON());
+      console.log("indigo", reportId, report_id);
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "vote_on_validation",
+        calldata: CallData.compile({
+          report_id: cairo.uint256(reportId),
+          agrees_with_validation: voteType === "Invalid" ? false : true,
+          reason: byteArray.byteArrayFromString("FORTICHAIN-API"),
+        }),
+      };
+      console.log("kate");
+      console.log(Call);
+      const multicallData = [Call];
+      // await account.execute(multicallData);
 
-      // const Call = {
-      //   contractAddress: FORTICHAINADDRESS,
-      //   entrypoint: "vote_on_validation",
-      //   calldata: CallData.compile({
-      //     report_id: cairo.uint256(report_id),
-      //     agrees_with_validation: voteType === "Invalid" ? false : true,
-      //     reason: byteArray.byteArrayFromString(""),
-      //   }),
-      // };
-
-      // const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
-
-      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      // //   [...multicallData],
-      // //   feeDetails
-      // // );
-
-      // // const result = await account?.executePaymasterTransaction(
-      // //   [...multicallData],
-      // //   feeDetails,
-      // //   feeEstimation?.suggested_max_fee_in_gas_token
-      // // );
-      // const result = await account.execute(multicallData);
-
-      // const status = await myProvider.waitForTransaction(
-      //   result?.transaction_hash as string
-      // );
-      await voteReport({
-        report_id: report_id,
-        is_valid: voteType === "Invalid" ? false : true,
-        reason: voteReason,
-        voter_wallet_address: address,
-      });
-      // setIsOpen(true);
-      // console.log(result);
-
-      // console.log(status);
-      setShowReport("");
+      // await voteReport({
+      //   report_id: report_id,
+      //   is_valid: voteType === "Invalid" ? false : true,
+      //   reason: voteReason,
+      //   voter_wallet_address: address,
+      // });
+      // setShowReport("");
+      toast.success("vote made succesfully");
     }
+    console.log("kyy");
   } catch (error) {
     console.error("Error:", error);
-    // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error voting on a report");
   } finally {
     setIsSubmitting(false);
   }
@@ -392,6 +356,8 @@ export const voteOnValidation = async (
 export const validateReport = async (
   account: AccountInterface | undefined,
   data: {
+    reportId: number;
+    address: string;
     id: string;
     status: string;
     severity_level: string;
@@ -400,7 +366,6 @@ export const validateReport = async (
   },
   setIsSubmitting: SetIsSubmitting,
   project_id: number,
-  address: string,
   valdatorViewHandler: ValdatorViewHandler,
   setShowReport: SetShowReport,
   writeReport: (reportData: ValidationInput) => Promise<void>
@@ -427,41 +392,23 @@ export const validateReport = async (
       const reason = JSON.stringify(data.description);
       // let add = `0x${normalizeAddress(address).slice(1)}`;
       // console.log(add);
-      // const Call = {
-      //   contractAddress: FORTICHAINADDRESS,
-      //   entrypoint: "validate_report",
-      //   calldata: CallData.compile({
-      //     validator_address: add,
-      //     project_id: cairo.uint256(project_id),
-      //     status: byteArray.byteArrayFromString(""),
-      //     severity_level_confirmation: byteArray.byteArrayFromString(""),
-      //     category_confirmation: byteArray.byteArrayFromString(""),
-      //     reason: byteArray.byteArrayFromString(""),
-      //   }),
-      // };
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "validate_report",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(data.reportId),
+          status: byteArray.byteArrayFromString(""),
+          severity_level_confirmation: byteArray.byteArrayFromString(
+            data.severity_level
+          ),
+          category_confirmation: byteArray.byteArrayFromString(data.status),
+          reason: byteArray.byteArrayFromString("FORTICHAIN-API"),
+        }),
+      };
 
-      // const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
+      const multicallData = [Call];
+      await account.execute(multicallData);
 
-      // // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      // //   [...multicallData],
-      // //   feeDetails
-      // // );
-
-      // // const result = await account?.executePaymasterTransaction(
-      // //   [...multicallData],
-      // //   feeDetails,
-      // //   feeEstimation?.suggested_max_fee_in_gas_token
-      // // );
-      // const result = await account.execute(multicallData);
-
-      // const status = await myProvider.waitForTransaction(
-      //   result?.transaction_hash as string
-      // );
       console.log(data);
       await writeReport({
         category_confirmation: data.status,
@@ -469,17 +416,13 @@ export const validateReport = async (
         severity_level_confirmation: data.severity_level,
         status: data.audit_report,
         report_id: data.id.toString(),
-        validator_wallet_address: address,
+        validator_wallet_address: data.address,
       });
-      // setIsOpen(true);
-      // console.log(result);
-
-      // console.log(status);
+      toast.success("validation succesful");
     }
   } catch (error) {
     console.error("Error:", error);
-    // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error validating report");
     valdatorViewHandler("none");
     setShowReport("");
   } finally {
@@ -487,17 +430,13 @@ export const validateReport = async (
   }
 };
 
-export const validatorWithdrawal = async (
+export const WithdrawaBounty = async (
   account: AccountInterface | undefined,
   data: {
     amount: number;
     address: string;
-  }
-  // setIsSubmitting: SetIsSubmitting
-  // formData: EditProjectProps,
-  // setIsOpen: SetIsOpen,
-  // handler: () => void,
-  // setIsError: SetIsError
+  },
+  setIsSubmitting: SetIsSubmitting
 ): Promise<void> => {
   // const { projectId, description, repoUrl } = formData;
 
@@ -512,49 +451,25 @@ export const validatorWithdrawal = async (
   // handler();
   try {
     // setIsOpen(true);
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
     if (account != undefined) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
-        entrypoint: "withdraw_validator_bounty",
+        entrypoint: "withdraw_bounty",
         calldata: CallData.compile({
-          address: data.address,
-          amount: cairo.uint256(data.amount),
+          amount: cairo.uint256(+data.amount * ONEUSDC),
+          recipient: data.address,
         }),
       };
       const multicallData = [Call];
-      const feeDetails: PaymasterDetails = {
-        feeMode: {
-          mode: "sponsored",
-        },
-      };
-
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
-
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
-      const result = await account.execute(multicallData);
-
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
-      // setIsOpen(true);
-      console.log(result);
-
-      console.log(status);
+      await account.execute(multicallData);
     }
   } catch (error) {
     console.error("Error:", error);
     // setIsError(true);
-    toast.error("error editing project");
+    toast.error("error withdrawing bounty please try again");
   } finally {
-    // setIsSubmitting(false);
+    setIsSubmitting(false);
   }
 };
 
@@ -585,8 +500,7 @@ export const create_validator_profile = async (
   setIsSubmitting: SetIsSubmitting,
   formData: validatorType,
   setIsSuccess: SetIsSuccess,
-  setter: Dispatch<SetStateAction<RouteState>>,
-  redirect: (url: string) => void
+  setter: Dispatch<SetStateAction<RouteState>>
 ): Promise<void> => {
   const { userName, address, githubLink, passworks } = formData;
 
@@ -609,50 +523,24 @@ export const create_validator_profile = async (
     setIsSubmitting(true);
     const pass = passworks.filter((data) => data !== "");
     console.log(pass);
-    if (account != undefined) {
-      const Call = {
-        contractAddress: FORTICHAINADDRESS,
-        entrypoint: "create_validator",
-        calldata: CallData.compile({
-          validator_address: address,
-          username: byteArray.byteArrayFromString(userName),
-          github_profile_url: byteArray.byteArrayFromString(githubLink),
-          pass_work: pass,
-        }),
-      };
-      const multicallData = [Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
-
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
-
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
-      const result = await account.execute(multicallData);
-      console.log(result);
-      if (!result) {
-        throw new Error("unable to create validator account");
-      }
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
-
-      setter((prev) => {
-        return { ...prev, isComplete: true };
-      });
-      toast.success("your validator profile crated succesfully");
-      redirect("/validator");
-      setIsSuccess(true);
-    }
+    if (account === undefined) return;
+    const Call = {
+      contractAddress: FORTICHAINADDRESS,
+      entrypoint: "create_validator",
+      calldata: CallData.compile({
+        validator_address: address,
+        username: byteArray.byteArrayFromString(userName),
+        github_profile_url: byteArray.byteArrayFromString(githubLink),
+        pass_work: pass,
+      }),
+    };
+    const multicallData = [Call];
+    await account.execute(multicallData);
+    setter((prev) => {
+      return { ...prev, isComplete: true };
+    });
+    setIsSuccess(true);
+    toast.success("validator profile crated succesfully");
   } catch (error) {
     console.error("Error:", error);
     toast.error("error creating validator profile");
@@ -666,8 +554,7 @@ export const create_resercher_profile = async (
   setIsSubmitting: SetIsSubmitting,
   formData: { userName: string; address: string },
   setIsSuccess: SetIsSuccess,
-  setter: Dispatch<SetStateAction<RouteState>>,
-  redirect: (url: string) => void
+  setter: Dispatch<SetStateAction<RouteState>>
 ): Promise<void> => {
   const { userName, address } = formData;
   if (!address) {
@@ -707,17 +594,12 @@ export const create_resercher_profile = async (
       //   feeDetails,
       //   feeEstimation?.suggested_max_fee_in_gas_token
       // );
-      const result = await account.execute(multicallData);
-
-      const status = await myProvider.waitForTransaction(
-        result?.transaction_hash as string
-      );
+      await account.execute(multicallData);
       setter((prev) => {
         return { ...prev, isComplete: true };
       });
-      toast.success("your validator profile crated succesfully");
-      redirect("/researcher");
       setIsSuccess(true);
+      toast.success("your validator profile crated succesfully");
     }
   } catch (error) {
     console.error("Error:", error);
@@ -757,22 +639,6 @@ export const assign_validator = async (
         }),
       };
       const multicallData = [approve_validator_call, Call];
-      // const feeDetails: PaymasterDetails = {
-      //   feeMode: {
-      //     mode: "sponsored",
-      //   },
-      // };
-
-      // const feeEstimation = await account?.estimatePaymasterTransactionFee(
-      //   [...multicallData],
-      //   feeDetails
-      // );
-
-      // const result = await account?.executePaymasterTransaction(
-      //   [...multicallData],
-      //   feeDetails,
-      //   feeEstimation?.suggested_max_fee_in_gas_token
-      // );
       const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
@@ -787,6 +653,38 @@ export const assign_validator = async (
     console.error("Error:", error);
     setIsSuccess(true);
     toast.error("error editing project");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const finalize_project_payments = async (
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  project_id: number
+): Promise<void> => {
+  if (account === undefined) {
+    toast.error("connect your wallet");
+    return;
+  }
+  try {
+    setIsSubmitting(true);
+
+    if (account != undefined) {
+      const Call = {
+        contractAddress: FORTICHAINADDRESS,
+        entrypoint: "finalize_project_payments",
+        calldata: CallData.compile({
+          project_id: cairo.uint256(project_id),
+        }),
+      };
+      const multicallData = [Call];
+      await account.execute(multicallData);
+      toast.success("payment finalize succesfully");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    toast.error("error finalizing payment");
   } finally {
     setIsSubmitting(false);
   }

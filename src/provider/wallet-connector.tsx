@@ -8,6 +8,7 @@ import {
   useAccount,
   useConnect,
   useDisconnect,
+  useNetwork,
 } from "@starknet-react/core";
 import Image from "next/image";
 import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";

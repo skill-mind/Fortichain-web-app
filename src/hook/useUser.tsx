@@ -14,7 +14,7 @@ export function UseUser() {
   const { address, account } = useAccount();
   const researchers = useResearchers();
   const platformValidators = useValidators();
-  const { setter, launchModal } = useContext(Router);
+  const { setter, isComplete } = useContext(Router);
 
   const { readData: owner } = useContractFetch(FORTICHAINABI, "owner", []);
 
@@ -36,7 +36,7 @@ export function UseUser() {
       setter((prev) => {
         return { ...prev, launchModal: true };
       });
-  }, [address, researchers, platformValidators]);
+  }, [address, researchers, platformValidators, isComplete]);
 
   useEffect(() => {
     if (!researchers) return;

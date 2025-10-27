@@ -1,5 +1,5 @@
 "use client";
-import { sepolia, mainnet } from "@starknet-react/chains";
+import { mainnet, sepolia } from "@starknet-react/chains";
 import React from "react";
 import {
   StarknetConfig,
@@ -37,7 +37,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       },
     }),
   ];
-
+  const chains = [mainnet];
   return (
     <StarknetConfig
       paymasterProvider={paymasterRpcProvider({
@@ -51,7 +51,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
           };
         },
       })}
-      chains={[sepolia]}
+      chains={chains}
       connectors={connectors as Connector[]}
       explorer={voyager}
       // autoConnect={true}
