@@ -21,20 +21,20 @@ export default function FundProject({
   const { address } = useAccount();
   const minimun_amount =
     data.projectType === "L1 (Layer 1 Protocols)"
-      ? 100000
+      ? 500000
       : data.projectType === "L2 (Layer 2 Protocols)"
-      ? 50000
+      ? 200000
       : data.projectType === "dApps (Decentralized Applications)"
       ? 2000
       : 1000;
   const minimun_placeholder =
     data.projectType === "L1 (Layer 1 Protocols)"
-      ? "💰Mininum deposit: 10,000"
+      ? "💰Mininum deposit: $50,000"
       : data.projectType === "L2 (Layer 2 Protocols)"
-      ? "💰Minimum  5000"
+      ? "💰Minimum  $20,0000"
       : data.projectType === "dApps (Decentralized Applications)"
-      ? "💰Minimum  20000"
-      : "💰Minimum  10000";
+      ? "💰Minimum  $20000"
+      : "💰Minimum  $10000";
   return (
     <section className="grid gap-5 text-base">
       <div className="bg-dark-gray border border-dark-border-gray rounded-[8px] p-6 grid gap-2.5">

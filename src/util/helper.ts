@@ -1,3 +1,4 @@
+import { mainnet, sepolia } from "@starknet-react/chains";
 import { useBalance } from "@starknet-react/core";
 
 export const formatAddress = (address: string, len = 6, lenRight = 4) => {
@@ -68,4 +69,18 @@ export const useGetBalance = (userAddress: string) => {
   });
 
   return balance;
+};
+
+export const getNetworkColor = (chainId?: string) => {
+  if (!chainId) return "text-gray-500";
+  if (String(chainId) === String(sepolia.id)) return "text-orange-600";
+  if (String(chainId) === String(mainnet.id)) return "text-green-600";
+  return "text-gray-500";
+};
+
+export const getNetworkName = (chainId?: string) => {
+  if (!chainId) return "Not Connected";
+  if (String(chainId) === String(sepolia.id)) return "Sepolia Testnet";
+  if (String(chainId) === String(mainnet.id)) return "Mainnet";
+  return "Unknown Network";
 };

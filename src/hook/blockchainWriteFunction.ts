@@ -23,7 +23,7 @@ import {
 type SetIsSubmitting = (isSubmitting: boolean) => void;
 type SetIsOpen = (isSubmitting: boolean) => void;
 type SetIsSuccess = (isSubmitting: boolean) => void;
-export const ONESTK = 1000000000000000000;
+export const ONEUSDC = 1000000;
 export const uploadProjectHandle = async (
   account: AccountInterface | undefined,
   setIsSubmitting: SetIsSubmitting,
@@ -43,9 +43,9 @@ export const uploadProjectHandle = async (
   } = formData;
   const minimun_amount =
     projectType === "L1 (Layer 1 Protocols)"
-      ? 50000
+      ? 500000
       : projectType === "L2 (Layer 2 Protocols)"
-      ? 20000
+      ? 200000
       : projectType === "dApps (Decentralized Applications)"
       ? 2000
       : 1000;
@@ -94,8 +94,8 @@ export const uploadProjectHandle = async (
           deadline: +formData.deadline,
           repository_url: byteArray.byteArrayFromString(formData.repoUrl),
           priority: formData.priority,
-          // amount: cairo.uint256(formData.amount),
-          amount: cairo.uint256(10),
+          amount: cairo.uint256(+formData.amount * ONEUSDC),
+          // amount: cairo.uint256(10),
         }),
       };
       const approveCall = {
@@ -457,7 +457,7 @@ export const WithdrawaBounty = async (
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "withdraw_bounty",
         calldata: CallData.compile({
-          amount: cairo.uint256(data.amount * ONESTK),
+          amount: cairo.uint256(+data.amount * ONEUSDC),
           recipient: data.address,
         }),
       };
