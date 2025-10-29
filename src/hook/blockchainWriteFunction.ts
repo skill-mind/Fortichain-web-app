@@ -452,7 +452,6 @@ export const WithdrawaBounty = async (
   try {
     // setIsOpen(true);
     setIsSubmitting(true);
-    console.log(+data.amount * ONEUSDC);
     if (account != undefined) {
       const Call = {
         contractAddress: FORTICHAINADDRESS,
