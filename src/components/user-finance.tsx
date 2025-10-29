@@ -22,7 +22,7 @@ export function UserFinance({
             Total amount made from bounty
           </h4>
           <h2 className="text-2xl">
-            ${researcher.total_bounty_won.toFixed(2)}
+            ${(researcher.total_bounty_won / 10 ** 18).toFixed(2)}
           </h2>
         </div>
         <div className="flex items-center gap-2 mt-2 capitalize">
@@ -59,7 +59,7 @@ export function UserFinance({
           <div className="grid gap-3  bg-dark-gray-pop rounded-[8px] p-6">
             <h4 className="text-gray-text text-base">Total amount withdrawn</h4>
             <h2 className="text-2xl">
-              ${researcher.total_amount_withdrawn.toFixed()}
+              ${(researcher.total_amount_withdrawn / 10 ** 18).toFixed()}
             </h2>
           </div>
         </div>
@@ -76,7 +76,10 @@ export function UserFinance({
                 Available to withdraw
               </h4>
               <h2 className="text-2xl">
-                ${researcher.available_amount_to_withdraw.toFixed(2)}
+                $
+                {(researcher.available_amount_to_withdraw / 10 ** 18).toFixed(
+                  2
+                )}
               </h2>
             </div>
           </div>

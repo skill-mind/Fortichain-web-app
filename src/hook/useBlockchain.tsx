@@ -124,6 +124,17 @@ export interface ValidatorReport {
   updated_at: number;
 }
 
+export interface MonthCount {
+  month: string;
+  projects: number;
+  timestamp: number;
+}
+
+export interface MonthData {
+  month: string;
+  projects: number;
+}
+
 export interface ValidatorVoteOnValidation {
   report_id: number;
   voter: { toString: (radix: number) => string };
@@ -714,6 +725,7 @@ export function useValidatorDetail(address: string) {
     "get_validator",
     [address]
   );
+  console.log(validatorsData, "000");
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType = {
@@ -806,78 +818,6 @@ export function getTimeFromEpoch(time: string) {
 export function epocTime(time: string) {
   if (!time) return "";
   const epochSeconds = time.replace("n", "");
-
   const date = new Date(+epochSeconds); // multiply by 1000 to convert to milliseconds
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
-
-// Simplified ERC-20 ABI for USDC (includes balanceOf function)
-const USDC_ABI = [
-  {
-    name: "balanceOf",
-    type: "function",
-    inputs: [
-      {
-        name: "account",
-        type: "felt",
-      },
-    ],
-    outputs: [
-      {
-        name: "balance",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-];
-
-const USDC_CONTRACT_ADDRESS =
-  "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8"; // e.g., '0x05a...'
-
-export const useUSDCBalance = () => {
-  // Get the connected account and chain ID from Starknet React
-  const { account, address } = useAccount();
-  const [balance, setBalance] = useState(0);
-
-  // Initialize the USDC contract
-  const { readData: contract } = useContractFetch(
-    USDC_ABI,
-    USDC_CONTRACT_ADDRESS,
-    []
-  );
-
-  const fetchBalance = useCallback(async () => {
-    if (!account || !address || !contract) {
-      console.error("Wallet not connected or contract not initialized");
-      return null;
-    }
-
-    try {
-      // Call the balanceOf function on the USDC contract
-      const balanceResult = await contract.call("balanceOf", [address]);
-
-      // Extract low and high parts of uint256 balance
-      const balanceUint256 = uint256.uint256ToBN({
-        low: balanceResult.balance.low,
-        high: balanceResult.balance.high,
-      });
-
-      // Convert to human-readable format (USDC has 6 decimals)
-      const balanceInUSDC = Number(balanceUint256) / 10 ** 6;
-      setBalance(balanceInUSDC);
-      console.log(`USDC Balance: ${balanceInUSDC}`);
-      return balanceInUSDC.toString();
-    } catch (error) {
-      console.error("Error fetching USDC balance:", error);
-      return null;
-    }
-  }, [account, address, contract]);
-
-  return {
-    fetchBalance,
-    isLoading: !account || !contract, // Loading state if account or contract is not ready
-    error: !account ? "Wallet not connected" : null,
-    balance,
-  };
-};

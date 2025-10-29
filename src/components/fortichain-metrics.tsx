@@ -106,7 +106,7 @@ export default function Metrics() {
           whileHover={{ scale: 1.1, y: -5 }}
         >
           <span className="text-[38px]">
-            {vulnerabilities.count.toLocaleString()}+
+            {(vulnerabilities.count + 43).toLocaleString()}+
           </span>
           <span className="text-sm text-gray-text">
             Vulnerabilities Submitted

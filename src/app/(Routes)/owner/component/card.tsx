@@ -11,7 +11,7 @@ export default function Card({
   ownerData: ProjectOwner;
 }) {
   const amount = +ownerData?.total_allocated_bounty.toString()
-    ? +ownerData?.total_allocated_bounty.toString() / ONE_STK
+    ? (+ownerData?.total_allocated_bounty.toString() / ONE_STK).toFixed(2)
     : 0;
   const text =
     type === "total"
