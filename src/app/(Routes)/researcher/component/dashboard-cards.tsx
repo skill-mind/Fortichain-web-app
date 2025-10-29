@@ -305,7 +305,9 @@ export function Earnings({
           <h3>Token Earnings</h3>
           <CircleDollarSign className="text-gray-text" />
         </div>
-        <h2 className="text-2xl">${researcher.total_bounty_won.toFixed(2)}</h2>
+        <h2 className="text-2xl">
+          ${(researcher.total_bounty_won / 10 ** 18).toFixed(2)}
+        </h2>
         <span
           className={`bg-[#320D35] text-[#BB00C1] rounded-full px-3 py-1 w-fit text-12`}
         >

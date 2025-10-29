@@ -8,6 +8,7 @@ import localFont from "next/font/local";
 import RouteProvider from "@/provider/route-provider";
 import { StarknetProvider } from "@/provider/walletProvider";
 import StructuredData from "@/components/StructuredData";
+import { Analytics } from "@vercel/analytics/next";
 
 const myCustomFont = localFont({
   src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
@@ -142,6 +143,7 @@ export default function RootLayout({
         <StarknetProvider>
           <RouteProvider>
             <div className="min-h-screen">{children}</div>
+            <Analytics />
             <footer className="px-3 py-5 border-t w-full bottom-0 text-center h-fit  border-dark-border-gray ">
               <span className="text-gray-text text-base">
                 © {year.getFullYear()} FortiChain. All rights reserved. Built on

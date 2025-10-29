@@ -5,22 +5,26 @@ import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 // Mock data matching the chart in the image
 const reportData = [
-  { month: "Jan", reports: 1 },
-  { month: "Feb", reports: 2.5 },
-  { month: "Mar", reports: 1 },
-  { month: "Apr", reports: 0 },
-  { month: "May", reports: 2 },
-  { month: "Jun", reports: 2.5 },
+  { month: "Jan", projects: 1 },
+  { month: "Feb", projects: 2.5 },
+  { month: "Mar", projects: 1 },
+  { month: "Apr", projects: 0 },
+  { month: "May", projects: 2 },
+  { month: "Jun", projects: 2.5 },
 ];
 
 const chartConfig = {
   reports: {
-    label: "Reports",
+    label: "Projectss",
     color: "hsl(var(--chart-1))",
   },
 };
 
 import type { TooltipProps } from "recharts";
+import { useEffect, useState } from "react";
+import { MonthCount, MonthData, useAllProjects } from "@/hook/useBlockchain";
+import { useAccount } from "@starknet-react/core";
+import { compareAddresses } from "@/util/helper";
 
 const CustomTooltip = ({
   active,
@@ -52,6 +56,53 @@ const CustomTooltip = ({
 };
 
 export function ReportHistoryChart() {
+  const projects = useAllProjects();
+  const { address } = useAccount();
+  const [monthCounts, setMonthCounts] = useState<MonthData[]>([]);
+
+  useEffect(() => {
+    if (!address || !projects) return;
+
+    const counts: Record<string, MonthCount> = {};
+
+    projects
+      .filter((project) => {
+        const ownerAddress =
+          typeof project.project_owner === "string"
+            ? project.project_owner
+            : project.project_owner.toString(16);
+
+        return compareAddresses(ownerAddress, address);
+      })
+      .forEach((project) => {
+        const timestamp = parseInt(project.created_at);
+        const date = new Date(timestamp);
+        console.log(date);
+        const monthOnly = date.toLocaleDateString("en-US", { month: "short" });
+        console.log({
+          d: +date,
+          monthOnly,
+          at: project.created_at,
+        });
+
+        if (!counts[monthOnly]) {
+          counts[monthOnly] = {
+            month: monthOnly,
+            projects: 0,
+            timestamp: date.getMonth(),
+          };
+        }
+        counts[monthOnly].projects += 1;
+      });
+
+    const dataArray: MonthData[] = Object.values(counts)
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(({ month, projects }) => ({ month, projects }));
+
+    setMonthCounts(dataArray);
+  }, [projects, address]);
+
+  console.log(monthCounts, "iiiii");
   return (
     <ChartContainer
       config={chartConfig}
@@ -59,7 +110,7 @@ export function ReportHistoryChart() {
     >
       <ResponsiveContainer className="p-0 m-0" width="100%" height="100%">
         <BarChart
-          data={reportData}
+          data={monthCounts}
           margin={{
             top: 20,
             right: 0,
@@ -86,7 +137,7 @@ export function ReportHistoryChart() {
             cursor={{ fill: "#1C1C1C", opacity: 0.1 }}
           />
           <Bar
-            dataKey="reports"
+            dataKey="projects"
             fill="#0073E6"
             radius={[4, 4, 0, 0]}
             maxBarSize={60}

@@ -721,6 +721,22 @@ export const FORTICHAINABI: Abi = [
       },
       {
         type: "function",
+        name: "view_project",
+        inputs: [
+          {
+            name: "project_id",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "fortichain_contracts::base::types::Project",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
         name: "is_validator",
         inputs: [
           {

@@ -17,6 +17,8 @@ export default function Page() {
   if (route !== "none") {
     return <LaunchAppUi />;
   }
+  const date = new Date(1761487836);
+  console.log(date);
   return (
     <div className="">
       <Header />

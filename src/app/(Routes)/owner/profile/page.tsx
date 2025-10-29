@@ -13,17 +13,28 @@ export default function Profile() {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
   const projects = useUserProject(address ?? "");
-  const { data: balnce, error } = useBalance({
-    address:
-      "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+  const { data: usdcBalance } = useBalance({
+    token:
+      "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8" as `0x${string}`,
+    address: address ? (address as `0x${string}`) : ("0x0" as `0x${string}`),
   });
-  console.log(balnce, "ppooo");
+
   return (
     <section className="flex justify-between items-stretch flex-col md:flex-row gap-3">
       <div className=" w-full md:w-1/2 bg-dark-gray p-6 flex flex-col justify-between gap-10 rounded-[8px]">
         <div className="bg-dark-gray-pop grid gap-3 px-6 py-3 border border-dark-border-gray rounded-[8px]">
           <h3 className="text-gray-text text-base">Wallet Balance</h3>
-          <h2 className="text-2xl">$9,650</h2>
+          <h2 className="text-2xl">
+            {usdcBalance && +usdcBalance?.formatted > 0 && (
+              <span className="text-[#E2E2E2]">
+                {usdcBalance?.symbol}
+                {usdcBalance?.formatted
+                  ? Number.parseFloat(usdcBalance.formatted).toFixed(2)
+                  : "0.00"}{" "}
+              </span>
+            )}
+            {!usdcBalance && "$0.00"}
+          </h2>
         </div>
         <div className="flex justify-between items-center gap-3 md:gap-6 flex-wrap">
           <div className="grid gap-3">

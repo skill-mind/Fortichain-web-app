@@ -124,6 +124,17 @@ export interface ValidatorReport {
   updated_at: number;
 }
 
+export interface MonthCount {
+  month: string;
+  projects: number;
+  timestamp: number;
+}
+
+export interface MonthData {
+  month: string;
+  projects: number;
+}
+
 export interface ValidatorVoteOnValidation {
   report_id: number;
   voter: { toString: (radix: number) => string };
@@ -714,6 +725,7 @@ export function useValidatorDetail(address: string) {
     "get_validator",
     [address]
   );
+  console.log(validatorsData, "000");
   useEffect(() => {
     if (!validatorsData) return; //
     const rawValidatorData: validatorType = {
@@ -806,7 +818,6 @@ export function getTimeFromEpoch(time: string) {
 export function epocTime(time: string) {
   if (!time) return "";
   const epochSeconds = time.replace("n", "");
-
   const date = new Date(+epochSeconds); // multiply by 1000 to convert to milliseconds
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }

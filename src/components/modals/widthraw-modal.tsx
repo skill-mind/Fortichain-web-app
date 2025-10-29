@@ -1,5 +1,9 @@
 "use client";
-import { useValidatorDetail, validatorType } from "@/hook/useBlockchain";
+import {
+  useResearcherByAddress,
+  useValidatorDetail,
+  validatorType,
+} from "@/hook/useBlockchain";
 import { X } from "lucide-react";
 import { Input } from "../ui/input";
 import WidthrawMessageModal from "./widthraw-message";
@@ -16,10 +20,12 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
   const [isError, setIsError] = useState(false);
   const { address, account } = useAccount();
   const validatorDetail = useValidatorDetail(address ?? "");
+  const researcher = useResearcherByAddress(address ?? "");
   async function handleWithdral() {
     await WithdrawaBounty(account, details, setIsSubmitting);
     handler();
   }
+  console.log(validatorDetail);
   return (
     <>
       {isSubmitting && (
@@ -66,6 +72,11 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
               ).toFixed(2)}
             </h2>
           )}
+          {researcher?.available_amount_to_withdraw && (
+            <h2 className="text-2xl">
+              ${(researcher.available_amount_to_withdraw / 10 ** 18).toFixed(2)}
+            </h2>
+          )}
         </div>
         <div className="w-full grid gap-2 capitalize">
           <label htmlFor="">wallet Address</label>
@@ -99,8 +110,8 @@ export default function WidthrawModal({ handler }: { handler: () => void }) {
           <span className="text-gray-text">Minimum withdrawal is $10</span>
         </div>
         <div className="border border-dark-border-gray rounded-[8px] p-6 font-light">
-          Verify your connected wallet address is correct. Transactions cannot
-          be reversed.
+          Verify the reciever wallet address is correct. Transactions cannot be
+          reversed.
         </div>
         <button
           onClick={handleWithdral}
