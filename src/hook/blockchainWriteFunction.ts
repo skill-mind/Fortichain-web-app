@@ -111,6 +111,7 @@ export const uploadProjectHandle = async (
         //   cairo.uint256(+formData?.amount * ONE_STK),
         // ],
       };
+      console.log(approveCall);
       const multicallData = [approveCall, Call];
       // const feeDetails: PaymasterDetails = {
       //   feeMode: {

@@ -10,7 +10,7 @@ import SuccessModal from "@/components/modals/succesful-upload-project-model";
 import toast from "react-hot-toast";
 
 export default function Page() {
-  const { account } = useAccount();
+  const { account, address } = useAccount();
 
   const [formsection, setFormSection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,10 +36,10 @@ export default function Page() {
       : "Summary";
 
   const handleSubmit = async () => {
-    console.log(account);
-    // if (!account) {
-    //   return toast.error("Connect Wallet to continue");
-    // }
+    console.log(account, address);
+    if (!account) {
+      return toast.error("Connect Wallet to continue");
+    }
     uploadProjectHandle(
       account,
       setIsSubmitting,
