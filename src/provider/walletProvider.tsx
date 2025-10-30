@@ -38,6 +38,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
     }),
   ];
   const chains = [mainnet, sepolia];
+  console.log(process.env.NEXT_PUBLIC_RPC_URL, "rpc");
   return (
     <StarknetConfig
       paymasterProvider={paymasterRpcProvider({
@@ -52,12 +53,12 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
           };
         },
       })}
-      chains={chains}
+      chains={[mainnet, sepolia]}
       connectors={connectors as Connector[]}
       explorer={voyager}
-      // autoConnect={true}
+      autoConnect={true}
       provider={jsonRpcProvider({
-        rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
+        rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL ?? "" }),
       })}
     >
       {children}

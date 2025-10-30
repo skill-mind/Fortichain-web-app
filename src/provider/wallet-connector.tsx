@@ -40,11 +40,13 @@ export function WalletConnectorModal({
     await connect({ connector: connector as Connector });
   }
 
-  const { address, account } = useAccount();
+  const { address, account, isConnected, status } = useAccount();
   console.log(
     {
       address,
       account,
+      isConnected,
+      status,
     },
     "connecor"
   );
