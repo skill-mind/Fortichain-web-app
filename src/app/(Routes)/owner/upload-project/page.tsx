@@ -36,9 +36,10 @@ export default function Page() {
       : "Summary";
 
   const handleSubmit = async () => {
-    if (!account) {
-      return toast.error("Connect Wallet to continue");
-    }
+    console.log(account);
+    // if (!account) {
+    //   return toast.error("Connect Wallet to continue");
+    // }
     uploadProjectHandle(
       account,
       setIsSubmitting,

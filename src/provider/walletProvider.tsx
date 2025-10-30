@@ -37,7 +37,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       },
     }),
   ];
-  const chains = [mainnet, sepolia];
+  const chains = [sepolia];
   return (
     <StarknetConfig
       paymasterProvider={paymasterRpcProvider({
