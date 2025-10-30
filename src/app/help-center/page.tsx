@@ -62,7 +62,7 @@ export default function Help() {
           type: "success",
           message: "Message sent successfully! We'll get back to you soon.",
         });
-        // setFormData({ name: "", email: "", message: "" });
+        setFormData({ name: "", email: "", message: "" });
       } else {
         throw new Error("Failed to send message");
       }

@@ -43,7 +43,8 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       paymasterProvider={paymasterRpcProvider({
         rpc: () => {
           return {
-            nodeUrl: "https://sepolia.paymaster.avnu.fi",
+            // nodeUrl: "https://sepolia.paymaster.avnu.fi",
+            nodeUrl: "https://starknet.paymaster.avnu.fi",
             headers: {
               "x-paymaster-api-key":
                 process.env.NEXT_PUBLIC_PAYMASTER_API ?? "",
