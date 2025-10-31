@@ -6,30 +6,30 @@ import {
   useConnect,
   useDisconnect,
 } from "@starknet-react/core";
-import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
+// import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
 
 export function WalletConnect() {
   const { disconnect } = useDisconnect();
 
-  const { connect, connectors } = useConnect();
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    connectors: connectors as StarknetkitConnector[],
-  });
+  // const { connect, connectors } = useConnect();
+  // const { starknetkitConnectModal } = useStarknetkitConnectModal({
+  //   connectors: connectors as StarknetkitConnector[],
+  // });
 
-  async function connectWallet() {
-    const { connector } = await starknetkitConnectModal();
-    if (!connector) {
-      return;
-    }
-    await connect({ connector: connector as Connector });
-  }
+  // async function connectWallet() {
+  //   const { connector } = await starknetkitConnectModal();
+  //   if (!connector) {
+  //     return;
+  //   }
+  //   await connect({ connector: connector as Connector });
+  // }
 
   const { address } = useAccount();
 
   if (!address) {
     return (
       <button
-        onClick={connectWallet}
+        // onClick={connectWallet}
         className=" text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors p-4"
       >
         Connect Wallet

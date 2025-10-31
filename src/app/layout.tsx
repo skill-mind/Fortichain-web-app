@@ -6,9 +6,9 @@ import { Toaster } from "react-hot-toast";
 import localFont from "next/font/local";
 
 import RouteProvider from "@/provider/route-provider";
-import { StarknetProvider } from "@/provider/walletProvider";
 import StructuredData from "@/components/StructuredData";
 import { Analytics } from "@vercel/analytics/next";
+import WalletProvider from "@/provider/walletProvider";
 
 const myCustomFont = localFont({
   src: "../../public/fonts/GT-Walsheim-Medium-Trial-BF651b7fc728fb3.otf", // Relative path from the current file
@@ -140,7 +140,7 @@ export default function RootLayout({
             },
           }}
         />
-        <StarknetProvider>
+        <WalletProvider>
           <RouteProvider>
             <div className="min-h-screen">{children}</div>
             <Analytics />
@@ -151,7 +151,7 @@ export default function RootLayout({
               </span>
             </footer>
           </RouteProvider>
-        </StarknetProvider>
+        </WalletProvider>
       </body>
     </html>
   );

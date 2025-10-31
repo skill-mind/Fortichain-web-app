@@ -59,7 +59,6 @@ export function ReportHistoryChart() {
   const projects = useAllProjects();
   const { address } = useAccount();
   const [monthCounts, setMonthCounts] = useState<MonthData[]>([]);
-
   useEffect(() => {
     if (!address || !projects) return;
 
@@ -102,7 +101,13 @@ export function ReportHistoryChart() {
     setMonthCounts(dataArray);
   }, [projects, address]);
 
-  console.log(monthCounts, "iiiii");
+  if (monthCounts.length === 0) {
+    return (
+      <div className="p-8 text-center text-2xl">
+        <h2>No project upload for Audit yet</h2>
+      </div>
+    );
+  }
   return (
     <ChartContainer
       config={chartConfig}

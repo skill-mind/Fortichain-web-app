@@ -3,12 +3,8 @@ import type React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Router } from "@/provider/route-provider";
 import { redirect } from "next/navigation";
-import { type Connector, useAccount, useConnect } from "@starknet-react/core";
+import { useAccount } from "@starknet-react/core";
 import toast from "react-hot-toast";
-import {
-  type StarknetkitConnector,
-  useStarknetkitConnectModal,
-} from "starknetkit";
 import { create_validator_profile } from "@/hook/blockchainWriteFunction";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressNavigation } from "./launcher-progress-navigation";
@@ -17,6 +13,7 @@ import { UsernameInputSection } from "./user-name-input";
 import { ResearcherFormNavigationButtons } from "./researcher-form";
 import { GitHubIntegrationSection } from "./validator-github-inputs";
 import { UseUser } from "@/hook/useUser";
+import WalletModal from "./modals/walletModal";
 
 export interface validatorType {
   address: string;
@@ -31,11 +28,7 @@ export default function ProjectValidatorLauncher() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formsection, setFormSection] = useState(1);
-  const { connect, connectors } = useConnect();
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    connectors: connectors as StarknetkitConnector[],
-  });
-  const [_, setConnector] = useState<StarknetkitConnector | string>("");
+  const [isConnectorOpen, setIsConnectorOpen] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
     address: "",
@@ -98,15 +91,6 @@ export default function ProjectValidatorLauncher() {
     );
   }
 
-  async function connectWallet() {
-    const { connector } = await starknetkitConnectModal();
-    if (!connector) {
-      return;
-    }
-    setConnector(connector);
-    await connect({ connector: connector as Connector });
-  }
-
   const handleBack = () => {
     setFormSection((prev) => Math.max(1, prev - 1));
   };
@@ -142,6 +126,10 @@ export default function ProjectValidatorLauncher() {
     }));
   };
 
+  function connectorHandler() {
+    setIsConnectorOpen((isConnect) => !isConnect);
+  }
+
   return (
     <motion.div
       className="flex h-fit justify-center items-center gap-10 flex-col"
@@ -176,7 +164,7 @@ export default function ProjectValidatorLauncher() {
                 >
                   <WalletConnectionCard
                     isConnected={isConnected ?? false}
-                    onConnect={connectWallet}
+                    onConnect={connectorHandler}
                   />
                 </motion.div>
               )}
@@ -220,6 +208,7 @@ export default function ProjectValidatorLauncher() {
           onSubmit={() => {}}
         />
       </form>
+      {isConnectorOpen && <WalletModal close={connectorHandler} />}
     </motion.div>
   );
 }

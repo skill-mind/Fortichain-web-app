@@ -12,12 +12,12 @@ export default function WalletModal({ close }: { close: () => void }) {
   const { connect, connectors } = useConnect({});
 
   return (
-    <div className="sticky top-1/2 left-1/2">
+    <>
       <div
-        className="absolute -translate-y-1/2 w-full h-screen bg-black/75 "
+        className="bg-main-bg/75 z-50 fixed top-0 h-screen w-full left-0"
         onClick={close}
       />
-      <div className="bg-dark-gray max-w-xl min-w-[462px] min-h-[500px]  mx-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-4 rounded-lg">
+      <div className="bg-dark-gray max-w-xl min-w-[462px] min-h-fit  mx-auto fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-4 z-50 rounded-lg">
         <ul className="flex justify-between flex-col" role="list">
           {connectors.map((connecter, i) => {
             return (
@@ -83,6 +83,6 @@ export default function WalletModal({ close }: { close: () => void }) {
           })}
         </ul>
       </div>
-    </div>
+    </>
   );
 }

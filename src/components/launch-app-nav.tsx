@@ -1,28 +1,16 @@
 "use client";
 import { UseUser } from "@/hook/useUser";
 import { Router } from "@/provider/route-provider";
-import { Connector, useConnect } from "@starknet-react/core";
-import { useContext, useState } from "react";
-import { StarknetkitConnector, useStarknetkitConnectModal } from "starknetkit";
+import { useContext } from "react";
 
-export default function LauchAppNav() {
+export default function LauchAppNav({
+  connectorHandler,
+}: {
+  connectorHandler: () => void;
+}) {
   const { setter } = useContext(Router);
-  const { connect, connectors } = useConnect();
-  const [_, setConnector] = useState<StarknetkitConnector | string>("");
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    connectors: connectors as StarknetkitConnector[],
-  });
 
-  async function connectWallet() {
-    const { connector } = await starknetkitConnectModal();
-    if (!connector) {
-      return;
-    }
-    setConnector(connector);
-    await connect({ connector: connector as Connector });
-  }
   UseUser();
-
   return (
     <>
       <nav className="bg-dark-gray mx-auto min-w-[850px] hidden xl:block  p-1 rounded-full mt-7 ">
@@ -92,7 +80,7 @@ export default function LauchAppNav() {
           <span className="w-0.5 min-h-10 bg-dark-border-gray " />
           <button
             onClick={() => {
-              connectWallet();
+              connectorHandler();
             }}
             className={`min-w-157 min-h-50 p-0.5 group ${
               true ? "bg-sky-blue-border" : "hover:bg-sky-blue-border"
@@ -178,7 +166,7 @@ export default function LauchAppNav() {
           <span className="w-0.5 min-h-10 bg-dark-border-gray hidden sm:block" />
           <button
             onClick={() => {
-              connectWallet();
+              connectorHandler();
             }}
             className="bg-dark-gray w-full min-h-50 p-0.5 group             
               hover:from-sky-blue-border hover:to-sky-blue-border

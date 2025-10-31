@@ -2,8 +2,14 @@
 import { motion } from "framer-motion";
 import LauchAppNav from "./launch-app-nav";
 import Nav from "./nav";
+import WalletModal from "./modals/walletModal";
+import { useState } from "react";
 
 export default function Header() {
+  const [isConnectorOpen, setIsConnectorOpen] = useState<boolean>(false);
+  function connectorHandler() {
+    setIsConnectorOpen((isConnect) => !isConnect);
+  }
   return (
     <header className="bg-[url(../../public/Hero.svg)] h-[815px] border-b border-dark-border-gray">
       <Nav />
@@ -64,8 +70,11 @@ export default function Header() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <LauchAppNav />
+          <LauchAppNav connectorHandler={connectorHandler} />
         </motion.div>
+      </div>
+      <div className="absolute top-[10%] left-1/2">
+        {isConnectorOpen && <WalletModal close={connectorHandler} />}
       </div>
     </header>
   );

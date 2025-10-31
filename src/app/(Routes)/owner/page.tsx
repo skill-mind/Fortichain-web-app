@@ -30,6 +30,11 @@ export default function Page() {
           <ul className="list-disc grid gap-3 mt-3 pl-3 text-base">
             <li>Please fund the audit with USDC on Starknet chain.</li>
             <li>
+              if no valid vulnerabilities are reported by the project deadline,
+              your escrowed funds will be refunded to your wallet, with a 5%
+              platform fee deducted by FortiChain
+            </li>
+            <li>
               Security researchers and validators can proceed with the audit
               once there’s an adequate bounty amount.
             </li>

@@ -6,7 +6,7 @@ import { redirect, usePathname } from "next/navigation";
 import WalletModal from "./modals/walletModal";
 import { useContext, useEffect, useState } from "react";
 import { MenuIcon } from "lucide-react";
-import { useAccount, useNetwork } from "@starknet-react/core";
+import { useAccount, useDisconnect, useNetwork } from "@starknet-react/core";
 import { formatAddress, getNetworkColor, getNetworkName } from "@/util/helper";
 import Image from "next/image";
 import ready from "../../public/Argent.svg";
@@ -28,6 +28,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
   const { setter } = useContext(Router);
   const [isScrolled, setIsScrolled] = useState(false);
   const { chain } = useNetwork();
+  const { disconnect } = useDisconnect();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -145,10 +146,64 @@ export default function DashboardNavBar({ routeType, routes }: route) {
                     </span>
                   </span>
                 </button>
+                {isDisconnectOpen && (
+                  <div className="bg-dark-gray fixed top-16 right-3 translate-y-1/12 max-w-xl p-6 border border-dark-border-gray rounded-[8px] mt-7 w-4/5">
+                    <ul className="flex gap-2 justify-between items-center flex-col">
+                      <button
+                        className="w-full  min-h-16 p-1 sm:p-0.5 group             
+                 from-[#10273E] to-sky-blue-border
+                 bg-gradient-to-r group 
+             rounded-full group"
+                      >
+                        <span
+                          className="sm:px-6 sm:py-3
+                       bg-dark-gray
+                 flex items-center gap-2.5 p-1 justify-center cursor-pointer  rounded-full h-[60px] w-full"
+                        >
+                          {connector?.id == "argentX" && (
+                            <Image
+                              className="w-5"
+                              src={ready}
+                              alt="ready wallet"
+                            />
+                          )}
+                          {connector?.id == "braavos" && (
+                            <Image
+                              className="w-5"
+                              src={bravoos}
+                              alt="Braavos wallet"
+                            />
+                          )}
+                          <span className="">{formatAddress(address)}</span>
+                        </span>
+                      </button>
+                      <button
+                        className="w-full min-h-16 p-0.5 group             
+                  hover:from-sky-blue-border hover:to-sky-blue-border
+                  bg-gradient-to-r group to-[#312F2F] from-[#212121]
+              rounded-full group"
+                        onClick={() => {
+                          disconnect();
+                          setIsDisconnectOpen(false);
+                        }}
+                        type="button"
+                      >
+                        <span
+                          className="px-6 py-3
+                      group-hover:from-sky-from group-hover:to-sky-to
+                      group-hover:bg-gradient-to-r bg-[#1C1C1C]
+                  flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-[60px] w-full"
+                        >
+                          Disconnect Wallet
+                        </span>
+                      </button>
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
             {/* <WalletConnect /> */}
-            <WalletConnectorModal isDisconnectOpen={isDisconnectOpen} />
+            {/* <WalletConnectorModal isDisconnectOpen={isDisconnectOpen} /> */}
 
             <button
               onClick={() => {
@@ -229,7 +284,7 @@ export default function DashboardNavBar({ routeType, routes }: route) {
       )}
       {/* notification */}
       {isNotificationOpen && <Notification />}
-      {/* {isConnectorOpen && <WalletModal close={connectorHandler} />} */}
+      {isConnectorOpen && <WalletModal close={connectorHandler} />}
     </div>
   );
 }

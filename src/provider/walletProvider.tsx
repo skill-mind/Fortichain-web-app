@@ -1,44 +1,43 @@
 "use client";
-import { mainnet, sepolia } from "@starknet-react/chains";
 import React from "react";
+
+import { mainnet, sepolia } from "@starknet-react/chains";
 import {
   StarknetConfig,
+  publicProvider,
   voyager,
-  Connector,
+  InjectedConnector,
   paymasterRpcProvider,
-  jsonRpcProvider,
 } from "@starknet-react/core";
-import { InjectedConnector } from "starknetkit/injected";
-import { WebWalletConnector } from "starknetkit/webwallet";
-import { ArgentMobileConnector } from "starknetkit/argentMobile";
+// import { WebWalletConnector } from "starknetkit/webwallet";
+// import { ArgentMobileConnector } from "starknetkit/argentMobile";
 
-export function StarknetProvider({ children }: { children: React.ReactNode }) {
+const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const connectors = [
     new InjectedConnector({
-      options: { id: "argentX", name: "Argent X" },
+      options: { id: "argentX", name: "Ready" },
     }),
     new InjectedConnector({
       options: { id: "braavos", name: "Braavos" },
     }),
-    new InjectedConnector({
-      options: { id: "metamask", name: "MetaMask" },
-    }),
-    new InjectedConnector({
-      options: { id: "keplr", name: "Keplr" },
-    }),
-    new InjectedConnector({
-      options: { id: "okxwallet", name: "OKX" },
-    }),
-    new WebWalletConnector({ url: "https://web.argent.xyz" }),
-    ArgentMobileConnector.init({
-      options: {
-        dappName: "Fortichain",
-        url: "https://forti-chain.xyz",
-      },
-    }),
+    // new InjectedConnector({
+    //   options: { id: "metamask", name: "MetaMask" },
+    // }),
+    // new InjectedConnector({
+    //   options: { id: "keplr", name: "Keplr" },
+    // }),
+    // new InjectedConnector({
+    //   options: { id: "okxwallet", name: "OKX" },
+    // }),
+    // new WebWalletConnector({ url: "https://web.argent.xyz" }),
+    // ArgentMobileConnector.init({
+    //   options: {
+    //     dappName: "Fortichain", // Replace with your app's name
+    //     url: "https://web.argent.xyz",
+    //   },
+    // }),
   ];
-  const chains = [mainnet, sepolia];
-  console.log(process.env.NEXT_PUBLIC_RPC_URL, "rpc");
+
   return (
     <StarknetConfig
       paymasterProvider={paymasterRpcProvider({
@@ -53,15 +52,14 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
           };
         },
       })}
-      chains={[mainnet, sepolia]}
-      connectors={connectors as Connector[]}
+      chains={[mainnet]}
+      provider={publicProvider()}
+      connectors={[...connectors]}
       explorer={voyager}
-      autoConnect={true}
-      provider={jsonRpcProvider({
-        rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL ?? "" }),
-      })}
     >
       {children}
     </StarknetConfig>
   );
-}
+};
+
+export default WalletProvider;

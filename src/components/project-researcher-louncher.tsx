@@ -3,11 +3,8 @@ import type React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Router } from "@/provider/route-provider";
 import { redirect } from "next/navigation";
-import { type Connector, useAccount, useConnect } from "@starknet-react/core";
-import {
-  type StarknetkitConnector,
-  useStarknetkitConnectModal,
-} from "starknetkit";
+import { useAccount } from "@starknet-react/core";
+
 import { create_resercher_profile } from "@/hook/blockchainWriteFunction";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResearcherFormNavigationButtons } from "./researcher-form";
@@ -15,6 +12,7 @@ import { UsernameInputSection } from "./user-name-input";
 import { ProgressNavigation } from "./launcher-progress-navigation";
 import { WalletConnectionCard } from "./wallet-connection-card";
 import { UseUser } from "@/hook/useUser";
+import WalletModal from "./modals/walletModal";
 
 export default function ProjectResearcherLauncher() {
   const { setter } = useContext(Router);
@@ -22,11 +20,7 @@ export default function ProjectResearcherLauncher() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formsection, setFormSection] = useState(1);
-  const { connect, connectors } = useConnect();
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    connectors: connectors as StarknetkitConnector[],
-  });
-  const [_, setConnector] = useState<StarknetkitConnector | string>("");
+  const [isConnectorOpen, setIsConnectorOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     address: "",
     userName: "",
@@ -76,14 +70,8 @@ export default function ProjectResearcherLauncher() {
       setter
     );
   }
-
-  async function connectWallet() {
-    const { connector } = await starknetkitConnectModal();
-    if (!connector) {
-      return;
-    }
-    setConnector(connector);
-    await connect({ connector: connector as Connector });
+  function connectorHandler() {
+    setIsConnectorOpen((isConnect) => !isConnect);
   }
 
   const handleBack = () => {
@@ -128,7 +116,7 @@ export default function ProjectResearcherLauncher() {
                 >
                   <WalletConnectionCard
                     isConnected={isConnected ?? false}
-                    onConnect={connectWallet}
+                    onConnect={connectorHandler}
                   />
                 </motion.div>
               )}
@@ -157,6 +145,7 @@ export default function ProjectResearcherLauncher() {
           onSubmit={() => {}}
         />
       </form>
+      {isConnectorOpen && <WalletModal close={connectorHandler} />}
     </motion.div>
   );
 }

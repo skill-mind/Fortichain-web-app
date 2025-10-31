@@ -4,20 +4,14 @@ import { type Connector, useAccount, useConnect } from "@starknet-react/core";
 import { WalletCards } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import {
-  type StarknetkitConnector,
-  useStarknetkitConnectModal,
-} from "starknetkit";
 import { motion } from "framer-motion";
 import { WalletConnectionCard } from "./wallet-connection-card";
+import WalletModal from "./modals/walletModal";
 
 export default function ProjectOwnerLauncher() {
-  const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
-  const [connector, setConnector] = useState<StarknetkitConnector | string>("");
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    connectors: connectors as StarknetkitConnector[],
-  });
+  const { isConnected } = useAccount();
+  const [isConnectorOpen, setIsConnectorOpen] = useState<boolean>(false);
+
   const { isComplete, route, setter } = useContext(Router);
   function Handler() {
     setter((prev) => {
@@ -25,13 +19,8 @@ export default function ProjectOwnerLauncher() {
     });
   }
 
-  async function connectWallet() {
-    const { connector } = await starknetkitConnectModal();
-    if (!connector) {
-      return;
-    }
-    setConnector(connector);
-    await connect({ connector: connector as Connector });
+  function connectorHandler() {
+    setIsConnectorOpen((isConnect) => !isConnect);
   }
 
   useEffect(() => {
@@ -80,7 +69,7 @@ export default function ProjectOwnerLauncher() {
         >
           <WalletConnectionCard
             isConnected={isConnected ?? false}
-            onConnect={connectWallet}
+            onConnect={connectorHandler}
           />
         </motion.div>
       </motion.div>
@@ -129,6 +118,7 @@ export default function ProjectOwnerLauncher() {
           </span>
         </motion.button>
       </motion.div>
+      {isConnectorOpen && <WalletModal close={connectorHandler} />}
     </div>
   );
 }
