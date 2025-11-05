@@ -8,10 +8,13 @@ export default function ResearcherModal({
   handler: () => void;
   selectedResearcher: SecurityResearcher;
 }) {
-  const approval_rate =
+  const approval_rate = Math.min(
     (selectedResearcher?.reports_approved_count /
       selectedResearcher?.reports_submitted_count) *
-    100;
+      100,
+    100
+  );
+
   return (
     <>
       <div
@@ -46,7 +49,7 @@ export default function ResearcherModal({
         <div className="py-3 px-6 bg-dark-gray-pop rounded-[8px] grid gap-4">
           <span className="text-gray-text text-base">Total Money Earned</span>
           <h2 className="text-18">
-            ${selectedResearcher?.total_bounty_won.toFixed()}
+            ${(selectedResearcher?.total_bounty_won / 10 ** 18).toFixed(2)}
           </h2>
         </div>
 

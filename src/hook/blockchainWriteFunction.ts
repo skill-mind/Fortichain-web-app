@@ -632,6 +632,36 @@ export const assign_validator = async (
           validator_address: address,
         }),
       };
+      const multicallData = [Call];
+      const result = await account.execute(multicallData);
+
+      const status = await myProvider.waitForTransaction(
+        result?.transaction_hash as string
+      );
+      setIsOpen(true);
+      console.log(result);
+      toast.success("validator assigned");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    setIsSuccess(true);
+    toast.error("error assigning validator");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+export const approve_validator = async (
+  address: string,
+  account: AccountInterface | undefined,
+  setIsSubmitting: SetIsSubmitting,
+  setIsOpen: SetIsOpen
+  // handler: () => void,
+): Promise<void> => {
+  try {
+    setIsSubmitting(true);
+
+    if (account != undefined) {
       const approve_validator_call = {
         contractAddress: FORTICHAINADDRESS,
         entrypoint: "approve_validator",
@@ -639,7 +669,7 @@ export const assign_validator = async (
           validator_address: address,
         }),
       };
-      const multicallData = [approve_validator_call, Call];
+      const multicallData = [approve_validator_call];
       const result = await account.execute(multicallData);
 
       const status = await myProvider.waitForTransaction(
@@ -648,12 +678,11 @@ export const assign_validator = async (
       setIsOpen(true);
       console.log(result);
 
-      console.log(status);
+      toast.success("validator approved");
     }
   } catch (error) {
     console.error("Error:", error);
-    setIsSuccess(true);
-    toast.error("error editing project");
+    toast.error("error approving validator");
   } finally {
     setIsSubmitting(false);
   }

@@ -67,9 +67,11 @@ export function ProjectTable({
           </thead>
           <tbody>
             {researchers.map((user) => {
-              const approval_rate =
+              const approval_rate = Math.min(
                 (user?.reports_approved_count / user?.reports_submitted_count) *
-                100;
+                  100,
+                100
+              );
               return (
                 <tr
                   key={user?.id}

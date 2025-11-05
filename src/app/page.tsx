@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Router } from "@/provider/route-provider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Quote, QuoteRight } from "@/icons/github";
 import { Input } from "@/components/ui/input";
 import Header from "@/components/home-header";
@@ -17,8 +17,7 @@ export default function Page() {
   if (route !== "none") {
     return <LaunchAppUi />;
   }
-  const date = new Date(1761487836);
-  console.log(date);
+
   return (
     <div className="">
       <Header />
