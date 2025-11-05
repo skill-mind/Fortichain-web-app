@@ -14,7 +14,7 @@ export default function Page() {
     return (
       <div className=" w-full flex h-screen justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
         <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">
-          No complete Adit on a project
+          No complete Audit on a project
         </h2>
       </div>
     );
