@@ -10,6 +10,7 @@ import {
 import {
   useAllProjects,
   useUserProject,
+  useValidatorDetail,
   useValidatorProjectsWorkedOn,
 } from "@/hook/useBlockchain";
 import { useAccount } from "@starknet-react/core";
@@ -18,7 +19,7 @@ export default function ValidatorReport() {
   const { address } = useAccount();
   const projects = useAllProjects();
   // const projects = useValidatorProjectsWorkedOn(address ?? "");
-  // const projects = useUserProject(address ?? "");
+  const validator = useValidatorDetail(address ?? "");
 
   if (projects?.length == 0) {
     return (
@@ -29,7 +30,15 @@ export default function ValidatorReport() {
       </div>
     );
   }
-
+  if (validator?.status == "pending") {
+    return (
+      <div className=" w-full flex h-screen justify-center items-center text-center text-gray-text text-2xl md:text-[32px] border border-dark-border-gray rounded-[8px] bg-dark-gray">
+        <h2 className="mx-auto h-fit md:p-28 p-2.5 max-w-3xl ">
+          Awaiting KYC Approval
+        </h2>
+      </div>
+    );
+  }
   return (
     <div className=" font-walsheim">
       <div className="h-11 border-dark-border-gray border rounded-full py-1 md:max-w-[450px] mb-3">

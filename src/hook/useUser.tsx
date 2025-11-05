@@ -51,10 +51,12 @@ export function UseUser() {
     }
   }, [researchers, address]);
   useEffect(() => {
+    console.log(owner, address === `0x0${owner?.toString(16)}`);
     if (owner && address === `0x0${owner?.toString(16)}`) {
       setter((prev) => {
         return { ...prev, isComplete: true, route: "admin" };
       });
+      console.log(owner && address === `0x0${owner?.toString(16)}`);
       redirect("/admin");
     }
   }, [address, owner]);

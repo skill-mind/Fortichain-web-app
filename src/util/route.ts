@@ -93,6 +93,10 @@ export const ownerRoute = [
     url: "/projects",
   },
   {
+    label: "Certificate",
+    url: "/owner/certificate",
+  },
+  {
     label: "Ranking",
     url: "/ranking",
   },

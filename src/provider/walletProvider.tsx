@@ -8,6 +8,7 @@ import {
   voyager,
   InjectedConnector,
   paymasterRpcProvider,
+  jsonRpcProvider,
 } from "@starknet-react/core";
 // import { WebWalletConnector } from "starknetkit/webwallet";
 // import { ArgentMobileConnector } from "starknetkit/argentMobile";
@@ -53,7 +54,9 @@ const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         },
       })}
       chains={[mainnet]}
-      provider={publicProvider()}
+      provider={jsonRpcProvider({
+        rpc: () => ({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }),
+      })}
       connectors={[...connectors]}
       explorer={voyager}
     >

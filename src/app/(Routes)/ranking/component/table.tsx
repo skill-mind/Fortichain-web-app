@@ -5,9 +5,9 @@ import {
 import { formatAddress } from "@/util/helper";
 
 export default function Table({ type }: { type: string }) {
-  const { data: validators, loading: validatorsIsLoading } =
+  const { data: researchers, loading: validatorsIsLoading } =
     useFetchAllReserchersDetails();
-  const { data: researchers, loading: researchersIsLoading } =
+  const { data: validators, loading: researchersIsLoading } =
     useFetchAllValidatorsDetails();
   const user = type === "validator" ? validators : researchers;
   return (

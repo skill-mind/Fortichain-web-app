@@ -1,6 +1,10 @@
-import { validatorType } from "@/hook/useBlockchain";
+"use client";
+import { approve_validator } from "@/hook/blockchainWriteFunction";
+import { useValidatorDetail, validatorType } from "@/hook/useBlockchain";
+import { useAccount } from "@starknet-react/core";
 import { X } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function ValidatorModal({
   handler,
@@ -9,6 +13,11 @@ export default function ValidatorModal({
   handler: () => void;
   selectedValidator: validatorType;
 }) {
+  const { address, account } = useAccount();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const passwork = useValidatorDetail(
+    selectedValidator.validator_address.toString(0) ?? ""
+  )?.passwork;
   return (
     <>
       <div
@@ -43,7 +52,7 @@ export default function ValidatorModal({
         <div className="py-3 px-6 bg-dark-gray-pop rounded-[8px] grid gap-4">
           <span className="text-gray-text text-base">Total Money Earned</span>
           <h2 className="text-18">
-            ${selectedValidator.total_bounty_won.toFixed(2)}
+            ${(selectedValidator.total_bounty_won / 10 ** 18).toFixed(2)}
           </h2>
         </div>
 
@@ -69,37 +78,49 @@ export default function ValidatorModal({
             href={selectedValidator.github_profile_url ?? " "}
             className="text-blue-ball"
           >
-            {/* {selectedValidator?.github_profile_url} */}
+            {selectedValidator?.github_profile_url}
           </Link>
         </div>
 
         <div className="grid gap-6 mt-3 text-base">
           <span className="text-gray-text">Pass Work</span>
-          <span className="text-blue-ball break-all">
-            https://github.com/fortichain/smartcontractaudit
-          </span>
-          <span className="text-blue-ball break-all">
-            https://github.com/fortichain/smartcontractaudit
-          </span>
+          {passwork?.map((work, key) => {
+            return (
+              <Link key={key} href={work ?? " "} className="text-blue-ball">
+                {work}
+              </Link>
+            );
+          })}
         </div>
-        <div>
-          <button
-            className="w-full min-h-50 p-0.5 group             
+        {selectedValidator.status === "pending" && (
+          <div>
+            <button
+              disabled={isSubmitting}
+              className="w-full min-h-50 p-0.5 group             
               from-sky-blue-border to-sky-blue-border
               bg-gradient-to-r group hover:to-[#312F2F] hover:from-[#212121]
-          rounded-full group"
-            type="button"
-          >
-            <span
-              className="px-6 py-3
+          rounded-full group disabled:cursor-not-allowed"
+              type="button"
+            >
+              <span
+                onClick={() => {
+                  approve_validator(
+                    address ?? "",
+                    account,
+                    setIsSubmitting,
+                    handler
+                  );
+                }}
+                className="px-6 py-3
                   from-sky-from to-sky-to
                    bg-gradient-to-r group-hover:bg-[#1C1C1C]
               flex items-center gap-2.5 p-2 justify-center cursor-pointer  rounded-full h-full w-full"
-            >
-              View Profile
-            </span>
-          </button>
-        </div>
+              >
+                {isSubmitting ? "Approving..." : "Approve Profile"}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
