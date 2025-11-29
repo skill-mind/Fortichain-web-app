@@ -14,14 +14,24 @@ import {
 import { formatAddress } from "@/util/helper";
 import Image from "next/image";
 import logo from "../../../public/Logo.svg";
+import { Certificate } from "@/util/types";
 
-export default function CertificateModal({
+export function CertificateModal({
+  certificate,
   handler,
-  id,
 }: {
+  certificate: Certificate| undefined;
   handler: () => void;
-  id: number;
 }) {
+  // Format date from ISO string
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}th - ${month} - ${year}`;
+  };
+
   return (
     <div className="">
       <div
@@ -37,17 +47,17 @@ export default function CertificateModal({
         </div>
         <div className="grid gap-3">
           <h3 className="text-gray-text">Project</h3>
-          <h2>Smart Contract Report</h2>
+          <h2>{certificate?.project_name}</h2>
         </div>
         <div className="grid md:gap-0 gap-4 grid-cols-1 sm:grid-cols-3 items-center">
           <div>
             <h3 className="text-gray-text">Certification ID</h3>
-            <h2>AUDIT-1755201024223</h2>
+            <h2>{certificate?.certificate_id}</h2>
           </div>
           <div>
             <div className="px-10 mb-2 mx-auto py-5 text-[#0073E6] bg-[#10273E] w-fit border border-[#114171] rounded-full flex gap-2 items-center">
               <BadgeCheck />
-              Valid Report
+              {certificate?.is_completed ? "Valid Report" : "In Progress"}
             </div>
             <h5 className="text-gray-text sm:text-start text-12">
               The badge above certifies that a comprehensive security audit has
@@ -57,7 +67,7 @@ export default function CertificateModal({
           </div>
           <div>
             <h3 className="text-gray-text">Audit Date</h3>
-            <h2>17th - Aug - 2025</h2>
+            <h2>{formatDate(certificate?.issued_at??"")}</h2>
           </div>
         </div>
       </div>

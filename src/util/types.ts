@@ -294,3 +294,26 @@ export type {
   ResearchersResponse,
   ValidatorsResponse,
 };
+
+
+interface UserMin {
+  name: string;
+  wallet_address: string;
+}
+
+export interface Certificate {
+  certificate_id: string;
+  is_completed: boolean;
+  issued_at: string;
+  project_id: number;
+  project_name: string;
+  researchers: UserMin[];
+  validator: UserMin;
+}
+
+export interface CertificateResponse {
+  data: Certificate[];
+  message: string;
+  success: boolean;
+  total: number;
+}

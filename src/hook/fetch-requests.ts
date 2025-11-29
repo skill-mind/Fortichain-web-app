@@ -1,5 +1,6 @@
 import {
   AssignedValidator,
+  CertificateResponse,
   ProjectData,
   ResearchersResponse,
   ValidatorsResponse,
@@ -60,6 +61,32 @@ export function useFetchProjectDetails(id: number) {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["projectDetails", id], // Unique key for caching
+    queryFn: fetchProjectDetails,
+    refetchInterval: 5000,
+    retry: 2,
+  });
+
+  return {
+    data: data?.data, // Extract the `data` property from the response
+    loading: isLoading,
+    error: error as Error | null,
+  };
+}
+
+export function useFetchUserCompletedProjectDetails(address:string) {
+  const fetchProjectDetails = async (): Promise<CertificateResponse> => {
+    const response = await fetch(
+      `${server}/certificates/owner/${address}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch project certififate details");
+    }
+    return response.json();
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["certificateDetails", address], // Unique key for caching
     queryFn: fetchProjectDetails,
     refetchInterval: 5000,
     retry: 2,
