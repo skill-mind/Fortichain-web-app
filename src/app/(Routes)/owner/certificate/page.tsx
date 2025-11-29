@@ -6,7 +6,6 @@ import {CertificateModal} from "@/components/modals/certificate";
 import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
 import { useFetchUserCompletedProjectDetails } from "@/hook/fetch-requests";
-import { CertificateResponse } from "@/util/types";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
