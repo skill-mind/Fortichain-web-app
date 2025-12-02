@@ -10,6 +10,7 @@ export default function Table({ type }: { type: string }) {
   const { data: validators, loading: researchersIsLoading } =
     useFetchAllValidatorsDetails();
   const user = type === "validator" ? validators : researchers;
+  console.log({ validators, researchers });
   return (
     <div className="border px-6 border-dark-border-gray rounded-[8px] overflow-scroll scrollbar-hide max-h-[650px]">
       <div className="overflow-x-auto scrollbar-hide">

@@ -1,8 +1,23 @@
-export default function ValidatorResearcherCard({
+import { Certificate } from "@/util/types";
+
+export default function CertificateCard({
+  certificate,
   handler,
+  setCertificate,
 }: {
+  certificate: Certificate;
   handler: () => void;
+  setCertificate: (num: string) => void;
 }) {
+  // Format date from ISO string
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}th - ${month} - ${year}`;
+  };
+
   return (
     <div
       className="border 
@@ -12,30 +27,30 @@ export default function ValidatorResearcherCard({
       <div className="flex justify-between items-center sm:items-start">
         <div className="flex items-center gap-1">
           <span className="rounded-full bg-blue-ball w-1 h-1" />
-          <h5>Audited</h5>
+          <h5>{certificate.is_completed ? "Audited" : "In Progress"}</h5>
         </div>
         <span
           className={` sm:hidden ${
-            true
+            certificate.is_completed
               ? "text-blue-ball bg-pririty-low-bg"
               : "text-pririty-high-text bg-pririty-high-bg"
           } rounded-full py-1.5 px-3 text-sm`}
         >
-          Priority: Low
+          Priority: {certificate.is_completed ? "Low" : "High"}
         </span>
       </div>
       <div className="pb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3>DeFi Protocol Smart Contract Audit</h3>
+          <h3>{certificate.project_name}</h3>
         </div>
         <span
           className={`hidden sm:block ${
-            true
+            certificate.is_completed
               ? "text-blue-ball bg-pririty-low-bg"
               : "text-pririty-high-text bg-pririty-high-bg"
           } rounded-full py-1.5 px-3 text-sm`}
         >
-          Priority: Low
+          Priority: {certificate.is_completed ? "Low" : "High"}
         </span>
       </div>
       <div className="border-b border-dark-border-gray pb-4">
@@ -48,7 +63,7 @@ export default function ValidatorResearcherCard({
         <div className="flex flex-wrap items-center gap-1">
           <span className="text-gray-text">Submitted:</span>
           <span className="bg-dark-gray-pop rounded-full px-3 py-1">
-            10th - Aug - 2025
+            {formatDate(certificate.issued_at)}
           </span>
           <span className="flex gap-1 items-center">
             <span className="text-gray-text">Findings</span>
@@ -57,7 +72,10 @@ export default function ValidatorResearcherCard({
         </div>
         <div className="w-full grid place-content-end xl:w-fit">
           <button
-            onClick={handler}
+            onClick={() => {
+              setCertificate(certificate.certificate_id)
+              handler();
+            }}
             className="w-fit min-h-11 p-0.5 group             
         hover:from-sky-blue-border hover:to-sky-blue-border
         bg-gradient-to-r group to-[#312F2F] from-[#212121]

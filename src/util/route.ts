@@ -66,12 +66,8 @@ export const adminRoute = [
     url: "/admin/fortichain-metrics",
   },
   {
-    label: "Blog managements",
+    label: "News letter",
     url: "/admin/fortichain-blog",
-  },
-  {
-    label: "Help center",
-    url: "/admin/help-desk",
   },
   {
     label: "Suspention",
