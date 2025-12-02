@@ -49,6 +49,11 @@ export default function Footer() {
             // { href: "/blog", text: "Blog" },
             { href: "/privacy", text: "Privacy" },
             { href: "/help-center", text: "Help Center" },
+            {
+              href: "https://docs.google.com/document/d/1sveuc200t17U5Frb2NWR-fm6bT6lAQNKG2ZWNzHxkPY/edit?usp=sharing",
+              text: "Governance",
+              target: "_blank",
+            },
           ].map((item, index) => (
             <motion.li
               key={item.href}
